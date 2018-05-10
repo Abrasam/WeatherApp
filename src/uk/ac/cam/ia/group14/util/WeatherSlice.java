@@ -10,8 +10,9 @@ public class WeatherSlice {
     private final int visibility;
     private final int cloudLevel;
     private final int freezingAltitude;
+    private final Status status;
 
-    public WeatherSlice(Date time, int temp, int wind, int rain, int visibility, int cloudLevel, int freezingAltitude) {
+    public WeatherSlice(Date time, int temp, int wind, int rain, int visibility, int cloudLevel, int freezingAltitude, Status status) {
         this.time = time;
         this.temp = temp;
         this.wind = wind;
@@ -19,6 +20,7 @@ public class WeatherSlice {
         this.visibility = visibility;
         this.cloudLevel = cloudLevel;
         this.freezingAltitude = freezingAltitude;
+        this.status = status;
     }
 
     public Date getTime() {
@@ -47,5 +49,19 @@ public class WeatherSlice {
 
     public int getFreezingAltitude() {
         return freezingAltitude;
+    }
+
+    public Status getStatus() {
+        return status;
+    }
+
+    public enum Status {
+        RAIN,
+        CLOUD,
+        SCATTERED_CLOUD,
+        SNOW,
+        SUN,
+        HAIL;
+        //MORE TO BE ADDED YO
     }
 }
