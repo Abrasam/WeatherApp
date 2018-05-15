@@ -27,8 +27,13 @@ public class MainFrame extends JFrame {
         return datum;
     }
 
+    private void getDetailPanel(){
+        this.add(new DetailPanel());
+    }
+
     public static void main (String[] args){
-        MainFrame d = new MainFrame();
-        d.setVisible(true);
+        MainFrame mf = new MainFrame();
+        mf.setVisible(true);
+        //mf.getDetailPanel();
     }
 }
