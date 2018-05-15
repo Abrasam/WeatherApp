@@ -4,13 +4,16 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.geom.Ellipse2D;
 import java.awt.geom.RoundRectangle2D;
+import java.util.Calendar;
+import java.util.Date;
 
 public class DetailPanel extends JPanel {
 
     public static String cardName = "DetailPanel";
-
-    public DetailPanel(){
-    }
+    private static boolean init = true;
+    private Date startDate;
+    private Date endDate;
+    public Date curDate;
 
     private void drawLine(Graphics g,double x, double y, double w, double h, Color c){
         Graphics2D g2d = (Graphics2D) g.create();
@@ -31,22 +34,37 @@ public class DetailPanel extends JPanel {
         if (fill) g2d.fill(rec);
     }
 
-    private void drawCircle(Graphics g,double x, double y, double w, double h, Color c){
+    private void drawCircle(Graphics g,double x, double y, double w, double h, Color c, boolean fill){
         Graphics2D g2d = (Graphics2D) g.create();
         g2d.setColor(c);
         g2d.setStroke(new BasicStroke(5));
         Ellipse2D.Double cir = new Ellipse2D.Double(x, y, w, h);
         g2d.draw(cir);
+        if (fill) g2d.fill(cir);
     }
 
     @Override
     public void paint(Graphics g){
+        int dateOnScroll = 6;
+        if (init){
+            startDate = new Date ();
+            Calendar cal = Calendar.getInstance();
+            cal.setTime(startDate);
+            cal.add(Calendar.DATE,4);
+            curDate = cal.getTime();
+            cal.setTime(startDate);
+            cal.add(Calendar.DATE,dateOnScroll);
+            endDate = cal.getTime();
+            System.out.println(startDate);
+            System.out.println(curDate);
+            System.out.println(endDate);
+        }
+        System.out.println("Painting");
         //screen size: x: 0-393, y: 0-770
         int CONST_SCREENRIGHT = 393;
         int CONST_SCREENBOTTOM = 770;
 
         //Scroll - param
-        int dateOnScroll = 6;
         Color scrollColor = new Color(150,150,150);
         int scrollBarX = 50;
         int scrollBarVertSpace = 20;
@@ -85,6 +103,10 @@ public class DetailPanel extends JPanel {
 
         //Location
         Color weaColor = new Color(140, 88, 150);
-        drawCircle(g,150,120,140, 140,weaColor);
+        drawCircle(g,150,120,140, 140,weaColor,false);
+
+        //Location
+        Color scrollButtonColor = new Color(64, 64, 64);
+        drawCircle(g,scrollBarX-scrollDivWidth/2,scrollBarVertSpace,16,16,scrollButtonColor,true);
     }
 }
