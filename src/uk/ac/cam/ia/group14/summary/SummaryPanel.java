@@ -12,20 +12,36 @@ public class SummaryPanel extends JPanel{
     MainFrame mainFrame;
     //JFrame testFrame;
 
-    JPanel rootPanel;
-    JPanel backButtonAndNamePanel;
+    JPanel backButtonAndNamePane;
+    JPanel forecastPane;
 
     public SummaryPanel(MainFrame mainFrame){
         this.mainFrame = mainFrame;
 
-        rootPanel = new JPanel(new GridBagLayout());
+
+        this.setLayout(new GridBagLayout());
 
         GridBagConstraints backButtonAndNameConstraints = new GridBagConstraints();
-        backButtonAndNameConstraints.fill = GridBagConstraints.NONE;
+        backButtonAndNameConstraints.fill = GridBagConstraints.VERTICAL;
         backButtonAndNameConstraints.gridx = 0;
         backButtonAndNameConstraints.gridy = 0;
 
-        //backButtonAndNamePanel = new JPanel(new BoxLayout(rootPanel))
+        backButtonAndNamePane = new JPanel();
+        backButtonAndNamePane.setBackground(Color.RED);
+
+        GridBagConstraints forecastConstraints = new GridBagConstraints();
+        forecastConstraints.fill = GridBagConstraints.BOTH;
+        forecastConstraints.gridx = 0;
+        forecastConstraints.gridy = 1;
+
+        forecastPane = new JPanel();
+        forecastPane.setBackground(Color.GREEN);
+
+        this.add(backButtonAndNamePane, backButtonAndNameConstraints);
+        this.add(forecastPane, forecastConstraints);
+
+
+        //backButtonAndNamePane = new JPanel(new BoxLayout(rootPane))
     }
 
     /*public SummaryPanel(JFrame testFrame) {
