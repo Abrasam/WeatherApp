@@ -4,6 +4,7 @@ import uk.ac.cam.ia.group14.rjt80.tools.Polygon2D;
 import uk.ac.cam.ia.group14.util.MainFrame;
 import uk.ac.cam.ia.group14.util.RegionID;
 import uk.ac.cam.ia.group14.util.Updateable;
+import uk.ac.cam.ia.group14.util.UpdateableJPanel;
 
 import javax.swing.*;
 import java.awt.*;
@@ -12,8 +13,8 @@ import java.awt.event.MouseEvent;
 import java.io.IOException;
 import java.util.*;
 
-public class MapPanel extends JPanel implements Updateable {
-    private static String cardName = "MapPanel";
+public class MapPanel extends UpdateableJPanel {
+    public static final String cardName = "MapPanel";
     private MainFrame frame;
     private Map<RegionID, Polygon2D> mountainRangeButtons;
 
