@@ -4,15 +4,15 @@ import java.util.Date;
 
 public class WeatherSlice {
     private final Date time;
-    private final int temp;
-    private final int wind;
-    private final int rain;
-    private final int visibility;
-    private final int cloudLevel;
-    private final int freezingAltitude;
+    private final double temp;
+    private final double wind;
+    private final double rain;
+    private final double visibility;
+    private final double cloudLevel;
+    private final double freezingAltitude;
     private final Status status;
 
-    public WeatherSlice(Date time, int temp, int wind, int rain, int visibility, int cloudLevel, int freezingAltitude, Status status) {
+    public WeatherSlice(Date time, double temp, double wind, double rain, double visibility, double cloudLevel, double freezingAltitude, Status status) {
         this.time = time;
         this.temp = temp;
         this.wind = wind;
@@ -27,27 +27,27 @@ public class WeatherSlice {
         return time;
     }
 
-    public int getTemp() {
+    public double getTemp() {
         return temp;
     }
 
-    public int getWind() {
+    public double getWind() {
         return wind;
     }
 
-    public int getRain() {
+    public double getRain() {
         return rain;
     }
 
-    public int getVisibility() {
+    public double getVisibility() {
         return visibility;
     }
 
-    public int getCloudLevel() {
+    public double getCloudLevel() {
         return cloudLevel;
     }
 
-    public int getFreezingAltitude() {
+    public double getFreezingAltitude() {
         return freezingAltitude;
     }
 
@@ -63,5 +63,25 @@ public class WeatherSlice {
         SUN,
         HAIL;
         //MORE TO BE ADDED YO
+    }
+
+    public enum Parameter {
+        TEMPERATURE,
+        WIND,
+        RAIN;
+    }
+
+    @Override
+    public String toString() {
+        return "WeatherSlice{" +
+                "time=" + time +
+                ", temp=" + temp +
+                ", wind=" + wind +
+                ", rain=" + rain +
+                ", visibility=" + visibility +
+                ", cloudLevel=" + cloudLevel +
+                ", freezingAltitude=" + freezingAltitude +
+                ", status=" + status +
+                '}';
     }
 }
