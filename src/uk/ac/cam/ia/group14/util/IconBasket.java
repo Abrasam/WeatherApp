@@ -60,17 +60,32 @@ public class IconBasket {
         return icon;
     }
 
+    public static ImageIcon getResizedIcon(int x, int y, boolean isDay, boolean hasClouds, boolean hasSun, boolean hasRain, boolean hasSnow, boolean hasBolt) {
+        String path = getPath(isDay, hasClouds, hasSun, hasRain, hasSnow, hasBolt);
+
+        BufferedImage img = null;
+        try {
+            img = ImageIO.read(new File(path));
+        } catch (IOException e) {
+            img = constDefaultImage;
+        }
+
+        img = ResizeImage.resize(img, x, y);
+
+        return new ImageIcon(img);
+    }
+
     public static BufferedImage getImage(boolean isDay, boolean hasClouds, boolean hasSun, boolean hasRain, boolean hasSnow, boolean hasBolt) {
         String path = getPath(isDay, hasClouds, hasSun, hasRain, hasSnow, hasBolt);
 
-        BufferedImage icon = null;
+        BufferedImage img = null;
         try {
-            icon = ImageIO.read(new File(path));
+            img = ImageIO.read(new File(path));
         } catch (IOException e) {
-            icon = constDefaultImage;
+            img = constDefaultImage;
         }
 
-        return icon;
+        return img;
     }
 
 
