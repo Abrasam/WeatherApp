@@ -10,6 +10,8 @@ public class RowForecastFragment extends JPanel{
 
     private String defaultFontName;
 
+    private final Color CONSTANTS_defColor = new Color(170, 248, 255);
+
     private final Font CONSTANTS_dayOfWeekFont = new Font(defaultFontName, Font.PLAIN, 19);
     private final double CONSTANTS_dayOfWeekWeight = 0.25,
             CONSTANTS_forecastIconWeight = 0.25,
@@ -26,6 +28,7 @@ public class RowForecastFragment extends JPanel{
 
 
     private void initComponents() {
+        this.setBackground(CONSTANTS_defColor);
 
         dayOfWeekLbl = new JLabel("", SwingConstants.CENTER);
         dayOfWeekLbl.setFont(CONSTANTS_dayOfWeekFont);
@@ -53,8 +56,8 @@ public class RowForecastFragment extends JPanel{
         leftStatsFragment.setData(leftStatsData);
         rightStatsFragment.setData(rightStatsData);
 
-        leftStatsFragment.setBackground(Color.YELLOW);
-        rightStatsFragment.setBackground(Color.RED);
+        //leftStatsFragment.setBackground(Color.YELLOW);
+        //rightStatsFragment.setBackground(Color.RED);
     }
     private void updateDayOfWeekAndIcon() {
         dayOfWeekLbl.setText(dayOfWeekString);

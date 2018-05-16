@@ -8,6 +8,8 @@ import java.util.List;
 public class InfoFragment extends JPanel {
 
 
+    private final Color CONSTANTS_defColor = new Color(170, 248, 255);
+
     private String defaultFontName;
     private final Font CONSTANTS_infoFont = new Font(defaultFontName, Font.PLAIN, 16);
 
@@ -17,6 +19,8 @@ public class InfoFragment extends JPanel {
 
 
     private void initComponents() {
+        this.setBackground(CONSTANTS_defColor);
+
         int gridX=0, gridY=0;
 
         double totalRowsWeight = 0.2;

@@ -15,13 +15,20 @@ public class SummaryPanel extends UpdateableJPanel implements ActionListener{
 
     public static String cardName = "SummaryPanel";
 
+    private final Color CONSTANTS_row1Background = new Color(100, 248, 255);
+    private final Color CONSTANTS_row2Background = new Color(210, 248, 255);
+
+
+
     private final String defaultFontName = "Ariel";
     private final Font CONSTANTS_row1LocationNameFont = new Font(defaultFontName, Font.PLAIN, 18);
-    private final Font CONSTANTS_row1Back = new Font(defaultFontName, Font.PLAIN, 18);
+    private final Font CONSTANTS_row1BackButtonFont = new Font(defaultFontName, Font.PLAIN, 18);
     private final String[] CONSTANTS_weekStrings = {"MON", "TUE", "WED", "THU", "FRI", "SAT", "SUN"};
 
     private final int CONSTANTS_daysCount = 5, CONSTANTS_forecastIconSize = 100;
+
     private final double CONSTANTS_rowForecastWeight = 1.0 / (double)CONSTANTS_daysCount;
+
     private final double CONSTANTS_backButtonWeight = 0.2, CONSTANTS_regionNameWeight = 0.8;
     private final double CONSTANTS_row1Weight = 0.1, CONSTANTS_row2Weight = (1.0 - CONSTANTS_row1Weight);
 
@@ -39,8 +46,8 @@ public class SummaryPanel extends UpdateableJPanel implements ActionListener{
     private void initBackButtonAndName() {
         row1BackBtn = new JButton("<");
         row1BackBtn.setBorder(null);
-        row1BackBtn.setBackground(Color.WHITE);
-        row1BackBtn.setFont(CONSTANTS_row1Back);
+        row1BackBtn.setBackground(CONSTANTS_row1Background);
+        row1BackBtn.setFont(CONSTANTS_row1BackButtonFont);
 
         GridBagConstraints backButtonConstraints =
                 getGridBagConstraints(GridBagConstraints.BOTH, 0, 0, CONSTANTS_backButtonWeight, 1.0);
@@ -50,6 +57,9 @@ public class SummaryPanel extends UpdateableJPanel implements ActionListener{
         row1LocationNameLbl.setFont(CONSTANTS_row1LocationNameFont);
         GridBagConstraints labelLocationConstraints =
                 getGridBagConstraints(GridBagConstraints.BOTH, 1, 0, CONSTANTS_regionNameWeight, 1.0);
+        row1LocationNameLbl.setBackground(CONSTANTS_row1Background);
+
+        backButtonAndNamePane.setBackground(CONSTANTS_row1Background);
         backButtonAndNamePane.add(row1LocationNameLbl, labelLocationConstraints);
     }
 
@@ -79,15 +89,34 @@ public class SummaryPanel extends UpdateableJPanel implements ActionListener{
     }
 
     private void initForecastPane() {
+        forecastPane.setBackground(CONSTANTS_row2Background);
+
         row2RowForecastFragments = new ArrayList<>();
+
+        int gridY=0;
+
+        double dummyRowWeight = 0.5 / (CONSTANTS_daysCount);
+
+
+        GridBagConstraints dummyRowConstraints =
+                getGridBagConstraints(GridBagConstraints.BOTH, 0, gridY++, dummyRowWeight, 1.0);
+        JPanel dummy = new JPanel();
+        dummy.setBackground(CONSTANTS_row2Background);
+        forecastPane.add(dummy, dummyRowConstraints);
 
         for (int i=0; i<CONSTANTS_daysCount; i++) {
             RowForecastFragment curRow = getForecastRow();
 
             GridBagConstraints wholeThingConstraints =
-                    getGridBagConstraints(GridBagConstraints.BOTH, 0, i, CONSTANTS_rowForecastWeight, 1.0);
-
+                    getGridBagConstraints(GridBagConstraints.BOTH, 0, gridY++, CONSTANTS_rowForecastWeight, 1.0);
             forecastPane.add(curRow, wholeThingConstraints);
+
+            dummyRowConstraints =
+                    getGridBagConstraints(GridBagConstraints.BOTH, 0, gridY++, dummyRowWeight, 1.0);
+            dummy = new JPanel();
+            dummy.setBackground(CONSTANTS_row2Background);
+            forecastPane.add(dummy, dummyRowConstraints);
+
         }
     }
 
