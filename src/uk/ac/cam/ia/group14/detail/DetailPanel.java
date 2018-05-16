@@ -1,5 +1,6 @@
 package uk.ac.cam.ia.group14.detail;
 
+import javax.imageio.ImageIO;
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.MouseEvent;
@@ -7,6 +8,9 @@ import java.awt.event.MouseListener;
 import java.awt.event.MouseMotionListener;
 import java.awt.geom.Ellipse2D;
 import java.awt.geom.RoundRectangle2D;
+import java.awt.image.BufferedImage;
+import java.io.File;
+import java.io.IOException;
 import java.util.Calendar;
 import java.util.Date;
 
@@ -37,6 +41,27 @@ public class DetailPanel extends JPanel implements MouseListener,MouseMotionList
     private boolean holdButton = false;
     private boolean sigMove = false;
     private int sigMoveConst = 15;
+    private long lastClickTime=0;
+
+    //Weather param
+    private double weatherX=220;
+    private double weatherY=190;
+    private int weatherSize = 150;
+
+    //locationButton param
+    private double locButtonX=90;
+    private double locButtonY=80;
+    private int locButtonSize = 30;
+
+    //summaryButton param
+    private double summaryX=360;
+    private double summaryY=80;
+    private int summarySize = 30;
+
+    //Current Date Display param
+    private double dateX = 220;
+    private double dateY = 110;
+    private int dateFont = 24;
 
     //Date param
     private String[] weekday = {"Monday","Tuesday","Wednesday","Thursday","Friday","Saturday","Sunday"};
@@ -138,6 +163,18 @@ public class DetailPanel extends JPanel implements MouseListener,MouseMotionList
         return cal.getTime();
     }
 
+    private BufferedImage getImg(String s){
+        BufferedImage img=null;
+        try
+        {
+            img = ImageIO.read(new File(s));
+        }
+        catch (IOException e) {
+            System.out.println("Please check the file!");
+        }
+        return img;
+    }
+
     @Override
     public void paint(Graphics g){
         super.paint(g);
@@ -151,25 +188,30 @@ public class DetailPanel extends JPanel implements MouseListener,MouseMotionList
         //ScrollButton - impl
         drawCircle(g,buttonX-scrollButtonSize/2,buttonY-scrollButtonSize/2,scrollButtonSize,scrollButtonSize,scrollButtonColor,true);
 
+        //WeatherLogo
+        g.drawImage(getImg("images/weather/cloud-rain-bolt.png"),(int)(weatherX-weatherSize/2),(int)(weatherY-weatherSize/2),weatherSize,weatherSize,this);
+
+        //LocationButton
+        g.drawImage(getImg("images/general/location.png"),(int)(locButtonX-locButtonSize/2),(int)(locButtonY-locButtonSize/2),locButtonSize,locButtonSize,this);
+
+        //SummaryButton
+        g.drawImage(getImg("images/general/summary.png"),(int)(summaryX-summarySize/2),(int)(summaryY-summarySize/2),summarySize,summarySize,this);
+
         //Graph: Temperature
         Color tempColor = new Color(150, 108, 97);
-        drawRec(g,80,300,CONST_SCREENRIGHT-110, 110,tempColor,true);
+        drawRec(g,75,300,300, 120,tempColor,true);
 
         //Graph: WindSpeed
         Color windColor = new Color(105, 150, 106);
-        drawRec(g,80,450,CONST_SCREENRIGHT-110, 110,windColor,true);
+        drawRec(g,75,450,300, 120,windColor,true);
 
         //Graph: Rainfall
         Color rainColor = new Color(100, 105, 150);
-        drawRec(g,80,600,CONST_SCREENRIGHT-110, 110,rainColor,true);
+        drawRec(g,75,600,300, 120,rainColor,true);
 
         //Location
         Color locColor = new Color(148, 150, 94);
         drawRec(g,80,20,CONST_SCREENRIGHT-110, 30,locColor,false);
-
-        //WeatherLogo
-        Color weaColor = new Color(140, 88, 150);
-        drawCircle(g,150,120,140, 140,weaColor,false);
 
         //date
         String day = Integer.toString(getDay(curDate));
@@ -180,17 +222,22 @@ public class DetailPanel extends JPanel implements MouseListener,MouseMotionList
         if (hour.length()==1) hour = "0" + hour;
         String minute = Integer.toString(getMinute(curDate));
         if (minute.length()==1) minute = "0" + minute;
-        drawString(g,210-13*6,85,day+"/"+month+"   "+hour+":"+minute,24);
+        drawString(g,dateX-13*dateFont/4,dateY-dateFont-1,day+"/"+month+"   "+hour+":"+minute,dateFont);
 
         //Weekdays
-        drawString(g,210-weekday[getWeeday(curDate)-1].length()*6,110,weekday[getWeeday(curDate)-1],24);
+        drawString(g,dateX-weekday[getWeeday(curDate)-1].length()*(dateFont/4),dateY,weekday[getWeeday(curDate)-1],dateFont);
     }
 
     private void initialise() {
         addMouseListener(this);
         addMouseMotionListener(this);
-        startDate = roundDateHour(new Date (),true);
+        startDate = new Date ();
         curDate = startDate;
+        startDate = roundDateHour(startDate,true);
+        Calendar cal = Calendar.getInstance();
+        cal.setTime(startDate);
+        cal.set(Calendar.HOUR_OF_DAY,0);
+        startDate = cal.getTime();
         endDate = addDate(startDate,dateOnScroll);
         range = addDate(startDate,dateOnScroll-1);
         buttonX = scrollBarX;
@@ -203,38 +250,58 @@ public class DetailPanel extends JPanel implements MouseListener,MouseMotionList
     }
     @Override
     public void mouseClicked(MouseEvent e) {
-        System.out.println("Clicked");
-        //too slow and repeat with press
+        //double click to return to current time
+        if (inRange(e.getX(),e.getY(),buttonX,buttonY,scrollButtonSize/2)){
+            long newClickTime = new Date().getTime();
+            if ((newClickTime-lastClickTime)<350){
+                curDate = new Date();
+                buttonY = scrollBarY - scrollBarHeight / 2 + ((double) (curDate.getTime() - startDate.getTime()) / (range.getTime() - startDate.getTime())) * (scrollBarHeight);
+                lastClickTime = 0;
+                repaint();
+            } else {
+                lastClickTime = newClickTime;
+            }
+        }
     }
 
     @Override
     public void mousePressed(MouseEvent e) {
-        System.out.println("Press");
+        //Check for press on button
         if (inRange(e.getX(),e.getY(),buttonX,buttonY,scrollButtonSize/2)){
             holdButton = true;
             pressX = (double)e.getX();
             pressY = (double)e.getY();
             repaint();
         }
+        //Check for press on location button
+        else if (inRange(e.getX(),e.getY(),locButtonX,locButtonY,locButtonSize/2)){
+            System.out.println("Click on location, redirect to Location panel");
+        }
+        //Check for press on summary button
+        else if (inRange(e.getX(),e.getY(),summaryX,summaryY,summarySize/2)){
+            System.out.println("Click on summary, redirect to Summary panel");
+        }
     }
 
     @Override
     public void mouseReleased(MouseEvent e) {
-        sigMove = false;
-        sigMoveConst = 15;
         holdButton = false;
-        double incr;
-        Date targetDate = roundDateHour(curDate,false);
-        while (curDate!=targetDate){
-            incr = targetDate.getTime()-curDate.getTime();
-            if (Math.abs(incr)>30000) {
-                incr*=convergeRate;
-                curDate = addMillisecond(curDate,(int)incr);
-            } else {
-                curDate = targetDate;
+        if (sigMove) {
+            sigMove = false;
+            sigMoveConst = 15;
+            double incr;
+            Date targetDate = roundDateHour(curDate, false);
+            while (curDate != targetDate) {
+                incr = targetDate.getTime() - curDate.getTime();
+                if (Math.abs(incr) > 30000) {
+                    incr *= convergeRate;
+                    curDate = addMillisecond(curDate, (int) incr);
+                } else {
+                    curDate = targetDate;
+                }
+                buttonY = scrollBarY - scrollBarHeight / 2 + ((double) (curDate.getTime() - startDate.getTime()) / (range.getTime() - startDate.getTime())) * (scrollBarHeight);
+                repaint();
             }
-            buttonY = scrollBarY-scrollBarHeight/2+((double)(curDate.getTime()-startDate.getTime())/(range.getTime()-startDate.getTime()))*(scrollBarHeight);
-            repaint();
         }
     }
 
