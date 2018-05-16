@@ -85,8 +85,8 @@ public class MapPanel extends UpdateableJPanel {
 
     private void loadDetailedPanel(RegionID mountainRangeSelected) {
         frame.getDatum().setCurrentMountainRegion(mountainRangeSelected);
-        /* TODO: Call update on DetailedPanel
-         * TODO: Call setPanel("DetailedPanel") on MainPanel
+        /*
+         * TODO: Call changeCard("DetailedPanel") on frame
          */
     }
 
@@ -98,9 +98,6 @@ public class MapPanel extends UpdateableJPanel {
     @Override
     public void paintComponent(Graphics g) {
         /*
-         * TODO: Draw background image
-         * g.drawImage(background, 0, 0, getWidth(), getHeight(), this);
-         *
          * TODO: Add title
          *
          * TODO: Add labels to ranges
@@ -118,6 +115,5 @@ public class MapPanel extends UpdateableJPanel {
         for (RegionID region : mountainRangeButtons.keySet()) {
             graphics2D.fill(mountainRangeButtons.get(region).drawShape());
         }
-        //graphics2D.fill(mountainRangeButtons.get(RegionID.BREACONS).drawShape());
     }
 }

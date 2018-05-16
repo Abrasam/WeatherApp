@@ -12,16 +12,9 @@ public class RossTest {
     public static void main(String args[]) {
         MainFrame frame = new MainFrame();
 
-        MapPanel mapPanel = new MapPanel(frame);
+        //MapPanel mapPanel = new MapPanel(frame);
         //SummaryPanel summaryPanel = new SummaryPanel();
         //DetailPanel detailPanel = new DetailPanel();
-        frame.setContentPane(mapPanel);
-        frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        frame.pack();
-        frame.setVisible(true);
-        frame.setSize(400, 800);
-        frame.setResizable(false);
-        //frame.setMinimumSize(new Dimension(500, 500));
-        //frame.setPreferredSize(new Dimension(500, 500));
+        //frame.setContentPane(mapPanel);
     }
 }
