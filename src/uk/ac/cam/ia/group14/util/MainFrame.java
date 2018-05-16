@@ -2,6 +2,7 @@ package uk.ac.cam.ia.group14.util;
 
 import uk.ac.cam.ia.group14.detail.DetailPanel;
 import uk.ac.cam.ia.group14.rjt80.display.MapPanel;
+import uk.ac.cam.ia.group14.summary.SummaryPanel;
 
 import javax.swing.*;
 import java.util.HashMap;
