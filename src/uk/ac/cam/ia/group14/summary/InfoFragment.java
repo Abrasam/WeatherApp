@@ -23,7 +23,7 @@ public class InfoFragment extends JPanel {
         double singlePadWeight = (1.0 - totalRowsWeight)/2.0; // Put dummy rows on the top and bottom to compress labels/data
 
         double rowWeight = totalRowsWeight / (double) infoData.size();
-        System.out.println(tagLbl);
+
         if (tagLbl != null) {
             gridY = 0;
 
