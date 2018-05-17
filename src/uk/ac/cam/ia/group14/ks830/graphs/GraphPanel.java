@@ -39,7 +39,7 @@ public class GraphPanel extends JPanel {
 
     // declare colour variables
     private Color lineColor;
-    private Color pointColor = new Color(100, 100, 100, 180);
+    private Color pointColor;
     private Color gridColor = new Color(200, 200, 200, 200);
 
     // declare variables for appearance of the graph
@@ -48,10 +48,9 @@ public class GraphPanel extends JPanel {
 
     // number of marks along y-axis
     // private int numberYDivisions = 3;
-
     private double[] values;
 
-    private GraphPanel(double[] values, WeatherSlice.Parameter parameter) {
+    public GraphPanel(double[] values, WeatherSlice.Parameter parameter) {
 
     	// the graph will display the values given in the argument
     	this.values = values;
@@ -61,22 +60,27 @@ public class GraphPanel extends JPanel {
 
     	switch (parameter) {
 		    case TEMPERATURE:
-		    	//System.out.println("temperature");
-			    lineColor = new Color(150, 105, 105, 180);
+		    	System.out.println("temperature");
+			    lineColor = new Color(44, 102, 230, 180);
+			    pointColor = new Color(100, 100, 100, 180);
 		    	break;
 		    case RAIN:
-		    	//System.out.println("rain");
-			    lineColor = new Color(100, 105, 150, 180);
+		    	System.out.println("rain");
+			    lineColor = new Color(44, 102, 230, 180);
+			    pointColor = new Color(100, 100, 100, 180);
 		    	break;
 
 		    case WIND:
-		    	//System.out.println("wind");
-			    lineColor = new Color(105, 150, 105, 180);
+		    	System.out.println("wind");
+			    lineColor = new Color(44, 102, 230, 180);
+			    pointColor = new Color(100, 100, 100, 180);
 		    	break;
 
 		    default:
 			    lineColor = new Color(44, 102, 230, 180);
+			    pointColor = new Color(100, 100, 100, 180);
 	    }
+
     }
 
 	@Override
@@ -194,10 +198,10 @@ public class GraphPanel extends JPanel {
         }
     }
 
-	/*@Override
-   public Dimension getPreferredSize() {
-        return new Dimension(width, heigth);
-   }*/
+//    @Override
+//    public Dimension getPreferredSize() {
+//        return new Dimension(width, heigth);
+//    }
 
     private double getMinScore() {
         double minScore = Double.MAX_VALUE;
@@ -215,51 +219,29 @@ public class GraphPanel extends JPanel {
         return maxScore;
     }
 
-    /*public void setValues(double[] values) {
+    public void setValues(double[] values) {
         this.values = values;
         invalidate();
         this.repaint();
-    }*/
+    }
 
-    /*public double[] getValues() {
+    public double[] getValues() {
         return values;
-    }*/
+    }
 
-    public static JPanel getPanel(double[] values, WeatherSlice.Parameter parameter) {
-	    JScrollPane scrollPane = new JScrollPane(new GraphPanel(values, parameter));
-
-	    scrollPane.setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED);
-	    scrollPane.getHorizontalScrollBar().setPreferredSize(new Dimension(0, 0));
+    public GraphPanel getPanel() {
 
 
-	    scrollPane.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_NEVER);
-	    scrollPane.getVerticalScrollBar().setVisible(false);
-
-	    scrollPane.setBounds(0, 0, 300, 120);
-	    scrollPane.setWheelScrollingEnabled(true);
-	    scrollPane.setPreferredSize(new Dimension(300, 120));
-
-	    scrollPane.setBackground(new Color(1, 0, 0, 0));
-
-	    scrollPane.getViewport().setBorder(null);
-	    scrollPane.setViewportBorder(null);
-	    scrollPane.setBorder(null);
-
-
-	    JPanel contentPane = new JPanel(null);
-	    contentPane.setPreferredSize(new Dimension(300, 120));
-	    contentPane.add(scrollPane);
-
-	    return contentPane;
+	    return this;
     }
     
     private static void createAndShowGui() {
 	    double[] values = new double[120];
 	    Random random = new Random();
 	    int maxDataPoints = values.length;
-	    int maxScore = 50;
+	    int maxScore = 20;
 	    for (int i = 0; i < maxDataPoints; i++) {
-		    values[i] = ((-10 + random.nextDouble() * maxScore));
+		    values[i] = ((10 + random.nextDouble() * maxScore));
 	    }
 
 	    GraphPanel mainPanel = new GraphPanel(values, WeatherSlice.Parameter.TEMPERATURE);
