@@ -35,6 +35,7 @@ public class SummaryPanel extends UpdateableJPanel implements ActionListener{
     private final double CONSTANTS_row1Weight = 0.1, CONSTANTS_row2Weight = (1.0 - CONSTANTS_row1Weight);
 
     private RegionID stateRegion;
+    private RegionID stateData;
 
     private JPanel backButtonAndNamePane;
     private JPanel forecastPane;
