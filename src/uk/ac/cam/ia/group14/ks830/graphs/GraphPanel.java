@@ -47,18 +47,21 @@ public class GraphPanel extends JPanel {
     private static final Stroke GRAPH_STROKE = new BasicStroke(2f);
     private int pointWidth = 4;
 
+    private int startTime = 0;
+
     // number of marks along y-axis
     // private int numberYDivisions = 3;
 
     private double[] values;
 
-    private GraphPanel(double[] values, WeatherSlice.Parameter parameter) {
+    private GraphPanel(double[] values, WeatherSlice.Parameter parameter, int startTime) {
 
     	// the graph will display the values given in the argument
     	this.values = values;
+    	this.startTime = startTime;
 
     	// set the size of the graph
-    	this.setPreferredSize(new Dimension(preferredWidth, preferredHeight));
+    	this.setSize(new Dimension(preferredWidth, preferredHeight));
 
     	switch (parameter) {
 		    case TEMPERATURE:
@@ -137,7 +140,8 @@ public class GraphPanel extends JPanel {
 					g2.drawLine(x0, getHeight() - padding - labelPadding - 1 - pointWidth,
 							x1, graphPoints.get(i).y);
 					g2.setColor(Color.BLACK);
-					String xLabel = (((i%24) / 10 == 0) ? ("0" + i%24) : i%24) + ":00";
+					String xLabel = ((((i + startTime) % 24) / 10 == 0) ?
+							("0" + (i + startTime) % 24) : (i + startTime) % 24) + ":00";
 					FontMetrics metrics = g2.getFontMetrics();
 					int labelWidth = metrics.stringWidth(xLabel);
 					g2.drawString(xLabel, x0 - labelWidth / 2, y0 + metrics.getHeight() + 3);
@@ -226,8 +230,8 @@ public class GraphPanel extends JPanel {
         return values;
     }*/
 
-	public static BufferedImage getImage(double[] values, WeatherSlice.Parameter parameter) {
-		GraphPanel panel = new GraphPanel(values, parameter);
+	public static BufferedImage getImage(double[] values, WeatherSlice.Parameter parameter, int startTime) {
+		GraphPanel panel = new GraphPanel(values, parameter, startTime);
 
 		int w = panel.getWidth();
 		int h = panel.getHeight();
@@ -238,8 +242,8 @@ public class GraphPanel extends JPanel {
 		return bi;
 	}
 
-    public static JPanel getPanel(double[] values, WeatherSlice.Parameter parameter) {
-	    JScrollPane scrollPane = new JScrollPane(new GraphPanel(values, parameter));
+    public static JPanel getPanel(double[] values, WeatherSlice.Parameter parameter, int startTime) {
+	    JScrollPane scrollPane = new JScrollPane(new GraphPanel(values, parameter, startTime));
 
 	    scrollPane.setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED);
 	    scrollPane.getHorizontalScrollBar().setPreferredSize(new Dimension(0, 0));
@@ -275,7 +279,7 @@ public class GraphPanel extends JPanel {
 		    values[i] = ((-10 + random.nextDouble() * maxScore));
 	    }
 
-	    GraphPanel mainPanel = new GraphPanel(values, WeatherSlice.Parameter.TEMPERATURE);
+	    GraphPanel mainPanel = new GraphPanel(values, WeatherSlice.Parameter.TEMPERATURE, 0);
 
 	    JScrollPane scrollPane = new JScrollPane(mainPanel);
 

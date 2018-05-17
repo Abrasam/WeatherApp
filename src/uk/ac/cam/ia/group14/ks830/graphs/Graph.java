@@ -41,9 +41,10 @@ public class Graph {
 			windData[i++] = slice.getWind();
 		}
 
-		temperatureGraph = GraphPanel.getImage(temperatureData, WeatherSlice.Parameter.TEMPERATURE);
-		rainGraph = GraphPanel.getImage(rainData, WeatherSlice.Parameter.RAIN);
-		windGraph = GraphPanel.getImage(windData, WeatherSlice.Parameter.WIND);
+		temperatureGraph = GraphPanel.getImage(temperatureData, WeatherSlice.Parameter.TEMPERATURE,
+				weatherSliceData[0].getTime().getHours());
+		rainGraph = GraphPanel.getImage(rainData, WeatherSlice.Parameter.RAIN, weatherSliceData[0].getTime().getHours());
+		windGraph = GraphPanel.getImage(windData, WeatherSlice.Parameter.WIND, weatherSliceData[0].getTime().getHours());
 	}
 
 	/**
@@ -55,9 +56,9 @@ public class Graph {
 		double[] rainData = generateRandomValues();
 		double[] windData = generateRandomValues();
 
-		temperatureGraph = GraphPanel.getImage(temperatureData, WeatherSlice.Parameter.TEMPERATURE);
-		rainGraph = GraphPanel.getImage(rainData, WeatherSlice.Parameter.RAIN);
-		windGraph = GraphPanel.getImage(windData, WeatherSlice.Parameter.WIND);
+		temperatureGraph = GraphPanel.getImage(temperatureData, WeatherSlice.Parameter.TEMPERATURE, 0);
+		rainGraph = GraphPanel.getImage(rainData, WeatherSlice.Parameter.RAIN, 0);
+		windGraph = GraphPanel.getImage(windData, WeatherSlice.Parameter.WIND, 0);
 	}
 	/**
 	 * Returns the GraphPanel displaying the rain data.
