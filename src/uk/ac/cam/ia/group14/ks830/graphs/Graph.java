@@ -2,6 +2,8 @@ package uk.ac.cam.ia.group14.ks830.graphs;
 import uk.ac.cam.ia.group14.util.WeatherSlice;
 
 import javax.swing.*;
+import java.awt.*;
+import java.awt.image.BufferedImage;
 import java.util.Random;
 
 
@@ -15,9 +17,9 @@ import java.util.Random;
 
 public class Graph {
 
-	private JPanel temperatureGraph;
-	private JPanel rainGraph;
-	private JPanel windGraph;
+	private BufferedImage temperatureGraph;
+	private BufferedImage rainGraph;
+	private BufferedImage windGraph;
 
 
 	/**
@@ -39,9 +41,9 @@ public class Graph {
 			windData[i++] = slice.getWind();
 		}
 
-		temperatureGraph = GraphPanel.getPanel(temperatureData, WeatherSlice.Parameter.TEMPERATURE);
-		rainGraph = GraphPanel.getPanel(rainData, WeatherSlice.Parameter.RAIN);
-		windGraph = GraphPanel.getPanel(windData, WeatherSlice.Parameter.WIND);
+		temperatureGraph = GraphPanel.getImage(temperatureData, WeatherSlice.Parameter.TEMPERATURE);
+		rainGraph = GraphPanel.getImage(rainData, WeatherSlice.Parameter.RAIN);
+		windGraph = GraphPanel.getImage(windData, WeatherSlice.Parameter.WIND);
 	}
 
 	/**
@@ -53,51 +55,51 @@ public class Graph {
 		double[] rainData = generateRandomValues();
 		double[] windData = generateRandomValues();
 
-		temperatureGraph = GraphPanel.getPanel(temperatureData, WeatherSlice.Parameter.TEMPERATURE);
-		rainGraph = GraphPanel.getPanel(rainData, WeatherSlice.Parameter.RAIN);
-		windGraph = GraphPanel.getPanel(windData, WeatherSlice.Parameter.WIND);
+		temperatureGraph = GraphPanel.getImage(temperatureData, WeatherSlice.Parameter.TEMPERATURE);
+		rainGraph = GraphPanel.getImage(rainData, WeatherSlice.Parameter.RAIN);
+		windGraph = GraphPanel.getImage(windData, WeatherSlice.Parameter.WIND);
 	}
 	/**
 	 * Returns the GraphPanel displaying the rain data.
 	 */
-	public JPanel getRainGraph() {
+	public BufferedImage getRainGraph() {
 		return rainGraph;
 	}
 
 	/**
 	 * Returns the GraphPanel displaying the temperature data.
 	 */
-	public JPanel getTemperatureGraph() {
+	public BufferedImage getTemperatureGraph() {
 		return temperatureGraph;
 	}
 
 	/**
 	 * Returns the GraphPanel displaying the wind data.
 	 */
-	public JPanel getWindGraph() {
+	public BufferedImage getWindGraph() {
 		return windGraph;
 	}
 
 	/**
-	 * Returns the GraphPanel displaying the random rain data. Use for testing.
+	 * Returns the BufferedImage displaying the random rain data. Use for testing.
 	 */
-	public static JPanel getRandomRainGraph() {
+	public static BufferedImage getRandomRainGraph() {
 		Graph graph = new Graph();
 		return graph.rainGraph;
 	}
 
 	/**
-	 * Returns the GraphPanel displaying the random temperature data. Use for testing.
+	 * Returns the BufferedImage displaying the random temperature data. Use for testing.
 	 */
-	public static JPanel getRandomTemperatureGraph() {
+	public static BufferedImage getRandomTemperatureGraph() {
 		Graph graph = new Graph();
 		return graph.temperatureGraph;
 	}
 
 	/**
-	 * Returns the GraphPanel displaying the random wind data. Use for testing.
+	 * Returns the BufferedImage displaying the random wind data. Use for testing.
 	 */
-	public static JPanel getRandomWindGraph() {
+	public static BufferedImage getRandomWindGraph() {
 		Graph graph = new Graph();
 		return graph.windGraph;
 	}

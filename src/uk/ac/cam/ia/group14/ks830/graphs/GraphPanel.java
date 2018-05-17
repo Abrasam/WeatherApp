@@ -10,6 +10,7 @@ import java.awt.Graphics2D;
 import java.awt.Point;
 import java.awt.RenderingHints;
 import java.awt.Stroke;
+import java.awt.image.BufferedImage;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
@@ -224,6 +225,18 @@ public class GraphPanel extends JPanel {
     /*public double[] getValues() {
         return values;
     }*/
+
+	public static BufferedImage getImage(double[] values, WeatherSlice.Parameter parameter) {
+		GraphPanel panel = new GraphPanel(values, parameter);
+
+		int w = panel.getWidth();
+		int h = panel.getHeight();
+		BufferedImage bi = new BufferedImage(w, h, BufferedImage.TYPE_INT_RGB);
+		Graphics2D g = bi.createGraphics();
+		panel.paint(g);
+		g.dispose();
+		return bi;
+	}
 
     public static JPanel getPanel(double[] values, WeatherSlice.Parameter parameter) {
 	    JScrollPane scrollPane = new JScrollPane(new GraphPanel(values, parameter));
