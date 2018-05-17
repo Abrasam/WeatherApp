@@ -20,14 +20,14 @@ public class SummaryUtil {
         return ret;
     }
 
-    public int getDayNumber(Date date) {
+    public static int getDayNumber(Date date) {
 
         SimpleDateFormat simpleDateFormat = new SimpleDateFormat("u");
         int dayOfWeek = Integer.parseInt( simpleDateFormat.format(date) );
 
         return dayOfWeek;
     }
-    public String getDayOfWeekString(Date date) {
+    public static String getDayOfWeekString(Date date) {
         int dayOfWeek = getDayNumber(date);
         while (dayOfWeek < 1) dayOfWeek += 7;
         while (dayOfWeek > 7) dayOfWeek -= 7;
@@ -35,7 +35,7 @@ public class SummaryUtil {
         return CONSTANTS_weekStrings[dayOfWeek];
     }
 
-    public String getDayOfWeekString(int dayOfWeek) {
+    public static String getDayOfWeekString(int dayOfWeek) {
         while (dayOfWeek < 1) dayOfWeek += 7;
         while (dayOfWeek > 7) dayOfWeek -= 7;
 

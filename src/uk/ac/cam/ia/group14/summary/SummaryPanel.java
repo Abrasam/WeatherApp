@@ -1,10 +1,8 @@
 package uk.ac.cam.ia.group14.summary;
 
 import uk.ac.cam.ia.group14.detail.DetailPanel;
-import uk.ac.cam.ia.group14.util.IconBasket;
-import uk.ac.cam.ia.group14.util.MainFrame;
-import uk.ac.cam.ia.group14.util.RegionID;
-import uk.ac.cam.ia.group14.util.UpdateableJPanel;
+import uk.ac.cam.ia.group14.sjs252.WeatherFetcher;
+import uk.ac.cam.ia.group14.util.*;
 
 import javax.swing.*;
 import java.awt.*;
@@ -35,7 +33,7 @@ public class SummaryPanel extends UpdateableJPanel implements ActionListener{
     private final double CONSTANTS_row1Weight = 0.1, CONSTANTS_row2Weight = (1.0 - CONSTANTS_row1Weight);
 
     private RegionID stateRegion;
-    private RegionID stateData;
+    private Region stateData;
 
     private JPanel backButtonAndNamePane;
     private JPanel forecastPane;
@@ -151,10 +149,27 @@ public class SummaryPanel extends UpdateableJPanel implements ActionListener{
         initForecastPane();
 
         row1BackBtn.addActionListener(this);
+
+        stateRegion = mainFrame.getDatum().getCurrentMountainRegion();
+        update();
     }
 
+    private void updateRowFragments() {
+
+        int dayOfWeek = SummaryUtil.getDayNumber( stateData.getDays()[0].getTime() );
+
+        for (int i=0; i<CONSTANTS_daysCount; i++) {
+            RowForecastFragment row = row2RowForecastFragments.get(i);
+
+            row.setDayOfWeekString( SummaryUtil.getDayOfWeekString(dayOfWeek+i) );
+
+        }
+    }
 
     public void update() {
+        stateData = WeatherFetcher.getInstance().getRegion(stateRegion);
+        row1LocationNameLbl.setText(stateData.getName());
+
 
     }
 

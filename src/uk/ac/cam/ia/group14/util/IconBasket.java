@@ -50,19 +50,24 @@ public class IconBasket {
         path = constInitDir + path + constExt;
         return path;
     }
-
-    public static ImageIcon getIcon(boolean isDay, boolean hasClouds, boolean hasSun, boolean hasRain, boolean hasSnow, boolean hasBolt) {
-        String path = getPath(isDay, hasClouds, hasSun, hasRain, hasSnow, hasBolt);
-
-        ImageIcon icon = null;
-        icon = new ImageIcon(path);
-
-        return icon;
+    private static String getPath(boolean isDay, WeatherSlice.Status status) {
+        switch (status) {
+            case SUN:
+                return getPath(isDay, false, true, false, false, false);
+            case CLOUDS:
+                return getPath(isDay, true, false, false, false, false);
+            case RAIN:
+                return getPath(isDay, true, false, true, false, false);
+            case THUNDERSTORM:
+                return getPath(isDay, true, false, true, false, true);
+            case SNOW:
+                return getPath(isDay, true, false, false, true, false);
+            default:
+                return getPath(isDay, true, false, false, false, false);
+        }
     }
 
-    public static ImageIcon getResizedIcon(int x, int y, boolean isDay, boolean hasClouds, boolean hasSun, boolean hasRain, boolean hasSnow, boolean hasBolt) {
-        String path = getPath(isDay, hasClouds, hasSun, hasRain, hasSnow, hasBolt);
-
+    private static BufferedImage getImageFromPath(String path) {
         BufferedImage img = null;
         try {
             img = ImageIO.read(new File(path));
@@ -70,38 +75,62 @@ public class IconBasket {
             img = constDefaultImage;
         }
 
-        img = ResizeImage.resize(img, x, y);
-
-        return new ImageIcon(img);
+        return img;
     }
 
     public static BufferedImage getImage(boolean isDay, boolean hasClouds, boolean hasSun, boolean hasRain, boolean hasSnow, boolean hasBolt) {
         String path = getPath(isDay, hasClouds, hasSun, hasRain, hasSnow, hasBolt);
 
-        BufferedImage img = null;
-        try {
-            img = ImageIO.read(new File(path));
-        } catch (IOException e) {
-            img = constDefaultImage;
-        }
+        BufferedImage img = getImageFromPath(path);
 
         return img;
     }
-
     public static BufferedImage getResizedImage(int x, int y, boolean isDay, boolean hasClouds, boolean hasSun, boolean hasRain, boolean hasSnow, boolean hasBolt) {
         String path = getPath(isDay, hasClouds, hasSun, hasRain, hasSnow, hasBolt);
 
-        BufferedImage img = null;
-        try {
-            img = ImageIO.read(new File(path));
-        } catch (IOException e) {
-            img = constDefaultImage;
-        }
-
+        BufferedImage img = getImageFromPath(path);
         img = ResizeImage.resize(img, x, y);
+        return img;
+    }
+    public static BufferedImage getResizedImage(int x, int y, boolean isDay, WeatherSlice.Status status) {
+        String path = getPath(isDay, status);
 
+        BufferedImage img = getImageFromPath(path);
+        img = ResizeImage.resize(img, x, y);
         return img;
     }
 
 
+    public static ImageIcon getIcon(boolean isDay, boolean hasClouds, boolean hasSun, boolean hasRain, boolean hasSnow, boolean hasBolt) {
+        String path = getPath(isDay, hasClouds, hasSun, hasRain, hasSnow, hasBolt);
+
+        ImageIcon icon = new ImageIcon(path);
+
+        return icon;
+    }
+    public static ImageIcon getIcon(boolean isDay, WeatherSlice.Status status) {
+        String path = getPath(isDay, status);
+
+        BufferedImage img = getImageFromPath(path);
+        return new ImageIcon(img);
+    }
+
+    public static ImageIcon getResizedIcon(int x, int y, boolean isDay, boolean hasClouds, boolean hasSun, boolean hasRain, boolean hasSnow, boolean hasBolt) {
+        String path = getPath(isDay, hasClouds, hasSun, hasRain, hasSnow, hasBolt);
+
+        BufferedImage img = getImageFromPath(path);
+
+        img = ResizeImage.resize(img, x, y);
+
+        return new ImageIcon(img);
+    }
+    public static ImageIcon getResizedIcon(int x, int y, boolean isDay, WeatherSlice.Status status) {
+        String path = getPath(isDay, status);
+
+        System.out.println(path);
+
+        BufferedImage img = getImageFromPath(path);
+        img = ResizeImage.resize(img, x, y);
+        return new ImageIcon(img);
+    }
 }

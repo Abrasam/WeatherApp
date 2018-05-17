@@ -84,6 +84,10 @@ public class RowForecastFragment extends JPanel{
         updateAll();
     }
 
+    public void setDayOfWeekString(String dayOfWeekString) {
+        this.dayOfWeekString = dayOfWeekString;
+        dayOfWeekLbl.setText(dayOfWeekString);
+    }
 
 
 }
