@@ -26,7 +26,6 @@ public class SummaryPanel extends UpdateableJPanel implements ActionListener{
     private final String defaultFontName = "Ariel";
     private final Font CONSTANTS_row1LocationNameFont = new Font(defaultFontName, Font.PLAIN, 18);
     private final Font CONSTANTS_row1BackButtonFont = new Font(defaultFontName, Font.PLAIN, 18);
-    private final String[] CONSTANTS_weekStrings = {"MON", "TUE", "WED", "THU", "FRI", "SAT", "SUN"};
 
     private final int CONSTANTS_daysCount = 5, CONSTANTS_forecastIconSize = 100;
 
