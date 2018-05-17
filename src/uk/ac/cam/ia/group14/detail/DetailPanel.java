@@ -1,7 +1,14 @@
 package uk.ac.cam.ia.group14.detail;
 
+import sun.applet.Main;
+import uk.ac.cam.ia.group14.ks830.graphs.Graph;
+import uk.ac.cam.ia.group14.rjt80.display.MapPanel;
+import uk.ac.cam.ia.group14.summary.SummaryPanel;
+import uk.ac.cam.ia.group14.util.IconBasket;
+import uk.ac.cam.ia.group14.util.MainFrame;
+import uk.ac.cam.ia.group14.util.UpdateableJPanel;
+
 import javax.imageio.ImageIO;
-import javax.swing.*;
 import java.awt.*;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
@@ -14,7 +21,7 @@ import java.io.IOException;
 import java.util.Calendar;
 import java.util.Date;
 
-public class DetailPanel extends JPanel implements MouseListener,MouseMotionListener {
+public class DetailPanel extends UpdateableJPanel implements MouseListener,MouseMotionListener {
 
     public static String cardName = "DetailPanel";
     private static boolean init = true;
@@ -45,8 +52,8 @@ public class DetailPanel extends JPanel implements MouseListener,MouseMotionList
 
     //Weather param
     private double weatherX=220;
-    private double weatherY=190;
-    private int weatherSize = 150;
+    private double weatherY=180;
+    private int weatherSize = 125;
 
     //locationButton param
     private double locButtonX=90;
@@ -75,6 +82,18 @@ public class DetailPanel extends JPanel implements MouseListener,MouseMotionList
     private Double pressX=-999.0;
     private Double pressY=-999.0;
     private double convergeRate = 0.2;
+
+    //Stored graph
+    private BufferedImage tempGraph;
+    private BufferedImage windGraph;
+    private BufferedImage rainGraph;
+    private BufferedImage attiGraph;
+
+    private MainFrame mf;
+
+    public DetailPanel(MainFrame mf){
+        this.mf = mf;
+    }
 
     private void drawLine(Graphics g,double x, double y, double w, double h, Color c){
         Graphics2D g2d = (Graphics2D) g.create();
@@ -107,6 +126,12 @@ public class DetailPanel extends JPanel implements MouseListener,MouseMotionList
     private void drawString(Graphics g,double x, double y, String str, int size) {
         g.setFont(new Font("Courier New", Font.BOLD, size));
         g.drawString(str, (int)x, (int)y);
+    }
+
+    private void drawImg(Graphics g, BufferedImage bi,double x, double y, double w, double h,double portion) {
+        Graphics2D g2d = (Graphics2D) g.create();
+        //g.drawImage(bi,75,250,3000, 120,this);
+        g2d.drawImage(bi,(int)x,(int)y,(int)(x+w), (int)(y+h),(int)(3000*portion),(int)0,(int)(w+3000*portion),(int)(h),this);
     }
 
     private Date roundDateHour(Date cur, boolean roundDown){
@@ -188,8 +213,10 @@ public class DetailPanel extends JPanel implements MouseListener,MouseMotionList
         //ScrollButton - impl
         drawCircle(g,buttonX-scrollButtonSize/2,buttonY-scrollButtonSize/2,scrollButtonSize,scrollButtonSize,scrollButtonColor,true);
 
+
         //WeatherLogo
-        g.drawImage(getImg("images/weather/cloud-rain-bolt.png"),(int)(weatherX-weatherSize/2),(int)(weatherY-weatherSize/2),weatherSize,weatherSize,this);
+        //g.drawImage(getImg("images/weather/cloud-rain-bolt.png"),(int)(weatherX-weatherSize/2),(int)(weatherY-weatherSize/2),weatherSize,weatherSize,this);
+        g.drawImage(IconBasket.getImage(true, true, true, false, false, false),(int)(weatherX-weatherSize/2),(int)(weatherY-weatherSize/2),weatherSize,weatherSize,this);
 
         //LocationButton
         g.drawImage(getImg("images/general/location.png"),(int)(locButtonX-locButtonSize/2),(int)(locButtonY-locButtonSize/2),locButtonSize,locButtonSize,this);
@@ -198,19 +225,23 @@ public class DetailPanel extends JPanel implements MouseListener,MouseMotionList
         g.drawImage(getImg("images/general/summary.png"),(int)(summaryX-summarySize/2),(int)(summaryY-summarySize/2),summarySize,summarySize,this);
 
         //Graph: Temperature
-        Color tempColor = new Color(150, 108, 97);
-        drawRec(g,75,300,300, 120,tempColor,true);
+        Color tempColor = new Color(150, 105, 105);
+        drawImg(g,tempGraph,75,250,300,120,((double)(curDate.getTime()-startDate.getTime())/(range.getTime()-startDate.getTime())));
 
         //Graph: WindSpeed
-        Color windColor = new Color(105, 150, 106);
-        drawRec(g,75,450,300, 120,windColor,true);
+        Color windColor = new Color(105, 150, 105);
+        drawImg(g,windGraph,75,375,300,120,((double)(curDate.getTime()-startDate.getTime())/(range.getTime()-startDate.getTime())));
 
         //Graph: Rainfall
         Color rainColor = new Color(100, 105, 150);
-        drawRec(g,75,600,300, 120,rainColor,true);
+        drawImg(g,rainGraph,75,500,300,120,((double)(curDate.getTime()-startDate.getTime())/(range.getTime()-startDate.getTime())));
+
+        //Graph: Temperature
+        Color tempAttiColor = new Color(150, 105, 105);
+        drawImg(g,attiGraph,75,625,300,120,((double)(curDate.getTime()-startDate.getTime())/(range.getTime()-startDate.getTime())));
 
         //Location
-        Color locColor = new Color(148, 150, 94);
+        Color locColor = new Color(150, 150, 105);
         drawRec(g,80,20,CONST_SCREENRIGHT-110, 30,locColor,false);
 
         //date
@@ -243,6 +274,10 @@ public class DetailPanel extends JPanel implements MouseListener,MouseMotionList
         buttonX = scrollBarX;
         buttonY = scrollBarY-scrollBarHeight/2+((double)(curDate.getTime()-startDate.getTime())/(range.getTime()-startDate.getTime()))*(scrollBarHeight);
         init = false;
+        tempGraph = Graph.getRandomTemperatureGraph();
+        windGraph = Graph.getRandomWindGraph();
+        rainGraph = Graph.getRandomRainGraph();
+        attiGraph = Graph.getRandomTemperatureGraph();
     }
 
     private boolean inRange(double x1,double y1, double x2, double y2, double range){
@@ -276,10 +311,12 @@ public class DetailPanel extends JPanel implements MouseListener,MouseMotionList
         //Check for press on location button
         else if (inRange(e.getX(),e.getY(),locButtonX,locButtonY,locButtonSize/2)){
             System.out.println("Click on location, redirect to Location panel");
+            mf.changeCard(MapPanel.cardName);
         }
         //Check for press on summary button
         else if (inRange(e.getX(),e.getY(),summaryX,summaryY,summarySize/2)){
             System.out.println("Click on summary, redirect to Summary panel");
+            mf.changeCard(SummaryPanel.cardName);
         }
     }
 
@@ -337,5 +374,10 @@ public class DetailPanel extends JPanel implements MouseListener,MouseMotionList
 
     @Override
     public void mouseMoved(MouseEvent e) {
+    }
+
+    @Override
+    public void update() {
+
     }
 }
