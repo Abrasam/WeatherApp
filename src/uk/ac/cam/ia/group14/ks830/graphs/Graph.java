@@ -1,6 +1,9 @@
 package uk.ac.cam.ia.group14.ks830.graphs;
 import uk.ac.cam.ia.group14.util.WeatherSlice;
 
+import javax.swing.*;
+import java.util.Random;
+
 
 /**
  * {@link Graph} class receives the data from arrays of {@link WeatherSlice}s
@@ -12,9 +15,9 @@ import uk.ac.cam.ia.group14.util.WeatherSlice;
 
 public class Graph {
 
-	private GraphPanel temperatureGraph;
-	private GraphPanel rainGraph;
-	private GraphPanel windGraph;
+	private JPanel temperatureGraph;
+	private JPanel rainGraph;
+	private JPanel windGraph;
 
 
 	/**
@@ -36,29 +39,58 @@ public class Graph {
 			windData[i++] = slice.getWind();
 		}
 
-		temperatureGraph = new GraphPanel(temperatureData, WeatherSlice.Parameter.TEMPERATURE);
-		rainGraph = new GraphPanel(rainData, WeatherSlice.Parameter.RAIN);
-		windGraph = new GraphPanel(windData, WeatherSlice.Parameter.WIND);
+		temperatureGraph = GraphPanel.getPanel(temperatureData, WeatherSlice.Parameter.TEMPERATURE);
+		rainGraph = GraphPanel.getPanel(rainData, WeatherSlice.Parameter.RAIN);
+		windGraph = GraphPanel.getPanel(windData, WeatherSlice.Parameter.WIND);
 	}
 
 	/**
+	 * The Graph to generate random values for data. Used for testing.
+	 */
+	public Graph() {
+		// extract weatherSliceData into the separate temperature, rain, wind data
+		double[] temperatureData = generateRandomValues();
+		double[] rainData = generateRandomValues();
+		double[] windData = generateRandomValues();
+
+		temperatureGraph = GraphPanel.getPanel(temperatureData, WeatherSlice.Parameter.TEMPERATURE);
+		rainGraph = GraphPanel.getPanel(rainData, WeatherSlice.Parameter.RAIN);
+		windGraph = GraphPanel.getPanel(windData, WeatherSlice.Parameter.WIND);
+	}
+	/**
 	 * Returns the GraphPanel displaying the rain data
 	 */
-	public GraphPanel getRainGraph() {
+	public JPanel getRainGraph() {
 		return rainGraph;
 	}
 
 	/**
 	 * Returns the GraphPanel displaying the temperature data
 	 */
-	public GraphPanel getTemperatureGraph() {
+	public JPanel getTemperatureGraph() {
 		return temperatureGraph;
 	}
 
 	/**
 	 * Returns the GraphPanel displaying the wind data
 	 */
-	public GraphPanel getWindGraph() {
+	public JPanel getWindGraph() {
 		return windGraph;
 	}
+
+	/**
+	 * private method for random value generation, to be used for testing
+	 */
+	private double[] generateRandomValues() {
+		double[] values = new double[120];
+		Random random = new Random();
+		int maxDataPoints = values.length;
+		int maxScore = 50;
+		for (int i = 0; i < maxDataPoints; i++) {
+			values[i] = ((-10 + random.nextDouble() * maxScore));
+		}
+
+		return values;
+	}
 }
+
