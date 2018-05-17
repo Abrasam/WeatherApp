@@ -46,10 +46,8 @@ public class WeatherFetcher implements Runnable {
                 URL urlHourly = new URL(String.format(QUERY, coordinates[0], coordinates[1]));
                 String hourlyJSON = readUrl(urlHourly);
                 WeatherSlice[][] data = load(hourlyJSON);
-                WeatherSlice[] hourly = data[0];
-                WeatherSlice[] daily = data[1];
                 //System.out.print(hourlyJSON); tee hee hee
-                regions.put(r, new Region(r.name, hourly, daily));
+                regions.put(r, new Region(r.name, data[0], data[1]));
                 BufferedWriter writer = new BufferedWriter(new FileWriter("saves/" + r.name + ".txt"));
                 writer.write(hourlyJSON);
                 writer.close();
@@ -63,7 +61,8 @@ public class WeatherFetcher implements Runnable {
                         buffer.append((char)read);
                     }
                     String json = buffer.toString();
-                    load(json);
+                    WeatherSlice[][] data = load(json);
+                    regions.put(r, new Region(r.name, data[0], data[1]));
                 } catch (IOException e1) {
                     //File fails when it comes to existing, so no cached data found.
                 }
