@@ -55,6 +55,12 @@ public class DetailPanel extends UpdateableJPanel implements MouseListener,Mouse
     private double weatherY=180;
     private int weatherSize = 125;
 
+    //Location param
+    private Color locColor = new Color(75, 50, 0);
+    private double locationX = 200;
+    private double locationY = 85;
+    private double locationFontSize = 40;
+
     //locationButton param
     private double locButtonX=90;
     private double locButtonY=80;
@@ -66,9 +72,9 @@ public class DetailPanel extends UpdateableJPanel implements MouseListener,Mouse
     private int summarySize = 30;
 
     //Current Date Display param
-    private double dateX = 220;
+    private double dateX = 215;
     private double dateY = 110;
-    private int dateFont = 24;
+    private int dateFontSize = 24;
 
     //Date param
     private String[] weekday = {"Monday","Tuesday","Wednesday","Thursday","Friday","Saturday","Sunday"};
@@ -88,6 +94,14 @@ public class DetailPanel extends UpdateableJPanel implements MouseListener,Mouse
     private BufferedImage windGraph;
     private BufferedImage rainGraph;
     private BufferedImage attiGraph;
+
+    //Graph param
+    private double graphX = 225;
+    private double graphY = 310;
+    private double graphW = 300;
+    private double graphH = 120;
+    private double graphSpacing = 5;
+    private double graphSourceW = 3000;
 
     private MainFrame mf;
 
@@ -123,15 +137,21 @@ public class DetailPanel extends UpdateableJPanel implements MouseListener,Mouse
         if (fill) g2d.fill(cir);
     }
 
-    private void drawString(Graphics g,double x, double y, String str, int size) {
+    private void drawString(Graphics g,double x, double y, String str, int size, Color c, boolean underlined) {
+        if (c!=null){
+            g.setColor(c);
+        }
         g.setFont(new Font("Courier New", Font.BOLD, size));
         g.drawString(str, (int)x, (int)y);
+        if (underlined){
+            drawLine(g,x-1,y+3,str.length()*size*0.6,2,g.getColor());
+        }
     }
 
-    private void drawImg(Graphics g, BufferedImage bi,double x, double y, double w, double h,double portion) {
+    private void drawImg(Graphics g, BufferedImage bi,double x, double y, double w, double h, double sourceW,double portion) {
         Graphics2D g2d = (Graphics2D) g.create();
         //g.drawImage(bi,75,250,3000, 120,this);
-        g2d.drawImage(bi,(int)x,(int)y,(int)(x+w), (int)(y+h),(int)(3000*portion),(int)0,(int)(w+3000*portion),(int)(h),this);
+        g2d.drawImage(bi,(int)x,(int)y,(int)(x+w), (int)(y+h),(int)(sourceW*portion),(int)0,(int)(w+sourceW*portion),(int)(h),this);
     }
 
     private Date roundDateHour(Date cur, boolean roundDown){
@@ -224,25 +244,38 @@ public class DetailPanel extends UpdateableJPanel implements MouseListener,Mouse
         //SummaryButton
         g.drawImage(getImg("images/general/summary.png"),(int)(summaryX-summarySize/2),(int)(summaryY-summarySize/2),summarySize,summarySize,this);
 
+        //Graph Section Ratio Calculation
+        double graphSection = ((double)(curDate.getTime()-startDate.getTime())/(range.getTime()-startDate.getTime()))-graphW/(graphSourceW*2);
+        graphSection += 0.008;//Make the section more center
+        if (graphSection<0){
+            graphSection=0;
+        } else if (graphSection>(1-graphW/graphSourceW)){
+            graphSection = 1-graphW/graphSourceW;
+        }
         //Graph: Temperature
         Color tempColor = new Color(150, 105, 105);
-        drawImg(g,tempGraph,75,250,300,120,((double)(curDate.getTime()-startDate.getTime())/(range.getTime()-startDate.getTime())));
+        drawImg(g,tempGraph,graphX-graphW/2,graphY-graphH/2,graphW,graphH,graphSourceW,graphSection);
+//        drawLine(g,75,250,1,150,Color.BLACK);
+//        drawLine(g,104,250,1,150,Color.RED);
+//        drawLine(g,375,250,1,150,Color.BLACK);
+//        drawLine(g,355,250,1,150,Color.BLUE);
 
         //Graph: WindSpeed
         Color windColor = new Color(105, 150, 105);
-        drawImg(g,windGraph,75,375,300,120,((double)(curDate.getTime()-startDate.getTime())/(range.getTime()-startDate.getTime())));
+        drawImg(g,windGraph,graphX-graphW/2,graphY-graphH/2+(graphH+graphSpacing)*1,graphW,graphH,graphSourceW,graphSection);
 
         //Graph: Rainfall
         Color rainColor = new Color(100, 105, 150);
-        drawImg(g,rainGraph,75,500,300,120,((double)(curDate.getTime()-startDate.getTime())/(range.getTime()-startDate.getTime())));
+        drawImg(g,rainGraph,graphX-graphW/2,graphY-graphH/2+(graphH+graphSpacing)*2,graphW,graphH,graphSourceW,graphSection);
 
         //Graph: Temperature
         Color tempAttiColor = new Color(150, 105, 105);
-        drawImg(g,attiGraph,75,625,300,120,((double)(curDate.getTime()-startDate.getTime())/(range.getTime()-startDate.getTime())));
+        drawImg(g,attiGraph,graphX-graphW/2,graphY-graphH/2+(graphH+graphSpacing)*3,graphW,graphH,graphSourceW,graphSection);
 
         //Location
-        Color locColor = new Color(150, 150, 105);
-        drawRec(g,80,20,CONST_SCREENRIGHT-110, 30,locColor,false);
+        //drawRec(g,80,20,CONST_SCREENRIGHT-110, 30,locColor,false);
+        String regionName = mf.getDatum().getCurrentMountainRegion().toString();
+        drawString(g,locationX-regionName.length()*locationFontSize/4,locationY-locationFontSize-1,regionName,(int)locationFontSize,locColor,true);
 
         //date
         String day = Integer.toString(getDay(curDate));
@@ -253,10 +286,18 @@ public class DetailPanel extends UpdateableJPanel implements MouseListener,Mouse
         if (hour.length()==1) hour = "0" + hour;
         String minute = Integer.toString(getMinute(curDate));
         if (minute.length()==1) minute = "0" + minute;
-        drawString(g,dateX-13*dateFont/4,dateY-dateFont-1,day+"/"+month+"   "+hour+":"+minute,dateFont);
+        drawString(g,dateX-13*dateFontSize/4,dateY-dateFontSize-1,day+"/"+month+"   "+hour+":"+minute,dateFontSize,null,false);
 
         //Weekdays
-        drawString(g,dateX-weekday[getWeeday(curDate)-1].length()*(dateFont/4),dateY,weekday[getWeeday(curDate)-1],dateFont);
+        drawString(g,dateX-weekday[getWeeday(curDate)-1].length()*(dateFontSize/4),dateY,weekday[getWeeday(curDate)-1],dateFontSize,null,false);
+    }
+
+    private void trimGraph(){
+        tempGraph = tempGraph.getSubimage(15,0,2973,120);
+        windGraph = windGraph.getSubimage(15,0,2973,120);
+        rainGraph = rainGraph.getSubimage(15,0,2973,120);
+        attiGraph = attiGraph.getSubimage(15,0,2973,120);
+        graphSourceW = 2973;
     }
 
     private void initialise() {
@@ -278,6 +319,7 @@ public class DetailPanel extends UpdateableJPanel implements MouseListener,Mouse
         windGraph = Graph.getRandomWindGraph();
         rainGraph = Graph.getRandomRainGraph();
         attiGraph = Graph.getRandomTemperatureGraph();
+        trimGraph();
     }
 
     private boolean inRange(double x1,double y1, double x2, double y2, double range){
@@ -288,7 +330,7 @@ public class DetailPanel extends UpdateableJPanel implements MouseListener,Mouse
         //double click to return to current time
         if (inRange(e.getX(),e.getY(),buttonX,buttonY,scrollButtonSize/2)){
             long newClickTime = new Date().getTime();
-            if ((newClickTime-lastClickTime)<350){
+            if ((newClickTime-lastClickTime)<500){
                 curDate = new Date();
                 buttonY = scrollBarY - scrollBarHeight / 2 + ((double) (curDate.getTime() - startDate.getTime()) / (range.getTime() - startDate.getTime())) * (scrollBarHeight);
                 lastClickTime = 0;
