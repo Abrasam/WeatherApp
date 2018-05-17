@@ -3,13 +3,15 @@
   <component name="ChangeListManager">
     <list default="true" id="f0fd33b6-a506-499a-90f3-6ac613fc4ddb" name="Default" comment="Try and create detail page java">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Beacons.txt" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Cairngorms.txt" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Grampians.txt" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Mournes.txt" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Pennines.txt" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Snowdonia.txt" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/production/WeatherApp/uk/ac/cam/ia/group14/ks830/graphs/Graph.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/production/WeatherApp/uk/ac/cam/ia/group14/ks830/graphs/Graph.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/production/WeatherApp/uk/ac/cam/ia/group14/ks830/graphs/GraphPanel$1.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/production/WeatherApp/uk/ac/cam/ia/group14/ks830/graphs/GraphPanel$1.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/production/WeatherApp/uk/ac/cam/ia/group14/ks830/graphs/GraphPanel$2.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/production/WeatherApp/uk/ac/cam/ia/group14/ks830/graphs/GraphPanel$2.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/production/WeatherApp/uk/ac/cam/ia/group14/ks830/graphs/GraphPanel.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/production/WeatherApp/uk/ac/cam/ia/group14/ks830/graphs/GraphPanel.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/production/WeatherApp/uk/ac/cam/ia/group14/sjs252/WeatherFetcher.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/production/WeatherApp/uk/ac/cam/ia/group14/sjs252/WeatherFetcher.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/production/WeatherApp/uk/ac/cam/ia/group14/util/Region.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/production/WeatherApp/uk/ac/cam/ia/group14/util/Region.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/saves/Beacons.txt" beforeDir="false" afterPath="$PROJECT_DIR$/saves/Beacons.txt" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/uk/ac/cam/ia/group14/sjs252/WeatherFetcher.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/uk/ac/cam/ia/group14/sjs252/WeatherFetcher.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/uk/ac/cam/ia/group14/util/Region.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/uk/ac/cam/ia/group14/util/Region.java" afterDir="false" />
     </list>
     <ignored path="$PROJECT_DIR$/out/" />
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
@@ -24,8 +26,8 @@
       <file leaf-file-name="WeatherFetcher.java" pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/src/uk/ac/cam/ia/group14/sjs252/WeatherFetcher.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="484">
-              <caret line="48" column="59" selection-start-line="48" selection-start-column="59" selection-end-line="48" selection-end-column="59" />
+            <state relative-caret-position="304">
+              <caret line="128" column="125" selection-start-line="128" selection-start-column="125" selection-end-line="128" selection-end-column="125" />
               <folding>
                 <element signature="imports" expanded="true" />
                 <element signature="e#1131#1132#0" expanded="true" />
@@ -60,8 +62,8 @@
       <file leaf-file-name="Region.java" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/src/uk/ac/cam/ia/group14/util/Region.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="90">
-              <caret line="6" column="18" selection-start-line="6" selection-start-column="18" selection-end-line="6" selection-end-column="18" />
+            <state relative-caret-position="345">
+              <caret line="29" column="18" selection-start-line="29" selection-start-column="18" selection-end-line="29" selection-end-column="18" />
             </state>
           </provider>
         </entry>
@@ -85,13 +87,17 @@
       </list>
     </option>
   </component>
+  <component name="FindInProjectRecents">
+    <findStrings>
+      <find>weather =</find>
+    </findStrings>
+  </component>
   <component name="Git.Settings">
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
   </component>
   <component name="IdeDocumentHistory">
     <option name="CHANGED_PATHS">
       <list>
-        <option value="$PROJECT_DIR$/src/uk/ac/cam/ia/group14/util/Region.java" />
         <option value="$PROJECT_DIR$/src/uk/ac/cam/ia/group14/detail/Detail.java" />
         <option value="$PROJECT_DIR$/src/uk/ac/cam/ia/group14/util/Updateable.java" />
         <option value="$PROJECT_DIR$/src/uk/ac/cam/ia/group14/util/InterpanelData.java" />
@@ -102,6 +108,7 @@
         <option value="$PROJECT_DIR$/src/uk/ac/cam/ia/group14/testing/RossTest.java" />
         <option value="$PROJECT_DIR$/src/uk/ac/cam/ia/group14/util/MainFrame.java" />
         <option value="$PROJECT_DIR$/src/uk/ac/cam/ia/group14/util/WeatherSlice.java" />
+        <option value="$PROJECT_DIR$/src/uk/ac/cam/ia/group14/util/Region.java" />
         <option value="$PROJECT_DIR$/src/uk/ac/cam/ia/group14/sjs252/WeatherFetcher.java" />
       </list>
     </option>
@@ -465,13 +472,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/uk/ac/cam/ia/group14/util/Region.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="90">
-          <caret line="6" column="18" selection-start-line="6" selection-start-column="18" selection-end-line="6" selection-end-column="18" />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/src/uk/ac/cam/ia/group14/detail/Detail.java" />
     <entry file="file://$PROJECT_DIR$/src/uk/ac/cam/ia/group14/sam/WeatherFetcher.java" />
     <entry file="file://$PROJECT_DIR$/src/uk/ac/cam/ia/group14/util/UpdateableJPanel.java">
@@ -545,10 +545,10 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/uk/ac/cam/ia/group14/util/MainFrame.java">
+    <entry file="file://$PROJECT_DIR$/src/uk/ac/cam/ia/group14/util/Region.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="43">
-          <caret line="3" selection-start-line="3" selection-end-line="3" />
+        <state relative-caret-position="345">
+          <caret line="29" column="18" selection-start-line="29" selection-start-column="18" selection-end-line="29" selection-end-column="18" />
         </state>
       </provider>
     </entry>
@@ -559,10 +559,17 @@
         </state>
       </provider>
     </entry>
+    <entry file="file://$PROJECT_DIR$/src/uk/ac/cam/ia/group14/util/MainFrame.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="43">
+          <caret line="3" selection-start-line="3" selection-end-line="3" />
+        </state>
+      </provider>
+    </entry>
     <entry file="file://$PROJECT_DIR$/src/uk/ac/cam/ia/group14/sjs252/WeatherFetcher.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="484">
-          <caret line="48" column="59" selection-start-line="48" selection-start-column="59" selection-end-line="48" selection-end-column="59" />
+        <state relative-caret-position="304">
+          <caret line="128" column="125" selection-start-line="128" selection-start-column="125" selection-end-line="128" selection-end-column="125" />
           <folding>
             <element signature="imports" expanded="true" />
             <element signature="e#1131#1132#0" expanded="true" />
