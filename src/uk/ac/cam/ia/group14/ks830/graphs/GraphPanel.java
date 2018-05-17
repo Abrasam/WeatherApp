@@ -13,9 +13,7 @@ import java.awt.Stroke;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
-import javax.swing.JFrame;
-import javax.swing.JPanel;
-import javax.swing.SwingUtilities;
+import javax.swing.*;
 
 /**
  * This is a GraphPanel implementation from {@see <a href="https://gist.github.com/roooodcastro/6325153"></a>}
@@ -32,16 +30,16 @@ import javax.swing.SwingUtilities;
 public class GraphPanel extends JPanel {
 
 	// dimensions to match the main frame
-    public final int preferredWidth = 300;
-    public final int preferredHeight = 120;
+    private final int preferredWidth = 3000;
+    private final int preferredHeight = 120;
 
     // padding for labels
-    private int padding = 25;
-    private int labelPadding = 25;
+    private int padding = 20;
+    private int labelPadding = 10;
 
     // declare colour variables
     private Color lineColor;
-    private Color pointColor;
+    private Color pointColor = new Color(100, 100, 100, 180);
     private Color gridColor = new Color(200, 200, 200, 200);
 
     // declare variables for appearance of the graph
@@ -49,36 +47,36 @@ public class GraphPanel extends JPanel {
     private int pointWidth = 4;
 
     // number of marks along y-axis
-    private int numberYDivisions = 3;
+    // private int numberYDivisions = 3;
+
     private double[] values;
 
-    public GraphPanel(double[] values, WeatherSlice.Parameter parameter) {
+    private GraphPanel(double[] values, WeatherSlice.Parameter parameter) {
+
+    	// the graph will display the values given in the argument
     	this.values = values;
+
+    	// set the size of the graph
     	this.setPreferredSize(new Dimension(preferredWidth, preferredHeight));
 
     	switch (parameter) {
 		    case TEMPERATURE:
-		    	System.out.println("temperature");
-			    lineColor = new Color(44, 102, 230, 180);
-			    pointColor = new Color(100, 100, 100, 180);
+		    	//System.out.println("temperature");
+			    lineColor = new Color(150, 105, 105, 180);
 		    	break;
 		    case RAIN:
-		    	System.out.println("rain");
-			    lineColor = new Color(44, 102, 230, 180);
-			    pointColor = new Color(100, 100, 100, 180);
+		    	//System.out.println("rain");
+			    lineColor = new Color(100, 105, 150, 180);
 		    	break;
 
 		    case WIND:
-		    	System.out.println("wind");
-			    lineColor = new Color(44, 102, 230, 180);
-			    pointColor = new Color(100, 100, 100, 180);
+		    	//System.out.println("wind");
+			    lineColor = new Color(105, 150, 105, 180);
 		    	break;
 
 		    default:
 			    lineColor = new Color(44, 102, 230, 180);
-			    pointColor = new Color(100, 100, 100, 180);
 	    }
-
     }
 
 	@Override
@@ -106,7 +104,7 @@ public class GraphPanel extends JPanel {
 
 
 		// create hatch marks and grid lines for y axis.
-		for (int i = 0; i < numberYDivisions + 1; i++) {
+		/*for (int i = 0; i < numberYDivisions + 1; i++) {
 			int x0 = padding + labelPadding;
 			int x1 = pointWidth + padding + labelPadding;
 			int y0 = getHeight() - ((i * (getHeight() - padding * 2 - labelPadding)) / numberYDivisions + padding + labelPadding);
@@ -124,7 +122,7 @@ public class GraphPanel extends JPanel {
 				g2.drawString(yLabel, x0 - labelWidth - 5, y0 + (metrics.getHeight() / 2) - 3);
 			}
 			g2.drawLine(x0, y0, x1, y1);
-		}
+		}*/
 
 		// and for x axis
 		for (int i = 0; i < values.length; i++) {
@@ -148,9 +146,14 @@ public class GraphPanel extends JPanel {
 		}
 
 
-		// create x and y axes
-        g2.drawLine(padding + labelPadding, getHeight() - padding - labelPadding, padding + labelPadding, padding);
-        g2.drawLine(padding + labelPadding,
+		// create y axis
+        /*g2.drawLine(padding + labelPadding,
+		        getHeight() - padding - labelPadding,
+		        padding + labelPadding,
+		        padding);*/
+
+		// create x axis
+		g2.drawLine(padding + labelPadding,
 		        getHeight() - padding - labelPadding,
 		        getWidth() - padding,
 		        getHeight() - padding - labelPadding);
@@ -167,20 +170,34 @@ public class GraphPanel extends JPanel {
         }
 
         g2.setStroke(oldStroke);
-        g2.setColor(pointColor);
+
         for (int i = 0; i < graphPoints.size(); i++) {
+
+        	g2.setColor(pointColor);
             int x = graphPoints.get(i).x - pointWidth / 2;
             int y = graphPoints.get(i).y - pointWidth / 2;
             int ovalW = pointWidth;
             int ovalH = pointWidth;
             g2.fillOval(x, y, ovalW, ovalH);
+
+            // display the temperature if it is a local minimum or a local maximum
+            if (i > 0 && i < values.length - 1 &&
+		            ((values[i] >= values[i+1] && values[i] >= values[i-1]) ||
+				            values[i] <= values[i+1] && values[i] <= values[i-1])) {
+	            // display the value above the point
+	            g2.setColor(pointColor);
+	            String metricLabel = ((int) values[i]) + "";
+	            FontMetrics metrics = g2.getFontMetrics();
+	            int labelWidth = metrics.stringWidth(metricLabel);
+	            g2.drawString(metricLabel, x - labelWidth / 2, y - (metrics.getHeight() / 2) + 1);
+            }
         }
     }
 
-//    @Override
-//    public Dimension getPreferredSize() {
-//        return new Dimension(width, heigth);
-//    }
+	/*@Override
+   public Dimension getPreferredSize() {
+        return new Dimension(width, heigth);
+   }*/
 
     private double getMinScore() {
         double minScore = Double.MAX_VALUE;
@@ -198,36 +215,88 @@ public class GraphPanel extends JPanel {
         return maxScore;
     }
 
-    public void setValues(double[] values) {
+    /*public void setValues(double[] values) {
         this.values = values;
         invalidate();
         this.repaint();
-    }
+    }*/
 
-    public double[] getValues() {
+    /*public double[] getValues() {
         return values;
-    }
+    }*/
 
-    public GraphPanel getPanel() {
+    public static JPanel getPanel(double[] values, WeatherSlice.Parameter parameter) {
+	    JScrollPane scrollPane = new JScrollPane(new GraphPanel(values, parameter));
+
+	    scrollPane.setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED);
+	    scrollPane.getHorizontalScrollBar().setPreferredSize(new Dimension(0, 0));
 
 
-	    return this;
+	    scrollPane.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_NEVER);
+	    scrollPane.getVerticalScrollBar().setVisible(false);
+
+	    scrollPane.setBounds(0, 0, 300, 120);
+	    scrollPane.setWheelScrollingEnabled(true);
+	    scrollPane.setPreferredSize(new Dimension(300, 120));
+
+	    scrollPane.setBackground(new Color(1, 0, 0, 0));
+
+	    scrollPane.getViewport().setBorder(null);
+	    scrollPane.setViewportBorder(null);
+	    scrollPane.setBorder(null);
+
+
+	    JPanel contentPane = new JPanel(null);
+	    contentPane.setPreferredSize(new Dimension(300, 120));
+	    contentPane.add(scrollPane);
+
+	    return contentPane;
     }
     
     private static void createAndShowGui() {
 	    double[] values = new double[120];
 	    Random random = new Random();
 	    int maxDataPoints = values.length;
-	    int maxScore = 20;
+	    int maxScore = 50;
 	    for (int i = 0; i < maxDataPoints; i++) {
-		    values[i] = ((10 + random.nextDouble() * maxScore));
+		    values[i] = ((-10 + random.nextDouble() * maxScore));
 	    }
 
 	    GraphPanel mainPanel = new GraphPanel(values, WeatherSlice.Parameter.TEMPERATURE);
-	    //mainPanel.setPreferredSize(new Dimension(GraphPanel.preferredWidth, GraphPanel.preferredHeight));
+
+	    JScrollPane scrollPane = new JScrollPane(mainPanel);
+
+	    scrollPane.setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED);
+	    scrollPane.getHorizontalScrollBar().setPreferredSize(new Dimension(0, 0));
+
+
+	    scrollPane.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_NEVER);
+		scrollPane.getVerticalScrollBar().setVisible(false);
+
+	    scrollPane.setBounds(0, 0, 300, 120);
+	    scrollPane.setWheelScrollingEnabled(true);
+	    scrollPane.setPreferredSize(new Dimension(300, 120));
+
+	    scrollPane.setBackground(new Color(1, 0, 0, 0));
+
+	    scrollPane.getViewport().setBorder(null);
+	    scrollPane.setViewportBorder(null);
+	    scrollPane.setBorder(null);
+
+
+	    JPanel contentPane = new JPanel(null);
+	    contentPane.setPreferredSize(new Dimension(300, 120));
+	    contentPane.add(scrollPane);
+
+
 	    JFrame frame = new JFrame("DrawGraph");
+
+
+	    frame.setContentPane(contentPane);
+	    //frame.getContentPane().add(mainPanel);
+
 	    frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-	    frame.getContentPane().add(mainPanel);
+
 	    frame.pack();
 	    frame.setLocationRelativeTo(null);
 	    frame.setVisible(true);
