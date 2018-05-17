@@ -49,9 +49,6 @@ public class GraphPanel extends JPanel {
 
     private int startTime = 0;
 
-    // number of marks along y-axis
-    // private int numberYDivisions = 3;
-
     private double[] values;
 
     private GraphPanel(double[] values, WeatherSlice.Parameter parameter, int startTime) {
@@ -65,16 +62,13 @@ public class GraphPanel extends JPanel {
 
     	switch (parameter) {
 		    case TEMPERATURE:
-		    	//System.out.println("temperature");
 			    lineColor = new Color(150, 105, 105, 180);
 		    	break;
 		    case RAIN:
-		    	//System.out.println("rain");
 			    lineColor = new Color(100, 105, 150, 180);
 		    	break;
 
 		    case WIND:
-		    	//System.out.println("wind");
 			    lineColor = new Color(105, 150, 105, 180);
 		    	break;
 
@@ -99,36 +93,9 @@ public class GraphPanel extends JPanel {
             graphPoints.add(new Point(x1, y1));
         }
 
-        // draw white background
-        /*g2.setColor(Color.WHITE);
-        g2.fillRect(padding
-		        + labelPadding, padding, getWidth() - (2 * padding) - labelPadding,
-		        getHeight() - 2 * padding - labelPadding);*/
         g2.setColor(Color.BLACK);
 
-
-		// create hatch marks and grid lines for y axis.
-		/*for (int i = 0; i < numberYDivisions + 1; i++) {
-			int x0 = padding + labelPadding;
-			int x1 = pointWidth + padding + labelPadding;
-			int y0 = getHeight() - ((i * (getHeight() - padding * 2 - labelPadding)) / numberYDivisions + padding + labelPadding);
-			int y1 = y0;
-			if (values.length > 0) {
-				// do NOT draw the horizontal grid lines
-				// g2.setColor(gridColor);
-				// g2.drawLine(padding + labelPadding + 1 + pointWidth, y0, getWidth() - padding, y1);
-
-				g2.setColor(Color.BLACK);
-				String yLabel = (int) ((((getMinScore() + (getMaxScore() - getMinScore()) *
-						((i * 1.0) / numberYDivisions)) * 100)) / 100.0) + "";
-				FontMetrics metrics = g2.getFontMetrics();
-				int labelWidth = metrics.stringWidth(yLabel);
-				g2.drawString(yLabel, x0 - labelWidth - 5, y0 + (metrics.getHeight() / 2) - 3);
-			}
-			g2.drawLine(x0, y0, x1, y1);
-		}*/
-
-		// and for x axis
+		// create hatch marks and grid lines for x axis
 		for (int i = 0; i < values.length; i++) {
 			if (values.length > 1) {
 				int x0 = i * (getWidth() - padding * 2 - labelPadding) / (values.length - 1) + padding + labelPadding;
@@ -150,13 +117,6 @@ public class GraphPanel extends JPanel {
 			}
 		}
 
-
-		// create y axis
-        /*g2.drawLine(padding + labelPadding,
-		        getHeight() - padding - labelPadding,
-		        padding + labelPadding,
-		        padding);*/
-
 		// create x axis
 		g2.drawLine(padding + labelPadding,
 		        getHeight() - padding - labelPadding,
@@ -176,6 +136,7 @@ public class GraphPanel extends JPanel {
 
         g2.setStroke(oldStroke);
 
+        // paint the points and related metric labels
         for (int i = 0; i < graphPoints.size(); i++) {
 
         	g2.setColor(pointColor);
@@ -199,11 +160,7 @@ public class GraphPanel extends JPanel {
         }
     }
 
-	/*@Override
-   public Dimension getPreferredSize() {
-        return new Dimension(width, heigth);
-   }*/
-
+    // find the minimum metric value (used to scale the y-axis)
     private double getMinScore() {
         double minScore = Double.MAX_VALUE;
         for (double score : values) {
@@ -212,6 +169,7 @@ public class GraphPanel extends JPanel {
         return minScore;
     }
 
+	// find the maximum metric value (used to scale the y-axis)
     private double getMaxScore() {
         double maxScore = Double.MIN_VALUE;
         for (double score : values) {
@@ -220,16 +178,6 @@ public class GraphPanel extends JPanel {
         return maxScore;
     }
 
-    /*public void setValues(double[] values) {
-        this.values = values;
-        invalidate();
-        this.repaint();
-    }*/
-
-    /*public double[] getValues() {
-        return values;
-    }*/
-
 	public static BufferedImage getImage(double[] values, WeatherSlice.Parameter parameter, int startTime) {
 		GraphPanel panel = new GraphPanel(values, parameter, startTime);
 
@@ -237,7 +185,7 @@ public class GraphPanel extends JPanel {
 		int h = panel.getHeight();
 		BufferedImage bi = new BufferedImage(w, h, BufferedImage.TYPE_INT_RGB);
 		Graphics2D g = bi.createGraphics();
-		panel.paint(g);
+		panel.print(g);
 		g.dispose();
 		return bi;
 	}
