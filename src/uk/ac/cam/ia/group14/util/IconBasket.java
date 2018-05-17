@@ -88,5 +88,20 @@ public class IconBasket {
         return img;
     }
 
+    public static BufferedImage getResizedImage(int x, int y, boolean isDay, boolean hasClouds, boolean hasSun, boolean hasRain, boolean hasSnow, boolean hasBolt) {
+        String path = getPath(isDay, hasClouds, hasSun, hasRain, hasSnow, hasBolt);
+
+        BufferedImage img = null;
+        try {
+            img = ImageIO.read(new File(path));
+        } catch (IOException e) {
+            img = constDefaultImage;
+        }
+
+        img = ResizeImage.resize(img, x, y);
+
+        return img;
+    }
+
 
 }
