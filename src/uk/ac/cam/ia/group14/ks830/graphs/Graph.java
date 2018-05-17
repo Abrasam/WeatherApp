@@ -58,7 +58,7 @@ public class Graph {
 		windGraph = GraphPanel.getPanel(windData, WeatherSlice.Parameter.WIND);
 	}
 	/**
-	 * Returns the GraphPanel displaying the rain data
+	 * Returns the GraphPanel displaying the rain data.
 	 */
 	public JPanel getRainGraph() {
 		return rainGraph;
