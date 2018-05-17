@@ -3,11 +3,13 @@ package uk.ac.cam.ia.group14.util;
 public class Region {
 
     private final String name;
-    private WeatherSlice[] hours;
-    private WeatherSlice[] days;
+    private final WeatherSlice[] hours;
+    private final WeatherSlice[] days;
 
-    public Region(String name) {
+    public Region(String name, WeatherSlice[] hours, WeatherSlice[] days) {
         this.name = name;
+        this.hours = hours;
+        this.days = days;
     }
 
     public String getName() {

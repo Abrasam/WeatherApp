@@ -56,12 +56,11 @@ public class WeatherSlice {
     }
 
     public enum Status {
-        RAIN,
-        CLOUD,
-        SCATTERED_CLOUD,
-        SNOW,
+        CLOUDS,
         SUN,
-        HAIL;
+        RAIN,
+        SNOW,
+        BOLT;
         //MORE TO BE ADDED YO
     }
 
