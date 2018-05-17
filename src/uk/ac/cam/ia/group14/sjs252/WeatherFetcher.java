@@ -126,7 +126,7 @@ public class WeatherFetcher implements Runnable {
                 rainfall = (rain == null ? 0 : rain.getDouble("3h"));
             } catch (JSONException e) {
             }
-            //NOTE THAT SOME PARAMETERS WERE RANDOMLY GENERATED HERE BECAUSE THE WEATHER API WOULD NOT PROVIDE THEM FOR FREE.   
+            //NOTE THAT SOME PARAMETERS WERE RANDOMLY GENERATED HERE BECAUSE THE WEATHER API WOULD NOT PROVIDE THEM FOR FREE.
             WeatherSlice slice = new WeatherSlice(time, temp, wind_speed, rainfall, 100, rand.nextInt(100)+5000, 10000 + rand.nextInt(500), parseStatus(status.getString("main")));
             hourly[3 * i] = slice;
             hourly[3 * i + 1] = slice;
