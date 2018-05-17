@@ -1,6 +1,9 @@
 package uk.ac.cam.ia.group14.summary;
 
+import uk.ac.cam.ia.group14.detail.DetailPanel;
 import uk.ac.cam.ia.group14.util.IconBasket;
+import uk.ac.cam.ia.group14.util.MainFrame;
+import uk.ac.cam.ia.group14.util.RegionID;
 import uk.ac.cam.ia.group14.util.UpdateableJPanel;
 
 import javax.swing.*;
@@ -31,6 +34,8 @@ public class SummaryPanel extends UpdateableJPanel implements ActionListener{
 
     private final double CONSTANTS_backButtonWeight = 0.2, CONSTANTS_regionNameWeight = 0.8;
     private final double CONSTANTS_row1Weight = 0.1, CONSTANTS_row2Weight = (1.0 - CONSTANTS_row1Weight);
+
+    private RegionID stateRegion;
 
     private JPanel backButtonAndNamePane;
     private JPanel forecastPane;
@@ -120,7 +125,11 @@ public class SummaryPanel extends UpdateableJPanel implements ActionListener{
         }
     }
 
-    public SummaryPanel(){
+    private MainFrame mainFrame;
+
+    public SummaryPanel(MainFrame mainFrame){
+        this.mainFrame = mainFrame;
+
         this.setLayout(new GridBagLayout());
 
         GridBagConstraints backButtonAndNameConstraints =
@@ -144,17 +153,19 @@ public class SummaryPanel extends UpdateableJPanel implements ActionListener{
         row1BackBtn.addActionListener(this);
     }
 
-    /*public SummaryPanel(JFrame testFrame) {
-        this.testFrame = testFrame;
-    }*/
-
 
     public void update() {
 
     }
 
+    private void actionBackButtonPressed() {
+        mainFrame.changeCard(DetailPanel.cardName);
+    }
+
     @Override
     public void actionPerformed(ActionEvent e) {
-
+        if (e.getSource() == row1BackBtn) {
+            actionBackButtonPressed();
+        }
     }
 }
