@@ -46,15 +46,15 @@ public class WeatherFetcher implements Runnable {
                 WeatherSlice[][] data = load(hourlyJSON);
                 WeatherSlice[] hourly = data[0];
                 WeatherSlice[] daily = data[1];
-                System.out.print(hourlyJSON);
+                //System.out.print(hourlyJSON); tee hee hee
                 regions.put(r, new Region(r.name, hourly, daily));
-                BufferedWriter writer = new BufferedWriter(new FileWriter(r.name + ".txt"));
+                BufferedWriter writer = new BufferedWriter(new FileWriter("saves/" + r.name + ".txt"));
                 writer.write(hourlyJSON);
                 writer.close();
             } catch (IOException e) {
                 //No new data so check for files.
                 try {
-                    FileReader reader = new FileReader(r.name + ".txt");
+                    FileReader reader = new FileReader("saves/" + r.name + ".txt");
                     StringBuffer buffer = new StringBuffer();
                     int read;
                     while ((read = reader.read()) != -1) {
