@@ -14,12 +14,14 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Random;
 
 public class WeatherFetcher implements Runnable {
 
     private static WeatherFetcher INSTANCE;
     private static final String QUERY = "http://api.openweathermap.org/data/2.5/forecast?lat=%s&lon=%s&units=metric&APPID=062a189260e157451fdeaf8cd4b42e13";
     private static final SimpleDateFormat FORMAT_OUTPUT = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+    private static Random rand = new Random();
 
     //Singleton get method.
     public static WeatherFetcher getInstance() {
@@ -124,7 +126,8 @@ public class WeatherFetcher implements Runnable {
                 rainfall = (rain == null ? 0 : rain.getDouble("3h"));
             } catch (JSONException e) {
             }
-            WeatherSlice slice = new WeatherSlice(time, temp, wind_speed, rainfall, 0, 0, 0, parseStatus(status.getString("main")));
+            //NOTE THAT SOME PARAMETERS WERE RANDOMLY GENERATED HERE BECAUSE THE WEATHER API WOULD NOT PROVIDE THEM FOR FREE.   
+            WeatherSlice slice = new WeatherSlice(time, temp, wind_speed, rainfall, 100, rand.nextInt(100)+5000, 10000 + rand.nextInt(500), parseStatus(status.getString("main")));
             hourly[3 * i] = slice;
             hourly[3 * i + 1] = slice;
             hourly[3 * i + 2] = slice;
@@ -164,6 +167,6 @@ public class WeatherFetcher implements Runnable {
     }
 
     public static void main(String[] args) {
-        getInstance();
+        System.out.println(getInstance().getRegion(RegionID.BREACONS));
     }
 }

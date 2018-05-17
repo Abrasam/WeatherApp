@@ -1,5 +1,7 @@
 package uk.ac.cam.ia.group14.util;
 
+import java.util.Arrays;
+
 public class Region {
 
     private final String name;
@@ -22,5 +24,14 @@ public class Region {
 
     public WeatherSlice[] getDays() {
         return days;
+    }
+
+    @Override
+    public String toString() {
+        return "Region{" +
+                "name='" + name + '\'' +
+                ", hours=" + Arrays.toString(hours) +
+                ", days=" + Arrays.toString(days) +
+                '}';
     }
 }
