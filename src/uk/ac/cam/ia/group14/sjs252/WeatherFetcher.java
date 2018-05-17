@@ -7,9 +7,7 @@ import uk.ac.cam.ia.group14.util.Region;
 import uk.ac.cam.ia.group14.util.RegionID;
 import uk.ac.cam.ia.group14.util.WeatherSlice;
 
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStreamReader;
+import java.io.*;
 import java.net.URL;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -50,8 +48,23 @@ public class WeatherFetcher implements Runnable {
                 WeatherSlice[] daily = data[1];
                 System.out.print(hourlyJSON);
                 regions.put(r, new Region(r.name, hourly, daily));
+                BufferedWriter writer = new BufferedWriter(new FileWriter(r.name + ".txt"));
+                writer.write(hourlyJSON);
+                writer.close();
             } catch (IOException e) {
-                //No new data so do not update regions.
+                //No new data so check for files.
+                try {
+                    FileReader reader = new FileReader(r.name + ".txt");
+                    StringBuffer buffer = new StringBuffer();
+                    int read;
+                    while ((read = reader.read()) != -1) {
+                        buffer.append((char)read);
+                    }
+                    String json = buffer.toString();
+                    load(json);
+                } catch (IOException e1) {
+                    //File fails when it comes to existing, so no cached data found.
+                }
             }
         }
     }
@@ -86,6 +99,11 @@ public class WeatherFetcher implements Runnable {
                 rain = ((JSONObject) hour.get("rain"));
             } catch (JSONException e) {
             }
+            JSONObject status = null;
+            try {
+                status = (JSONObject)((JSONArray)hour.get("weather")).get(0);
+            } catch (JSONException e) {
+            }
             Date time = null;
             try {
                 time = FORMAT_OUTPUT.parse((String) hour.get("dt_txt"));
@@ -106,7 +124,7 @@ public class WeatherFetcher implements Runnable {
                 rainfall = (rain == null ? 0 : rain.getDouble("3h"));
             } catch (JSONException e) {
             }
-            WeatherSlice slice = new WeatherSlice(time, temp, wind_speed, rainfall, 0, 0, 0, WeatherSlice.Status.CLOUDS);
+            WeatherSlice slice = new WeatherSlice(time, temp, wind_speed, rainfall, 0, 0, 0, parseStatus(status.getString("main")));
             hourly[3 * i] = slice;
             hourly[3 * i + 1] = slice;
             hourly[3 * i + 2] = slice;
@@ -115,6 +133,24 @@ public class WeatherFetcher implements Runnable {
             }
         }
         return new WeatherSlice[][] {hourly, daily};
+    }
+
+    private WeatherSlice.Status parseStatus(String status) {
+        switch (status) {
+            case "Thunderstorm":
+                return WeatherSlice.Status.THUNDERSTORM;
+            case "Drizzle":
+            case "Rain":
+                return WeatherSlice.Status.RAIN;
+            case "Snow":
+                return WeatherSlice.Status.SNOW;
+            case "Clear":
+                return WeatherSlice.Status.SUN;
+            case "Atmosphere":
+            case "Clouds":
+            default:
+                return WeatherSlice.Status.CLOUDS;
+        }
     }
 
     private String readUrl(URL url) throws IOException {
