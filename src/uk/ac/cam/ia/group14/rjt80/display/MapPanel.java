@@ -1,36 +1,34 @@
 package uk.ac.cam.ia.group14.rjt80.display;
 
 import uk.ac.cam.ia.group14.rjt80.tools.Polygon2D;
-import uk.ac.cam.ia.group14.util.MainFrame;
-import uk.ac.cam.ia.group14.util.RegionID;
-import uk.ac.cam.ia.group14.util.Updateable;
+import uk.ac.cam.ia.group14.util.*;
 
+import javax.imageio.ImageIO;
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import java.awt.image.BufferedImage;
+import java.io.File;
 import java.io.IOException;
 import java.util.*;
 
-public class MapPanel extends JPanel implements Updateable {
-    private static String cardName = "MapPanel";
+public class MapPanel extends UpdateableJPanel {
+    public static final String cardName = "MapPanel";
+    private static final String backgroundFile = "src/uk/ac/cam/ia/group14/rjt80/files/ukoutline.png";
+
     private MainFrame frame;
+    private BufferedImage background;
     private Map<RegionID, Polygon2D> mountainRangeButtons;
 
     public MapPanel(MainFrame frame) {
         super();
 
         this.frame = frame;
-        this.mountainRangeButtons = new HashMap<>();
-        for (int i = 0; i < RegionID.values().length; ++i) {
-            try {
-                mountainRangeButtons.put(RegionID.values()[i], new Polygon2D("src/uk/cam/ia/group14/"+RegionID.values()[i].toString()+".txt"));
-            } catch (IOException e) {
-                JOptionPane.showMessageDialog(null,
-                        "Could not retrieve file " + RegionID.values()[i].toString()+".txt",
-                        "Error", JOptionPane.ERROR_MESSAGE);
-            }
-        }
+
+        setBackground(backgroundFile);
+        getMountainRanges();
+
         this.addMouseListener(new MouseAdapter() {
             @Override
             public void mouseClicked(MouseEvent e) {
@@ -38,6 +36,36 @@ public class MapPanel extends JPanel implements Updateable {
                 respondToMouseClick(e.getPoint());
             }
         });
+
+
+    }
+
+    public void setBackground(String imgFilePath) {
+        final int WIDTH = 400;
+        final int HEIGHT = 800;
+        try {
+            File f = new File(imgFilePath);
+            background = new BufferedImage(WIDTH, HEIGHT, BufferedImage.TYPE_INT_ARGB);
+            background = ImageIO.read(f);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    private void getMountainRanges() {
+        this.mountainRangeButtons = new HashMap<>();
+
+        for (int i = 0; i < RegionID.values().length; ++i) {
+            try {
+                mountainRangeButtons.put(RegionID.values()[i], new Polygon2D("src/uk/ac/cam/ia/group14/rjt80/files/"+RegionID.values()[i].toString()+".txt"));
+                //mountainRangeButtons.get(RegionID.values()[i]).setScale(10);
+                //mountainRangeButtons.get(RegionID.values()[i]).setCentre(new Point(-50, -50));
+            } catch (IOException e) {
+                JOptionPane.showMessageDialog(null,
+                        "Could not retrieve file " + RegionID.values()[i].toString()+".txt",
+                        "Error", JOptionPane.ERROR_MESSAGE);
+            }
+        }
     }
 
     private void respondToMouseClick(Point mousePosition) {
@@ -47,6 +75,7 @@ public class MapPanel extends JPanel implements Updateable {
             RegionID thisRange = rangeIterator.next();
             if (mountainRangeButtons.get(thisRange).withinPolygon(mousePosition)) {
                 mountainRangeSelected = thisRange;
+                System.out.println(thisRange.toString());
             }
         }
         if (mountainRangeSelected != null) {
@@ -56,8 +85,8 @@ public class MapPanel extends JPanel implements Updateable {
 
     private void loadDetailedPanel(RegionID mountainRangeSelected) {
         frame.getDatum().setCurrentMountainRegion(mountainRangeSelected);
-        /* TODO: Call update on DetailedPanel
-         * TODO: Call setPanel("DetailedPanel") on MainPanel
+        /*
+         * TODO: Call changeCard("DetailedPanel") on frame
          */
     }
 
@@ -69,9 +98,6 @@ public class MapPanel extends JPanel implements Updateable {
     @Override
     public void paintComponent(Graphics g) {
         /*
-         * TODO: Draw background image
-         * g.drawImage(background, 0, 0, getWidth(), getHeight(), this);
-         *
          * TODO: Add title
          *
          * TODO: Add labels to ranges
@@ -80,6 +106,7 @@ public class MapPanel extends JPanel implements Updateable {
          *
          * TODO: Maybe add clicking functionality
          */
+        g.drawImage(background, 0, 0, getWidth(), getHeight(), this);
 
         g.setColor(Color.GREEN);
         Graphics2D graphics2D = (Graphics2D) g;

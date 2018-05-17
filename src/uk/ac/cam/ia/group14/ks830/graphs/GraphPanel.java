@@ -31,26 +31,55 @@ import javax.swing.SwingUtilities;
  */
 public class GraphPanel extends JPanel {
 
-    private int width = 400;
-    private int heigth = 250;
+	// dimensions to match the main frame
+    public final int preferredWidth = 300;
+    public final int preferredHeight = 120;
+
+    // padding for labels
     private int padding = 25;
     private int labelPadding = 25;
-    private Color lineColor; // = new Color(44, 102, 230, 180);
-    private Color pointColor; // = new Color(100, 100, 100, 180);
-   // private Color gridColor; // = new Color(200, 200, 200, 200);
+
+    // declare colour variables
+    private Color lineColor;
+    private Color pointColor;
+    private Color gridColor = new Color(200, 200, 200, 200);
+
+    // declare variables for appearance of the graph
     private static final Stroke GRAPH_STROKE = new BasicStroke(2f);
     private int pointWidth = 4;
-    private int numberYDivisions; // = 10;
-    private List<Double> scores;
 
-    public GraphPanel(List<Double> scores, WeatherSlice.Parameter parameter) {
-    	this.scores = scores;
+    // number of marks along y-axis
+    private int numberYDivisions = 3;
+    private double[] values;
+
+    public GraphPanel(double[] values, WeatherSlice.Parameter parameter) {
+    	this.values = values;
+    	this.setPreferredSize(new Dimension(preferredWidth, preferredHeight));
+
+    	switch (parameter) {
+		    case TEMPERATURE:
+		    	System.out.println("temperature");
+			    lineColor = new Color(44, 102, 230, 180);
+			    pointColor = new Color(100, 100, 100, 180);
+		    	break;
+		    case RAIN:
+		    	System.out.println("rain");
+			    lineColor = new Color(44, 102, 230, 180);
+			    pointColor = new Color(100, 100, 100, 180);
+		    	break;
+
+		    case WIND:
+		    	System.out.println("wind");
+			    lineColor = new Color(44, 102, 230, 180);
+			    pointColor = new Color(100, 100, 100, 180);
+		    	break;
+
+		    default:
+			    lineColor = new Color(44, 102, 230, 180);
+			    pointColor = new Color(100, 100, 100, 180);
+	    }
 
     }
-
-	public GraphPanel(List<Double> scores) {
-		this.scores = scores;
-	}
 
 	@Override
     protected void paintComponent(Graphics g) {
@@ -58,64 +87,73 @@ public class GraphPanel extends JPanel {
         Graphics2D g2 = (Graphics2D) g;
         g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
 
-        double xScale = ((double) getWidth() - (2 * padding) - labelPadding) / (scores.size() - 1);
+        double xScale = ((double) getWidth() - (2 * padding) - labelPadding) / (values.length - 1);
         double yScale = ((double) getHeight() - 2 * padding - labelPadding) / (getMaxScore() - getMinScore());
 
         List<Point> graphPoints = new ArrayList<>();
-        for (int i = 0; i < scores.size(); i++) {
+        for (int i = 0; i < values.length; i++) {
             int x1 = (int) (i * xScale + padding + labelPadding);
-            int y1 = (int) ((getMaxScore() - scores.get(i)) * yScale + padding);
+            int y1 = (int) ((getMaxScore() - values[i]) * yScale + padding);
             graphPoints.add(new Point(x1, y1));
         }
 
         // draw white background
-        g2.setColor(Color.WHITE);
+        /*g2.setColor(Color.WHITE);
         g2.fillRect(padding
 		        + labelPadding, padding, getWidth() - (2 * padding) - labelPadding,
-		        getHeight() - 2 * padding - labelPadding);
+		        getHeight() - 2 * padding - labelPadding);*/
         g2.setColor(Color.BLACK);
 
-        // create hatch marks and grid lines for y axis.
-        /*for (int i = 0; i < numberYDivisions + 1; i++) {
-            int x0 = padding + labelPadding;
-            int x1 = pointWidth + padding + labelPadding;
-            int y0 = getHeight() - ((i * (getHeight() - padding * 2 - labelPadding)) / numberYDivisions + padding + labelPadding);
-            int y1 = y0;
-            if (scores.size() > 0) {
-                g2.setColor(gridColor);
-                g2.drawLine(padding + labelPadding + 1 + pointWidth, y0, getWidth() - padding, y1);
-                g2.setColor(Color.BLACK);
-                String yLabel = ((int) ((getMinScore() + (getMaxScore() - getMinScore()) * ((i * 1.0) / numberYDivisions)) * 100)) / 100.0 + "";
-                FontMetrics metrics = g2.getFontMetrics();
-                int labelWidth = metrics.stringWidth(yLabel);
-                g2.drawString(yLabel, x0 - labelWidth - 5, y0 + (metrics.getHeight() / 2) - 3);
-            }
-            g2.drawLine(x0, y0, x1, y1);
-        }
 
-        // and for x axis
-        for (int i = 0; i < scores.size(); i++) {
-            if (scores.size() > 1) {
-                int x0 = i * (getWidth() - padding * 2 - labelPadding) / (scores.size() - 1) + padding + labelPadding;
-                int x1 = x0;
-                int y0 = getHeight() - padding - labelPadding;
-                int y1 = y0 - pointWidth;
-                if ((i % ((int) ((scores.size() / 20.0)) + 1)) == 0) {
-                    g2.setColor(gridColor);
-                    g2.drawLine(x0, getHeight() - padding - labelPadding - 1 - pointWidth, x1, padding);
-                    g2.setColor(Color.BLACK);
-                    String xLabel = i + "";
-                    FontMetrics metrics = g2.getFontMetrics();
-                    int labelWidth = metrics.stringWidth(xLabel);
-                    g2.drawString(xLabel, x0 - labelWidth / 2, y0 + metrics.getHeight() + 3);
-                }
-                g2.drawLine(x0, y0, x1, y1);
-            }
-        }*/
+		// create hatch marks and grid lines for y axis.
+		for (int i = 0; i < numberYDivisions + 1; i++) {
+			int x0 = padding + labelPadding;
+			int x1 = pointWidth + padding + labelPadding;
+			int y0 = getHeight() - ((i * (getHeight() - padding * 2 - labelPadding)) / numberYDivisions + padding + labelPadding);
+			int y1 = y0;
+			if (values.length > 0) {
+				// do NOT draw the horizontal grid lines
+				// g2.setColor(gridColor);
+				// g2.drawLine(padding + labelPadding + 1 + pointWidth, y0, getWidth() - padding, y1);
 
-        // create x and y axes 
+				g2.setColor(Color.BLACK);
+				String yLabel = (int) ((((getMinScore() + (getMaxScore() - getMinScore()) *
+						((i * 1.0) / numberYDivisions)) * 100)) / 100.0) + "";
+				FontMetrics metrics = g2.getFontMetrics();
+				int labelWidth = metrics.stringWidth(yLabel);
+				g2.drawString(yLabel, x0 - labelWidth - 5, y0 + (metrics.getHeight() / 2) - 3);
+			}
+			g2.drawLine(x0, y0, x1, y1);
+		}
+
+		// and for x axis
+		for (int i = 0; i < values.length; i++) {
+			if (values.length > 1) {
+				int x0 = i * (getWidth() - padding * 2 - labelPadding) / (values.length - 1) + padding + labelPadding;
+				int x1 = x0;
+				int y0 = getHeight() - padding - labelPadding;
+				int y1 = y0 - pointWidth;
+				if (i % 4 == 0) {
+					g2.setColor(gridColor);
+					g2.drawLine(x0, getHeight() - padding - labelPadding - 1 - pointWidth,
+							x1, graphPoints.get(i).y);
+					g2.setColor(Color.BLACK);
+					String xLabel = (((i%24) / 10 == 0) ? ("0" + i%24) : i%24) + ":00";
+					FontMetrics metrics = g2.getFontMetrics();
+					int labelWidth = metrics.stringWidth(xLabel);
+					g2.drawString(xLabel, x0 - labelWidth / 2, y0 + metrics.getHeight() + 3);
+				}
+				g2.drawLine(x0, y0, x1, y1);
+			}
+		}
+
+
+		// create x and y axes
         g2.drawLine(padding + labelPadding, getHeight() - padding - labelPadding, padding + labelPadding, padding);
-        // g2.drawLine(padding + labelPadding, getHeight() - padding - labelPadding, getWidth() - padding, getHeight() - padding - labelPadding);
+        g2.drawLine(padding + labelPadding,
+		        getHeight() - padding - labelPadding,
+		        getWidth() - padding,
+		        getHeight() - padding - labelPadding);
 
         Stroke oldStroke = g2.getStroke();
         g2.setColor(lineColor);
@@ -146,7 +184,7 @@ public class GraphPanel extends JPanel {
 
     private double getMinScore() {
         double minScore = Double.MAX_VALUE;
-        for (Double score : scores) {
+        for (double score : values) {
             minScore = Math.min(minScore, score);
         }
         return minScore;
@@ -154,46 +192,45 @@ public class GraphPanel extends JPanel {
 
     private double getMaxScore() {
         double maxScore = Double.MIN_VALUE;
-        for (Double score : scores) {
+        for (double score : values) {
             maxScore = Math.max(maxScore, score);
         }
         return maxScore;
     }
 
-    public void setScores(List<Double> scores) {
-        this.scores = scores;
+    public void setValues(double[] values) {
+        this.values = values;
         invalidate();
         this.repaint();
     }
 
-    public List<Double> getScores() {
-        return scores;
+    public double[] getValues() {
+        return values;
     }
 
     public GraphPanel getPanel() {
-	    GraphPanel graphPanel = new GraphPanel(scores);
-	    graphPanel.setPreferredSize(new Dimension(400, 250));
 
-	    return graphPanel;
+
+	    return this;
     }
     
     private static void createAndShowGui() {
-        List<Double> scores = new ArrayList<>();
-        Random random = new Random();
-        int maxDataPoints = 40;
-        int maxScore = 10;
-        for (int i = 0; i < maxDataPoints; i++) {
-            scores.add((double) random.nextDouble() * maxScore);
-//            scores.add((double) i);
-        }
-        GraphPanel mainPanel = new GraphPanel(scores);
-        mainPanel.setPreferredSize(new Dimension(400, 250));
-        JFrame frame = new JFrame("DrawGraph");
-        frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        frame.getContentPane().add(mainPanel);
-        frame.pack();
-        frame.setLocationRelativeTo(null);
-        frame.setVisible(true);
+	    double[] values = new double[120];
+	    Random random = new Random();
+	    int maxDataPoints = values.length;
+	    int maxScore = 20;
+	    for (int i = 0; i < maxDataPoints; i++) {
+		    values[i] = ((10 + random.nextDouble() * maxScore));
+	    }
+
+	    GraphPanel mainPanel = new GraphPanel(values, WeatherSlice.Parameter.TEMPERATURE);
+	    //mainPanel.setPreferredSize(new Dimension(GraphPanel.preferredWidth, GraphPanel.preferredHeight));
+	    JFrame frame = new JFrame("DrawGraph");
+	    frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+	    frame.getContentPane().add(mainPanel);
+	    frame.pack();
+	    frame.setLocationRelativeTo(null);
+	    frame.setVisible(true);
     }
     
     public static void main(String[] args) {

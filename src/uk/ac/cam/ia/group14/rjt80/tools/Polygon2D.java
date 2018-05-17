@@ -31,28 +31,22 @@ public class Polygon2D {
         sharedConstructor(ps, new Point(0, 0),1);
     }
 
-    public Polygon2D(String pointsFile, Point centre, int scale) throws IOException {
-        sharedConstructor(loadPointsFromFile(pointsFile), centre,scale);
-    }
-
-    public Polygon2D(String pointsFile, Point centre) throws IOException {
-        sharedConstructor(loadPointsFromFile(pointsFile), centre, 1);
-    }
-
-    public Polygon2D(String pointsFile, int scale) throws IOException {
-        sharedConstructor(loadPointsFromFile(pointsFile),new Point(0, 0), scale);
-    }
-
     public Polygon2D(String pointsFile) throws IOException {
-        sharedConstructor(loadPointsFromFile(pointsFile), new Point(0, 0),1);
+        loadPointsFromFile(pointsFile);
     }
 
-    private List<Point> loadPointsFromFile(String filename) throws IOException {
+    private void loadPointsFromFile(String filename) throws IOException {
         List<Point> sPs = new LinkedList<>();
 
         FileReader f = new FileReader(filename);
         BufferedReader b = new BufferedReader(f);
         String line;
+
+        int sScale = Integer.parseInt(b.readLine());
+
+        line = b.readLine();
+        Point sCentre = new Point(Integer.parseInt(line.split(",")[0]), Integer.parseInt(line.split(",")[1]));
+
         while ((line = b.readLine()) != null) {
             String[] coords = line.split(",");
             for (int i = 0; i < coords.length / 2; ++i) {
@@ -61,7 +55,7 @@ public class Polygon2D {
             }
         }
 
-        return sPs;
+        sharedConstructor(sPs, sCentre, sScale);
     }
 
     private void sharedConstructor(List<Point> ps, Point centre, int scale) {
