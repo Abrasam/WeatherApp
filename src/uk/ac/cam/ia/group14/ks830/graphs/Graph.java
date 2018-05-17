@@ -26,7 +26,7 @@ public class Graph {
 	 *
 	 * @param weatherSliceData the array of Weather Slices for a 120-hour period, starting at midnight.
 	 */
-	public Graph(WeatherSlice[] weatherSliceData) {
+	private Graph(WeatherSlice[] weatherSliceData) {
 		// extract weatherSliceData into the separate temperature, rain, wind data
 		double[] temperatureData = new double[120];
 		double[] rainData = new double[120];
@@ -47,7 +47,7 @@ public class Graph {
 	/**
 	 * The Graph to generate random values for data. Used for testing.
 	 */
-	public Graph() {
+	private Graph() {
 		// extract weatherSliceData into the separate temperature, rain, wind data
 		double[] temperatureData = generateRandomValues();
 		double[] rainData = generateRandomValues();
@@ -65,17 +65,41 @@ public class Graph {
 	}
 
 	/**
-	 * Returns the GraphPanel displaying the temperature data
+	 * Returns the GraphPanel displaying the random temperature data. Use for testing.
 	 */
 	public JPanel getTemperatureGraph() {
 		return temperatureGraph;
 	}
 
 	/**
+	 * Returns the GraphPanel displaying the random wind data. Use for testing.
+	 */
+	public JPanel getRandomWindGraph() {
+		return windGraph;
+	}
+
+	/**
+	 * Returns the GraphPanel displaying the random rain data. Use for testing.
+	 */
+	public static JPanel getRandomRainGraph() {
+		Graph graph = new Graph();
+		return graph.rainGraph;
+	}
+
+	/**
+	 * Returns the GraphPanel displaying the random temperature data. Use for testing.
+	 */
+	public static JPanel getRandomTemperatureGraph() {
+		Graph graph = new Graph();
+		return graph.temperatureGraph;
+	}
+
+	/**
 	 * Returns the GraphPanel displaying the wind data
 	 */
-	public JPanel getWindGraph() {
-		return windGraph;
+	public static JPanel getWindGraph() {
+		Graph graph = new Graph();
+		return graph.windGraph;
 	}
 
 	/**
