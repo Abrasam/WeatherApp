@@ -65,16 +65,16 @@ public class Graph {
 	}
 
 	/**
-	 * Returns the GraphPanel displaying the random temperature data. Use for testing.
+	 * Returns the GraphPanel displaying the temperature data.
 	 */
 	public JPanel getTemperatureGraph() {
 		return temperatureGraph;
 	}
 
 	/**
-	 * Returns the GraphPanel displaying the random wind data. Use for testing.
+	 * Returns the GraphPanel displaying the wind data.
 	 */
-	public JPanel getRandomWindGraph() {
+	public JPanel getWindGraph() {
 		return windGraph;
 	}
 
@@ -95,9 +95,9 @@ public class Graph {
 	}
 
 	/**
-	 * Returns the GraphPanel displaying the wind data
+	 * Returns the GraphPanel displaying the random wind data. Use for testing.
 	 */
-	public static JPanel getWindGraph() {
+	public static JPanel getRandomWindGraph() {
 		Graph graph = new Graph();
 		return graph.windGraph;
 	}
