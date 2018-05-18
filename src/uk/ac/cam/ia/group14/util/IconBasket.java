@@ -2,9 +2,13 @@ package uk.ac.cam.ia.group14.util;
 
 import javax.imageio.ImageIO;
 import javax.swing.*;
+import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
+import java.util.Calendar;
+import java.util.Date;
+import java.util.GregorianCalendar;
 
 /**
  * A class to retrieve a specified weather icon, based on the weather conditions (check images/weather/... for available icons)
@@ -14,6 +18,8 @@ import java.io.IOException;
  */
 
 public class IconBasket {
+
+    private static final int constDayHoursFrom = 6, constDayHoursTo = 20;
 
     private static final String constNight = "night";
     private static final String constCloud = "cloud";
@@ -67,6 +73,12 @@ public class IconBasket {
         }
     }
 
+    private static boolean checkIfDay(GregorianCalendar calendar) {
+        int hours = calendar.get(Calendar.HOUR_OF_DAY);
+        return (constDayHoursFrom <= hours && hours <= constDayHoursTo);
+    }
+
+    // Every other function refers to this one
     private static BufferedImage getImageFromPath(String path) {
         BufferedImage img = null;
         try {
@@ -78,59 +90,96 @@ public class IconBasket {
         return img;
     }
 
-    public static BufferedImage getImage(boolean isDay, boolean hasClouds, boolean hasSun, boolean hasRain, boolean hasSnow, boolean hasBolt) {
-        String path = getPath(isDay, hasClouds, hasSun, hasRain, hasSnow, hasBolt);
-
-        BufferedImage img = getImageFromPath(path);
-
-        return img;
-    }
-    public static BufferedImage getResizedImage(int x, int y, boolean isDay, boolean hasClouds, boolean hasSun, boolean hasRain, boolean hasSnow, boolean hasBolt) {
-        String path = getPath(isDay, hasClouds, hasSun, hasRain, hasSnow, hasBolt);
-
+    private static BufferedImage getResizedImageFromPath(int x, int y, String path) {
         BufferedImage img = getImageFromPath(path);
         img = ResizeImage.resize(img, x, y);
         return img;
+    }
+
+
+
+
+    public static BufferedImage getImage(boolean isDay, boolean hasClouds, boolean hasSun, boolean hasRain, boolean hasSnow, boolean hasBolt) {
+        String path = getPath(isDay, hasClouds, hasSun, hasRain, hasSnow, hasBolt);
+        return getImageFromPath(path);
+    }
+    public static BufferedImage getImage(boolean isDay, WeatherSlice.Status status) {
+        String path = getPath(isDay, status);
+        return getImageFromPath(path);
+    }
+    public static BufferedImage getImage(GregorianCalendar calDate, WeatherSlice.Status status) {
+        String path = getPath(checkIfDay(calDate), status);
+        return getImageFromPath(path);
+    }
+    public static BufferedImage getImage(Date date, WeatherSlice.Status status) {
+        GregorianCalendar calDate = new GregorianCalendar();
+        calDate.setTime(date);
+        String path = getPath(checkIfDay(calDate), status);
+
+        return getImageFromPath(path);
+    }
+
+
+    public static BufferedImage getResizedImage(int x, int y, boolean isDay, boolean hasClouds, boolean hasSun, boolean hasRain, boolean hasSnow, boolean hasBolt) {
+        String path = getPath(isDay, hasClouds, hasSun, hasRain, hasSnow, hasBolt);
+        return getResizedImageFromPath(x, y, path);
     }
     public static BufferedImage getResizedImage(int x, int y, boolean isDay, WeatherSlice.Status status) {
         String path = getPath(isDay, status);
+        return getResizedImageFromPath(x, y, path);
+    }
+    public static BufferedImage getResizedImage(int x, int y, GregorianCalendar calDate, WeatherSlice.Status status) {
+        String path = getPath(checkIfDay(calDate), status);
+        return getResizedImageFromPath(x, y, path);
+    }
+    public static BufferedImage getResizedImage(int x, int y, Date date, WeatherSlice.Status status) {
+        GregorianCalendar calDate = new GregorianCalendar();
+        calDate.setTime(date);
+        String path = getPath(checkIfDay(calDate), status);
 
-        BufferedImage img = getImageFromPath(path);
-        img = ResizeImage.resize(img, x, y);
-        return img;
+        return getResizedImageFromPath(x, y, path);
     }
 
 
     public static ImageIcon getIcon(boolean isDay, boolean hasClouds, boolean hasSun, boolean hasRain, boolean hasSnow, boolean hasBolt) {
-        String path = getPath(isDay, hasClouds, hasSun, hasRain, hasSnow, hasBolt);
-
-        ImageIcon icon = new ImageIcon(path);
-
-        return icon;
+        BufferedImage img = getImage(isDay, hasClouds, hasSun, hasRain, hasSnow, hasBolt);
+        return new ImageIcon(img);
     }
     public static ImageIcon getIcon(boolean isDay, WeatherSlice.Status status) {
-        String path = getPath(isDay, status);
+        BufferedImage img = getImage(isDay, status);
+        return new ImageIcon(img);
+    }
+    public static ImageIcon getIcon(GregorianCalendar date, WeatherSlice.Status status) {
+        BufferedImage img = getImage(date, status);
+        return new ImageIcon(img);
+    }
+    public static ImageIcon getIcon(Date date, WeatherSlice.Status status) {
+        GregorianCalendar calDate = new GregorianCalendar();
+        calDate.setTime(date);
 
-        BufferedImage img = getImageFromPath(path);
+        BufferedImage img = getImage(checkIfDay(calDate), status);
         return new ImageIcon(img);
     }
 
+
     public static ImageIcon getResizedIcon(int x, int y, boolean isDay, boolean hasClouds, boolean hasSun, boolean hasRain, boolean hasSnow, boolean hasBolt) {
-        String path = getPath(isDay, hasClouds, hasSun, hasRain, hasSnow, hasBolt);
-
-        BufferedImage img = getImageFromPath(path);
-
-        img = ResizeImage.resize(img, x, y);
-
+        BufferedImage img = getResizedImage(x, y, isDay, hasClouds, hasSun, hasRain, hasSnow, hasBolt);
         return new ImageIcon(img);
     }
     public static ImageIcon getResizedIcon(int x, int y, boolean isDay, WeatherSlice.Status status) {
-        String path = getPath(isDay, status);
+        BufferedImage img = getResizedImage(x, y, isDay, status);
+        return new ImageIcon(img);
+    }
+    public static ImageIcon getResizedIcon(int x, int y, GregorianCalendar calDate, WeatherSlice.Status status) {
+        BufferedImage img = getResizedImage(x, y, checkIfDay(calDate), status);
+        return new ImageIcon(img);
+    }
 
-        System.out.println(path);
+    public static ImageIcon getResizedIcon(int x, int y, Date date, WeatherSlice.Status status) {
+        GregorianCalendar calDate = new GregorianCalendar();
+        calDate.setTime(date);
 
-        BufferedImage img = getImageFromPath(path);
-        img = ResizeImage.resize(img, x, y);
+        BufferedImage img = getResizedImage(x, y, checkIfDay(calDate), status);
         return new ImageIcon(img);
     }
 }

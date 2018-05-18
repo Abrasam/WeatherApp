@@ -1,5 +1,6 @@
 package uk.ac.cam.ia.group14.summary;
 
+import javax.print.DocFlavor;
 import javax.swing.*;
 import java.awt.*;
 import java.util.List;
@@ -10,7 +11,7 @@ public class RowForecastFragment extends JPanel{
 
     private String defaultFontName;
 
-    private final Color CONSTANTS_defColor = new Color(170, 248, 255);
+    private final Color CONSTANTS_defColor = new Color(49,200,49);
 
     private final Font CONSTANTS_dayOfWeekFont = new Font(defaultFontName, Font.PLAIN, 19);
     private final double CONSTANTS_dayOfWeekWeight = 0.25,
@@ -23,7 +24,7 @@ public class RowForecastFragment extends JPanel{
     private InfoFragment rightStatsFragment;
 
     private String dayOfWeekString;
-    private ImageIcon forecastIconImage;
+    private ImageIcon forecastIcon;
     private List<String> leftStatsData, rightStatsData;
 
 
@@ -61,7 +62,7 @@ public class RowForecastFragment extends JPanel{
     }
     private void updateDayOfWeekAndIcon() {
         dayOfWeekLbl.setText(dayOfWeekString);
-        forecastIconLbl.setIcon(forecastIconImage);
+        forecastIconLbl.setIcon(forecastIcon);
     }
 
     private void updateAll() {
@@ -70,13 +71,13 @@ public class RowForecastFragment extends JPanel{
     }
 
 
-    public RowForecastFragment(String defaultFontName, String dayOfWeekString, List<String> leftStatsData, ImageIcon forecastIconImage, List<String> rightStatsData) {
+    public RowForecastFragment(String defaultFontName, String dayOfWeekString, List<String> leftStatsData, ImageIcon forecastIcon, List<String> rightStatsData) {
         super(new GridBagLayout());
 
         this.defaultFontName = defaultFontName;
         this.dayOfWeekString = dayOfWeekString;
         this.leftStatsData = leftStatsData;
-        this.forecastIconImage = forecastIconImage;
+        this.forecastIcon = forecastIcon;
         this.rightStatsData = rightStatsData;
 
         initComponents();
@@ -84,10 +85,13 @@ public class RowForecastFragment extends JPanel{
         updateAll();
     }
 
-    public void setDayOfWeekString(String dayOfWeekString) {
+    public void updateData(String dayOfWeekString, ImageIcon forecastIcon, List<String> leftStatsData, List<String> rightStatsData) {
+
         this.dayOfWeekString = dayOfWeekString;
-        dayOfWeekLbl.setText(dayOfWeekString);
+        this.forecastIcon = forecastIcon;
+        this.leftStatsData = leftStatsData;
+        this.rightStatsData = rightStatsData;
+
+        updateAll();
     }
-
-
 }

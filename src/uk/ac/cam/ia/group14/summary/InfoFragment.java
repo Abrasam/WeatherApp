@@ -8,7 +8,7 @@ import java.util.List;
 public class InfoFragment extends JPanel {
 
 
-    private final Color CONSTANTS_defColor = new Color(170, 248, 255);
+    private final Color CONSTANTS_defColor = new Color(49,200,49);
 
     private String defaultFontName;
     private final Font CONSTANTS_infoFont = new Font(defaultFontName, Font.PLAIN, 16);
