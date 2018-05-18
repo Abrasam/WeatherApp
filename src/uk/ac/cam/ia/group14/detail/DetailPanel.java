@@ -37,7 +37,6 @@ public class DetailPanel extends UpdateableJPanel implements MouseListener,Mouse
     private int scrollBarHeight = 700;
     private int scrollBarThickness = 3;
     private int scrollDivWidth = 16;
-    private double scrollDivRatio = 0.8;
     private int dateOnScroll = 6;
 
     //ScrollButton param
@@ -81,7 +80,7 @@ public class DetailPanel extends UpdateableJPanel implements MouseListener,Mouse
     private String[] weekdayShort = {"Mon","Tue","Wed","Thu","Fri","Sat","Sun"};
     private Date startDate;
     private Date range;
-    public Date curDate;
+    private Date curDate;
 
     //Mouse param
     private Double pressX=-999.0;
@@ -109,6 +108,8 @@ public class DetailPanel extends UpdateableJPanel implements MouseListener,Mouse
 
     public DetailPanel(MainFrame mf){
         this.mf = mf;
+        Color bgColor = new Color(215, 225, 255);
+        this.setBackground(bgColor);
     }
 
     private void drawLine(Graphics g,double x, double y, double w, double h, Color c){
@@ -152,13 +153,25 @@ public class DetailPanel extends UpdateableJPanel implements MouseListener,Mouse
 
     private void drawImg(Graphics g, BufferedImage bi,double x, double y, double w, double h, double sourceW,double portion) {
         Graphics2D g2d = (Graphics2D) g.create();
-        g2d.drawImage(bi,(int)x,(int)y,(int)(x+w), (int)(y+h),(int)(sourceW*portion),(int)0,(int)(w+sourceW*portion),(int)(h),this);
+        g2d.drawImage(bi,(int)x,(int)y,(int)(x+w), (int)(y+h),(int)(sourceW*portion),0,(int)(w+sourceW*portion),(int)(h),this);
     }
 
     private Date roundDateHour(Date cur, boolean roundDown){
         Calendar cal = Calendar.getInstance();
         cal.setTime(cur);
         cal.add(Calendar.MINUTE,roundDown?0:30);
+        cal.set(Calendar.MINUTE,0);
+        cal.set(Calendar.SECOND,0);
+        cal.set(Calendar.MILLISECOND,0);
+        return cal.getTime();
+    }
+
+    private Date roundUpDate(Date cur){
+        Calendar cal = Calendar.getInstance();
+        cal.setTime(cur);
+        cal.add(Calendar.DATE,1);
+        cal.add(Calendar.SECOND,-1);
+        cal.set(Calendar.HOUR_OF_DAY,0);
         cal.set(Calendar.MINUTE,0);
         cal.set(Calendar.SECOND,0);
         cal.set(Calendar.MILLISECOND,0);
@@ -199,7 +212,7 @@ public class DetailPanel extends UpdateableJPanel implements MouseListener,Mouse
     private int getWeeday(Date cur){
         Calendar cal = Calendar.getInstance();
         cal.setTime(cur);
-        return cal.get(Calendar.DAY_OF_WEEK);
+        return (cal.get(Calendar.DAY_OF_WEEK)+5)%7+1;
     }
 
     private Date addMillisecond(Date cur, int incr){
@@ -229,7 +242,14 @@ public class DetailPanel extends UpdateableJPanel implements MouseListener,Mouse
         //Scroll - impl
         drawLine(g,scrollBarX-scrollBarThickness/2,scrollBarY-scrollBarHeight/2,scrollBarThickness,scrollBarHeight,scrollColor);
         for (int i=0;i<dateOnScroll;i++){
-            drawLine(g,scrollBarX-scrollDivWidth/2 + ((i==0 || i==dateOnScroll-1)?0:scrollDivWidth*(1-scrollDivRatio)/2),scrollBarY-scrollBarHeight/2-scrollBarThickness/2+scrollBarHeight/(dateOnScroll-1)*i,scrollDivWidth*((i==0 || i==dateOnScroll-1)?1:scrollDivRatio),scrollBarThickness,scrollColor);
+            int vertAdjust = 0;
+            if ((startDate.getTime())-roundUpDate(startDate).getTime()<0) {
+                if (i==0) continue;
+                else vertAdjust = (int)(scrollBarHeight/(dateOnScroll-1)*(-1-((double)(startDate.getTime()-roundUpDate(startDate).getTime())/86400000)));
+            }
+            // when day doesn't start at midnight, adjust the scroll
+            drawLine(g,scrollBarX-scrollDivWidth/2,scrollBarY+vertAdjust-scrollBarHeight/2-scrollBarThickness/2+scrollBarHeight/(dateOnScroll-1)*i,scrollDivWidth,scrollBarThickness,scrollColor);
+            drawString(g,scrollBarX-scrollDivWidth/2 - 35,scrollBarY+vertAdjust + 7 -scrollBarHeight/2-scrollBarThickness/2+scrollBarHeight/(dateOnScroll-1)*i,weekdayShort[getWeeday(addDate(startDate,i))-1],18,null,false);
         }
         //ScrollButton - impl
         drawCircle(g,buttonX-scrollButtonSize/2,buttonY-scrollButtonSize/2,scrollButtonSize,scrollButtonSize,scrollButtonColor,true);
@@ -255,22 +275,22 @@ public class DetailPanel extends UpdateableJPanel implements MouseListener,Mouse
         //Graph: Temperature
         Color tempColor = new Color(150, 105, 105);
         drawImg(g,tempGraph,graphX-graphW/2,graphY-graphH/2,graphW,graphH,graphSourceW,graphSection);
-//        drawLine(g,75,250,1,150,Color.BLACK);
-//        drawLine(g,100,250,1,150,Color.RED);
-//        drawLine(g,375,250,1,150,Color.BLACK);
-//        drawLine(g,355,250,1,150,Color.BLUE);
+        g.drawImage(getImg("images/general/temperature.png"),(int)(graphX-graphW/2)-20,(int)(graphY-graphH/2),40,40,this);
 
         //Graph: WindSpeed
         Color windColor = new Color(105, 150, 105);
         drawImg(g,windGraph,graphX-graphW/2,graphY-graphH/2+(graphH+graphSpacing)*1,graphW,graphH,graphSourceW,graphSection);
+        g.drawImage(getImg("images/general/wind.png"),(int)(graphX-graphW/2)-20,(int)(graphY-graphH/2+(graphH+graphSpacing)*1),40,40,this);
 
         //Graph: Rainfall
         Color rainColor = new Color(100, 105, 150);
         drawImg(g,rainGraph,graphX-graphW/2,graphY-graphH/2+(graphH+graphSpacing)*2,graphW,graphH,graphSourceW,graphSection);
+        g.drawImage(getImg("images/general/rain.png"),(int)(graphX-graphW/2)-20,(int)(graphY-graphH/2+(graphH+graphSpacing)*2),40,40,this);
 
         //Graph: Temperature
         Color tempAttiColor = new Color(150, 105, 105);
         drawImg(g,attiGraph,graphX-graphW/2,graphY-graphH/2+(graphH+graphSpacing)*3,graphW,graphH,graphSourceW,graphSection);
+        g.drawImage(getImg("images/general/temperature.png"),(int)(graphX-graphW/2)-20,(int)(graphY-graphH/2+(graphH+graphSpacing)*3),40,40,this);
 
         //Location
         //drawRec(g,80,20,CONST_SCREENRIGHT-110, 30,locColor,false);
@@ -310,6 +330,7 @@ public class DetailPanel extends UpdateableJPanel implements MouseListener,Mouse
         cal.setTime(startDate);
         cal.set(Calendar.HOUR_OF_DAY,0);
         startDate = cal.getTime();
+        System.out.println(startDate);
         range = addDate(startDate,dateOnScroll-1);
         buttonX = scrollBarX;
         buttonY = scrollBarY-scrollBarHeight/2+((double)(curDate.getTime()-startDate.getTime())/(range.getTime()-startDate.getTime()))*(scrollBarHeight);
