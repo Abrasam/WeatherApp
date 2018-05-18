@@ -80,7 +80,6 @@ public class DetailPanel extends UpdateableJPanel implements MouseListener,Mouse
     private String[] weekday = {"Monday","Tuesday","Wednesday","Thursday","Friday","Saturday","Sunday"};
     private String[] weekdayShort = {"Mon","Tue","Wed","Thu","Fri","Sat","Sun"};
     private Date startDate;
-    private Date endDate;
     private Date range;
     public Date curDate;
 
@@ -102,6 +101,9 @@ public class DetailPanel extends UpdateableJPanel implements MouseListener,Mouse
     private double graphH = 120;
     private double graphSpacing = 5;
     private double graphSourceW = 3000;
+
+    //Graph move
+    private boolean holdGraph = false;
 
     private MainFrame mf;
 
@@ -150,7 +152,6 @@ public class DetailPanel extends UpdateableJPanel implements MouseListener,Mouse
 
     private void drawImg(Graphics g, BufferedImage bi,double x, double y, double w, double h, double sourceW,double portion) {
         Graphics2D g2d = (Graphics2D) g.create();
-        //g.drawImage(bi,75,250,3000, 120,this);
         g2d.drawImage(bi,(int)x,(int)y,(int)(x+w), (int)(y+h),(int)(sourceW*portion),(int)0,(int)(w+sourceW*portion),(int)(h),this);
     }
 
@@ -235,7 +236,6 @@ public class DetailPanel extends UpdateableJPanel implements MouseListener,Mouse
 
 
         //WeatherLogo
-        //g.drawImage(getImg("images/weather/cloud-rain-bolt.png"),(int)(weatherX-weatherSize/2),(int)(weatherY-weatherSize/2),weatherSize,weatherSize,this);
         g.drawImage(IconBasket.getImage(true, true, true, false, false, false),(int)(weatherX-weatherSize/2),(int)(weatherY-weatherSize/2),weatherSize,weatherSize,this);
 
         //LocationButton
@@ -256,7 +256,7 @@ public class DetailPanel extends UpdateableJPanel implements MouseListener,Mouse
         Color tempColor = new Color(150, 105, 105);
         drawImg(g,tempGraph,graphX-graphW/2,graphY-graphH/2,graphW,graphH,graphSourceW,graphSection);
 //        drawLine(g,75,250,1,150,Color.BLACK);
-//        drawLine(g,104,250,1,150,Color.RED);
+//        drawLine(g,100,250,1,150,Color.RED);
 //        drawLine(g,375,250,1,150,Color.BLACK);
 //        drawLine(g,355,250,1,150,Color.BLUE);
 
@@ -310,7 +310,6 @@ public class DetailPanel extends UpdateableJPanel implements MouseListener,Mouse
         cal.setTime(startDate);
         cal.set(Calendar.HOUR_OF_DAY,0);
         startDate = cal.getTime();
-        endDate = addDate(startDate,dateOnScroll);
         range = addDate(startDate,dateOnScroll-1);
         buttonX = scrollBarX;
         buttonY = scrollBarY-scrollBarHeight/2+((double)(curDate.getTime()-startDate.getTime())/(range.getTime()-startDate.getTime()))*(scrollBarHeight);
@@ -343,28 +342,41 @@ public class DetailPanel extends UpdateableJPanel implements MouseListener,Mouse
 
     @Override
     public void mousePressed(MouseEvent e) {
+        int mouseX = e.getX();
+        int mouseY = e.getY();
         //Check for press on button
-        if (inRange(e.getX(),e.getY(),buttonX,buttonY,scrollButtonSize/2)){
+        if (inRange(mouseX,mouseY,buttonX,buttonY,scrollButtonSize/2)){
             holdButton = true;
-            pressX = (double)e.getX();
-            pressY = (double)e.getY();
+            pressX = (double)mouseX;
+            pressY = (double)mouseY;
             repaint();
         }
         //Check for press on location button
-        else if (inRange(e.getX(),e.getY(),locButtonX,locButtonY,locButtonSize/2)){
+        else if (inRange(mouseX,mouseY,locButtonX,locButtonY,locButtonSize/2)){
             System.out.println("Click on location, redirect to Location panel");
             mf.changeCard(MapPanel.cardName);
         }
         //Check for press on summary button
-        else if (inRange(e.getX(),e.getY(),summaryX,summaryY,summarySize/2)){
+        else if (inRange(mouseX,mouseY,summaryX,summaryY,summarySize/2)){
             System.out.println("Click on summary, redirect to Summary panel");
+                repaint();
             mf.changeCard(SummaryPanel.cardName);
+        }
+        //Check for press on graphs
+        else if (((mouseX>=(graphX-graphW/2)) && (mouseX<=(graphX+graphW/2))) &&
+                ((mouseY>=(graphY-graphH/2)) && (mouseY<=(graphY+(graphH+graphSpacing)*3+graphH/2)))) {
+            holdGraph = true;
+            sigMove = true;
+            pressX = (double)mouseX;
+            pressY = (double)mouseY;
+            repaint();
         }
     }
 
     @Override
     public void mouseReleased(MouseEvent e) {
         holdButton = false;
+        holdGraph = false;
         if (sigMove) {
             sigMove = false;
             sigMoveConst = 15;
@@ -396,22 +408,34 @@ public class DetailPanel extends UpdateableJPanel implements MouseListener,Mouse
 
     @Override
     public void mouseDragged(MouseEvent e) {
+        int mouseX = e.getX();
+        int mouseY = e.getY();
         if (holdButton){
             if (sigMove){
-                buttonY = e.getY();
+                buttonY = mouseY;
                 if (buttonY<scrollBarY-scrollBarHeight/2) buttonY = scrollBarY-scrollBarHeight/2;
                 else if (buttonY>scrollBarY+scrollBarHeight/2) buttonY = scrollBarY+scrollBarHeight/2;
                 Calendar cal = Calendar.getInstance();
                 cal.setTime(startDate);
                 cal.add(Calendar.MILLISECOND,(int)((buttonY-scrollBarY+scrollBarHeight/2)/scrollBarHeight*(range.getTime()-startDate.getTime())));
                 curDate = cal.getTime();
-            } else if (!(inRange(pressX,pressY,e.getX(),e.getY(),sigMoveConst/6))){
+            } else if (!(inRange(pressX,pressY,mouseX,mouseY,sigMoveConst/6))){
                 sigMove = true;
             } else {
                 sigMoveConst--;
             }
+            repaint();
+        } else if (holdGraph){
+            curDate = addMillisecond(curDate,(int)(pressX-mouseX)*144000); //144000 = 60*60*1000 / 25 -- (25px is the graph representation of 1 hour)
+            if (curDate.getTime()<startDate.getTime()){
+                curDate = startDate;
+            } else if (curDate.getTime()>range.getTime()){
+                curDate = range;
+            }
+            pressX = (double)mouseX;
+            buttonY = scrollBarY-scrollBarHeight/2+((double)(curDate.getTime()-startDate.getTime())/(range.getTime()-startDate.getTime()))*(scrollBarHeight);
+            repaint();
         }
-        repaint();
     }
 
     @Override
