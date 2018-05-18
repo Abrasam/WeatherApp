@@ -98,11 +98,12 @@ public class IconBasket {
 
 
 
-
+    @Deprecated
     public static BufferedImage getImage(boolean isDay, boolean hasClouds, boolean hasSun, boolean hasRain, boolean hasSnow, boolean hasBolt) {
         String path = getPath(isDay, hasClouds, hasSun, hasRain, hasSnow, hasBolt);
         return getImageFromPath(path);
     }
+
     public static BufferedImage getImage(boolean isDay, WeatherSlice.Status status) {
         String path = getPath(isDay, status);
         return getImageFromPath(path);
@@ -119,11 +120,12 @@ public class IconBasket {
         return getImageFromPath(path);
     }
 
-
+    @Deprecated
     public static BufferedImage getResizedImage(int x, int y, boolean isDay, boolean hasClouds, boolean hasSun, boolean hasRain, boolean hasSnow, boolean hasBolt) {
         String path = getPath(isDay, hasClouds, hasSun, hasRain, hasSnow, hasBolt);
         return getResizedImageFromPath(x, y, path);
     }
+
     public static BufferedImage getResizedImage(int x, int y, boolean isDay, WeatherSlice.Status status) {
         String path = getPath(isDay, status);
         return getResizedImageFromPath(x, y, path);
@@ -140,11 +142,12 @@ public class IconBasket {
         return getResizedImageFromPath(x, y, path);
     }
 
-
+    @Deprecated
     public static ImageIcon getIcon(boolean isDay, boolean hasClouds, boolean hasSun, boolean hasRain, boolean hasSnow, boolean hasBolt) {
         BufferedImage img = getImage(isDay, hasClouds, hasSun, hasRain, hasSnow, hasBolt);
         return new ImageIcon(img);
     }
+
     public static ImageIcon getIcon(boolean isDay, WeatherSlice.Status status) {
         BufferedImage img = getImage(isDay, status);
         return new ImageIcon(img);
@@ -161,11 +164,12 @@ public class IconBasket {
         return new ImageIcon(img);
     }
 
-
+    @Deprecated
     public static ImageIcon getResizedIcon(int x, int y, boolean isDay, boolean hasClouds, boolean hasSun, boolean hasRain, boolean hasSnow, boolean hasBolt) {
         BufferedImage img = getResizedImage(x, y, isDay, hasClouds, hasSun, hasRain, hasSnow, hasBolt);
         return new ImageIcon(img);
     }
+
     public static ImageIcon getResizedIcon(int x, int y, boolean isDay, WeatherSlice.Status status) {
         BufferedImage img = getResizedImage(x, y, isDay, status);
         return new ImageIcon(img);

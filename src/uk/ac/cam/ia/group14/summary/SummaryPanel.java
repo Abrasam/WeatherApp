@@ -6,8 +6,6 @@ import uk.ac.cam.ia.group14.util.*;
 
 import javax.swing.*;
 import java.awt.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.util.ArrayList;
@@ -22,43 +20,51 @@ public class SummaryPanel extends UpdateableJPanel implements MouseListener{
 
     public static String cardName = "SummaryPanel";
 
+    // Size of the summary
+    private final int CONSTANTS_daysCount = 5;
+
+    // Colour constants
     private final Color CONSTANTS_row1Background = new Color(19,78,19);
     private final Color CONSTANTS_row2Background = new Color(24,98,24);
 
-
-
+    // Font constants
     private final String defaultFontName = "Ariel";
     private final Font CONSTANTS_row1LocationNameFont = new Font(defaultFontName, Font.PLAIN, 20);
     private final Font CONSTANTS_row1BackButtonFont = new Font(defaultFontName, Font.PLAIN, 18);
-    private final String CONSTANTS_row1LocationNamePrefix = "5-day summary for ";
+    private final int CONSTANTS_forecastIconSize = 90;
 
-    private final int CONSTANTS_daysCount = 5, CONSTANTS_forecastIconSize = 90;
-
-    private final double CONSTANTS_rowForecastWeight = 1.0 / (double)CONSTANTS_daysCount;
-
-    private final double CONSTANTS_backButtonWeight = 0.2, CONSTANTS_regionNameWeight = 0.8;
+    // Weight-related constants
     private final double CONSTANTS_row1Weight = 0.1, CONSTANTS_row2Weight = (1.0 - CONSTANTS_row1Weight);
+    private final double CONSTANTS_rowForecastWeight = 1.0 / (double)CONSTANTS_daysCount;
+    private final double CONSTANTS_backButtonWeight = 0.2, CONSTANTS_regionNameWeight = 0.8;
     private final double CONSTANTS_dummyForecastRowWeight = 0.5;
 
+    // Prefixes/suffixes
+    private final String CONSTANTS_row1LocationNamePrefix = "5-day summary for ";
     private final String CONSTANTS_celsius = "℃", CONSTANTS_kmh = "km/h", CONSTANTS_percent = "%";
 
+    // Size of the left&right stats on each row
     private final int CONSTANTS_leftStatsSize = 2, CONSTANTS_rightStatsSize = 2;
 
+
+    // Weather data
     private RegionID stateRegion;
     private Region stateData;
 
+    // The two main panels in the grid - those are row1 for backButtonAndName and row2 for forecastFragmentsPane
     private JPanel backButtonAndNamePane;
-    private JPanel forecastPane;
+    private JPanel forecastFragmentsPane;
 
+    // The two elements on the first row
     private JLabel row1BackBtn;
     private JLabel row1LocationNameLbl;
 
-
+    // All the elements on the second row (which contains many rows of fragments itself)
     private ArrayList<RowForecastFragment> row2RowForecastFragments;
 
 
-
-    private void initBackButtonAndName() {
+    // Initialise the bare bones of the back button and location name
+    private void initBackButtonAndLocationName() {
         row1BackBtn = new JLabel("<", SwingConstants.CENTER);
         row1BackBtn.setForeground(Color.WHITE);
         row1BackBtn.setBorder(null);
@@ -69,7 +75,7 @@ public class SummaryPanel extends UpdateableJPanel implements MouseListener{
                 getGridBagConstraints(GridBagConstraints.BOTH, 0, 0, CONSTANTS_backButtonWeight, 1.0);
         backButtonAndNamePane.add(row1BackBtn, backButtonConstraints);
 
-        row1LocationNameLbl = new JLabel("LOCATION NAME HERE", SwingConstants.CENTER);
+        row1LocationNameLbl = new JLabel("", SwingConstants.CENTER);
         row1LocationNameLbl.setForeground(Color.WHITE);
         row1LocationNameLbl.setFont(CONSTANTS_row1LocationNameFont);
         GridBagConstraints labelLocationConstraints =
@@ -81,13 +87,11 @@ public class SummaryPanel extends UpdateableJPanel implements MouseListener{
     }
 
 
+    // Initialise the bare bones of a forecastRowFragment
+    private RowForecastFragment getRowForecastFragment() {
 
-    private RowForecastFragment getForecastRow() {
-
-        String dayOfWeekString = "M";
-        ImageIcon forecastIconImage =
-                IconBasket.getResizedIcon(CONSTANTS_forecastIconSize, CONSTANTS_forecastIconSize,true,
-                        false, true, false, false, false);
+        String dayOfWeekString = "";
+        ImageIcon forecastIconImage = null;
 
         ArrayList<String> leftStatsData, rightStatsData;
         leftStatsData = new ArrayList<>();
@@ -96,43 +100,47 @@ public class SummaryPanel extends UpdateableJPanel implements MouseListener{
         rightStatsData = new ArrayList<>();
         for (int i=0; i<CONSTANTS_rightStatsSize; i++) rightStatsData.add("");
 
-        RowForecastFragment wholeThing = new RowForecastFragment(defaultFontName, dayOfWeekString, leftStatsData, forecastIconImage, rightStatsData);
+        RowForecastFragment wholeThing =
+                new RowForecastFragment(defaultFontName, dayOfWeekString, leftStatsData, forecastIconImage, rightStatsData);
         row2RowForecastFragments.add(wholeThing);
 
         return wholeThing;
     }
 
+    // Initialise the wole forecast pane by adding all RowForecastFragments
     private void initForecastPane() {
-        forecastPane.setBackground(CONSTANTS_row2Background);
+        forecastFragmentsPane.setBackground(CONSTANTS_row2Background);
 
         row2RowForecastFragments = new ArrayList<>();
 
         int gridY=0;
 
+        // Dummy rows are added to the grid in order to separate rows
+        // The weight for each dummy row is calculated
         double dummyRowWeight = CONSTANTS_dummyForecastRowWeight / (CONSTANTS_daysCount);
-
 
         GridBagConstraints dummyRowConstraints =
                 getGridBagConstraints(GridBagConstraints.BOTH, 0, gridY++, dummyRowWeight, 1.0);
         JPanel dummy = new JPanel();
         dummy.setBackground(CONSTANTS_row2Background);
-        forecastPane.add(dummy, dummyRowConstraints);
+        forecastFragmentsPane.add(dummy, dummyRowConstraints);
 
         for (int i=0; i<CONSTANTS_daysCount; i++) {
-            RowForecastFragment curRow = getForecastRow();
+            RowForecastFragment curRow = getRowForecastFragment();
 
             GridBagConstraints wholeThingConstraints =
                     getGridBagConstraints(GridBagConstraints.BOTH, 0, gridY++, CONSTANTS_rowForecastWeight, 1.0);
-            forecastPane.add(curRow, wholeThingConstraints);
+            forecastFragmentsPane.add(curRow, wholeThingConstraints);
 
             dummyRowConstraints =
                     getGridBagConstraints(GridBagConstraints.BOTH, 0, gridY++, dummyRowWeight, 1.0);
             dummy = new JPanel();
             dummy.setBackground(CONSTANTS_row2Background);
-            forecastPane.add(dummy, dummyRowConstraints);
+            forecastFragmentsPane.add(dummy, dummyRowConstraints);
         }
     }
 
+    // Triggers the initialisation of the two main rows in the grid
     private void initBareBones() {
 
         this.setLayout(new GridBagLayout());
@@ -147,28 +155,34 @@ public class SummaryPanel extends UpdateableJPanel implements MouseListener{
         forecastConstraints.fill = GridBagConstraints.BOTH;
 
 
-        forecastPane = new JPanel(new GridBagLayout());
+        forecastFragmentsPane = new JPanel(new GridBagLayout());
 
         this.add(backButtonAndNamePane, backButtonAndNameConstraints);
-        this.add(forecastPane, forecastConstraints);
+        this.add(forecastFragmentsPane, forecastConstraints);
 
-        initBackButtonAndName();
+        initBackButtonAndLocationName();
         initForecastPane();
 
         row1BackBtn.addMouseListener(this);
 
-        stateRegion = mainFrame.getDatum().getCurrentMountainRegion();
     }
 
     private MainFrame mainFrame;
 
     public SummaryPanel(MainFrame mainFrame){
         this.mainFrame = mainFrame;
+
+        stateRegion = mainFrame.getDatum().getCurrentMountainRegion();
+
+        if (stateRegion == null) {
+            System.out.println("Dude, the region is null..");
+        }
+
         initBareBones();
         update();
     }
 
-
+    // Updates the data in all row fragments
     private void updateRowFragments() {
 
         System.out.println(stateData.getDays()[0].getTime());
@@ -211,6 +225,7 @@ public class SummaryPanel extends UpdateableJPanel implements MouseListener{
         }
     }
 
+    // Function, which is called when this screen is accessed. It updates the data to be displayed
     public void update() {
         stateData = WeatherFetcher.getInstance().getRegion(stateRegion);
         row1LocationNameLbl.setText(CONSTANTS_row1LocationNamePrefix + stateData.getName());
@@ -218,16 +233,11 @@ public class SummaryPanel extends UpdateableJPanel implements MouseListener{
         updateRowFragments();
     }
 
+    // Function which specifies what to do when the back button is pressed
+    // It makes a request to change the active screen and mainFrame takes care of everything else
     private void actionBackButtonPressed() {
         mainFrame.changeCard(DetailPanel.cardName);
     }
-
-    /*@Override
-    public void actionPerformed(ActionEvent e) {
-        if (e.getSource() == row1BackBtn) {
-            actionBackButtonPressed();
-        }
-    }*/
 
     @Override
     public void mouseClicked(MouseEvent mouseEvent) {
