@@ -227,6 +227,7 @@ public class SummaryPanel extends UpdateableJPanel implements MouseListener{
 
     // Function, which is called when this screen is accessed. It updates the data to be displayed
     public void update() {
+        stateRegion = mainFrame.getDatum().getCurrentMountainRegion();
         stateData = WeatherFetcher.getInstance().getRegion(stateRegion);
         row1LocationNameLbl.setText(CONSTANTS_row1LocationNamePrefix + stateData.getName());
 
