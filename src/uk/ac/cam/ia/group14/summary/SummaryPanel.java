@@ -24,8 +24,10 @@ public class SummaryPanel extends UpdateableJPanel implements MouseListener{
     private final int CONSTANTS_daysCount = 5;
 
     // Colour constants
-    private final Color CONSTANTS_row1Background = new Color(19,78,19);
-    private final Color CONSTANTS_row2Background = new Color(24,98,24);
+    private final Color CONSTANTS_row1Background = Color.decode("#094754");
+
+    private final Color CONSTANTS_rowForecastsColor = Color.decode("#8BC5AC");;
+    private final Color CONSTANTS_rowStripesColor = Color.decode("#278577");
 
     // Font constants
     private final String defaultFontName = "Ariel";
@@ -37,7 +39,7 @@ public class SummaryPanel extends UpdateableJPanel implements MouseListener{
     private final double CONSTANTS_row1Weight = 0.1, CONSTANTS_row2Weight = (1.0 - CONSTANTS_row1Weight);
     private final double CONSTANTS_rowForecastWeight = 1.0 / (double)CONSTANTS_daysCount;
     private final double CONSTANTS_backButtonWeight = 0.2, CONSTANTS_regionNameWeight = 0.8;
-    private final double CONSTANTS_dummyForecastRowWeight = 0.5;
+    private final double CONSTANTS_dummyForecastRowWeight = 0.1;
 
     // Prefixes/suffixes
     private final String CONSTANTS_row1LocationNamePrefix = "5-day summary for ";
@@ -101,7 +103,8 @@ public class SummaryPanel extends UpdateableJPanel implements MouseListener{
         for (int i=0; i<CONSTANTS_rightStatsSize; i++) rightStatsData.add("");
 
         RowForecastFragment wholeThing =
-                new RowForecastFragment(defaultFontName, dayOfWeekString, leftStatsData, forecastIconImage, rightStatsData);
+                new RowForecastFragment(defaultFontName, CONSTANTS_rowForecastsColor,
+                        dayOfWeekString, leftStatsData, forecastIconImage, rightStatsData);
         row2RowForecastFragments.add(wholeThing);
 
         return wholeThing;
@@ -109,7 +112,7 @@ public class SummaryPanel extends UpdateableJPanel implements MouseListener{
 
     // Initialise the wole forecast pane by adding all RowForecastFragments
     private void initForecastPane() {
-        forecastFragmentsPane.setBackground(CONSTANTS_row2Background);
+        forecastFragmentsPane.setBackground(CONSTANTS_rowStripesColor);
 
         row2RowForecastFragments = new ArrayList<>();
 
@@ -117,12 +120,12 @@ public class SummaryPanel extends UpdateableJPanel implements MouseListener{
 
         // Dummy rows are added to the grid in order to separate rows
         // The weight for each dummy row is calculated
-        double dummyRowWeight = CONSTANTS_dummyForecastRowWeight / (CONSTANTS_daysCount);
+        double dummyRowWeight = CONSTANTS_dummyForecastRowWeight / (double)(CONSTANTS_daysCount);
 
         GridBagConstraints dummyRowConstraints =
                 getGridBagConstraints(GridBagConstraints.BOTH, 0, gridY++, dummyRowWeight, 1.0);
         JPanel dummy = new JPanel();
-        dummy.setBackground(CONSTANTS_row2Background);
+        dummy.setBackground(CONSTANTS_rowStripesColor);
         forecastFragmentsPane.add(dummy, dummyRowConstraints);
 
         for (int i=0; i<CONSTANTS_daysCount; i++) {
@@ -135,7 +138,7 @@ public class SummaryPanel extends UpdateableJPanel implements MouseListener{
             dummyRowConstraints =
                     getGridBagConstraints(GridBagConstraints.BOTH, 0, gridY++, dummyRowWeight, 1.0);
             dummy = new JPanel();
-            dummy.setBackground(CONSTANTS_row2Background);
+            dummy.setBackground(CONSTANTS_rowStripesColor);
             forecastFragmentsPane.add(dummy, dummyRowConstraints);
         }
     }

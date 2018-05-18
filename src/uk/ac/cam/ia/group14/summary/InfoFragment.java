@@ -7,10 +7,9 @@ import java.util.List;
 
 public class InfoFragment extends JPanel {
 
-
-    private final Color CONSTANTS_defColor = new Color(49,200,49);
-
     private String defaultFontName;
+    private Color defColor;
+
     private final Font CONSTANTS_infoFont = new Font(defaultFontName, Font.PLAIN, 16);
 
     private List<JLabel> tagLbl;
@@ -19,7 +18,7 @@ public class InfoFragment extends JPanel {
 
 
     private void initComponents() {
-        this.setBackground(CONSTANTS_defColor);
+        this.setBackground(defColor);
 
         int gridX=0, gridY=0;
 
@@ -92,9 +91,12 @@ public class InfoFragment extends JPanel {
         }
     }
 
-    public InfoFragment(String defaultFontName, List<JLabel> tagLbl, List<String> infoData) {
+    public InfoFragment(String defaultFontName, Color defColor, List<JLabel> tagLbl, List<String> infoData) {
 
         this.defaultFontName = defaultFontName;
+        this.defColor = defColor;
+
+
         assert (tagLbl.size() == infoData.size());
 
         this.setLayout(new GridBagLayout());
@@ -104,9 +106,11 @@ public class InfoFragment extends JPanel {
 
         initComponents();
     }
-    public InfoFragment(String defaultFontName, List<String> infoData) {
+    public InfoFragment(String defaultFontName, Color defColor, List<String> infoData) {
 
         this.defaultFontName = defaultFontName;
+        this.defColor = defColor;
+
         this.setLayout(new GridBagLayout());
         this.infoData = infoData;
 

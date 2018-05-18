@@ -11,7 +11,7 @@ public class RowForecastFragment extends JPanel{
 
     private String defaultFontName;
 
-    private final Color CONSTANTS_defColor = new Color(49,200,49);
+    private Color defColor;
 
     private final Font CONSTANTS_dayOfWeekFont = new Font(defaultFontName, Font.PLAIN, 19);
     private final double CONSTANTS_dayOfWeekWeight = 0.25,
@@ -29,7 +29,7 @@ public class RowForecastFragment extends JPanel{
 
 
     private void initComponents() {
-        this.setBackground(CONSTANTS_defColor);
+        this.setBackground(defColor);
 
         dayOfWeekLbl = new JLabel("", SwingConstants.CENTER);
         dayOfWeekLbl.setFont(CONSTANTS_dayOfWeekFont);
@@ -42,12 +42,12 @@ public class RowForecastFragment extends JPanel{
                 getGridBagConstraints(GridBagConstraints.BOTH, 2, 0, CONSTANTS_forecastIconWeight, 1.0);
         this.add(forecastIconLbl, forecastIconConstraints);
 
-        leftStatsFragment = new InfoFragment(defaultFontName, leftStatsData);
+        leftStatsFragment = new InfoFragment(defaultFontName, defColor, leftStatsData);
         GridBagConstraints leftStatsConstraints =
                 getGridBagConstraints(GridBagConstraints.BOTH, 1, 0, CONSTANTS_singleStatWeight, 1.0);
         this.add(leftStatsFragment, leftStatsConstraints);
 
-        rightStatsFragment = new InfoFragment(defaultFontName, rightStatsData);
+        rightStatsFragment = new InfoFragment(defaultFontName, defColor, rightStatsData);
         GridBagConstraints rightStatsConstraints =
                 getGridBagConstraints(GridBagConstraints.BOTH, 3, 0, CONSTANTS_singleStatWeight, 1.0);
         this.add(rightStatsFragment, rightStatsConstraints);
@@ -71,10 +71,12 @@ public class RowForecastFragment extends JPanel{
     }
 
 
-    public RowForecastFragment(String defaultFontName, String dayOfWeekString, List<String> leftStatsData, ImageIcon forecastIcon, List<String> rightStatsData) {
+    public RowForecastFragment(String defaultFontName, Color defColor, String dayOfWeekString, List<String> leftStatsData, ImageIcon forecastIcon, List<String> rightStatsData) {
         super(new GridBagLayout());
 
         this.defaultFontName = defaultFontName;
+        this.defColor = defColor;
+        
         this.dayOfWeekString = dayOfWeekString;
         this.leftStatsData = leftStatsData;
         this.forecastIcon = forecastIcon;
