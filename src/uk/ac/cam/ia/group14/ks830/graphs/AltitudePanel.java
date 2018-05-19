@@ -79,7 +79,7 @@ public class AltitudePanel extends JPanel{
 
 
 		// create hatch marks and grid lines for x axis
-		for (int i = 0; i < values.length; i++) {
+		for (int i = 0; i < values.length; i+=2) {
 			if (values.length > 1) {
 				int x0 = i * (getWidth() - padding * 2 - labelPadding) / (values.length - 1) + padding + labelPadding;
 				int x1 = x0;
