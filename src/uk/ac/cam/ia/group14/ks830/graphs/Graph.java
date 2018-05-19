@@ -25,8 +25,9 @@ public class Graph {
 
 
 	/**
-	 * The constructor uses the {@link WeatherSlice[]} array to extract the metrics into arrays,
-	 * which are then converted into three {@link GraphPanel}s.
+	 * The constructor takes in the {@link RegionID} to get the corresponding {@link WeatherSlice}[] array
+	 * from a {@link WeatherFetcher}.
+	 * This is then converted into three {@link GraphPanel}s.
 	 *
 	 * @param regionID: the region for which the weather data graphs should be displayed.
 	 */
@@ -53,9 +54,36 @@ public class Graph {
 	}
 
 	/**
+	 * The constructor uses the {@link WeatherSlice[]} array directly to extract the metrics into arrays,
+	 * which are then converted into three {@link GraphPanel}s.
+	 *
+	 * @param weatherSlices: the region for which the weather data graphs should be displayed.
+	 */
+	private Graph(WeatherSlice[] weatherSlices) {
+		// retrieve a WeatherSlice array containing the hourly data for the next five days
+
+		// extract weatherSliceData into the separate temperature, rain, wind data
+		double[] temperatureData = new double[120];
+		double[] rainData = new double[120];
+		double[] windData = new double[120];
+		int i = 0;
+
+		int startTime = weatherSlices[0].getTime().getHours();
+		for(WeatherSlice slice: weatherSlices) {
+			temperatureData[i] = slice.getTemp();
+			rainData[i] = slice.getRain();
+			windData[i++] = slice.getWind();
+		}
+
+		temperatureGraph = GraphPanel.getImage(temperatureData, WeatherSlice.Parameter.TEMPERATURE, startTime);
+		rainGraph = GraphPanel.getImage(rainData, WeatherSlice.Parameter.RAIN, startTime);
+		windGraph = GraphPanel.getImage(windData, WeatherSlice.Parameter.WIND, startTime);
+	}
+
+	/**
 	 * The Graph to generate random values for data. Used for testing.
 	 */
-	private Graph() {
+	/*private Graph() {
 		// generate arrays of random data for temperature, rain, and wind
 		double[] temperatureData = generateRandomValues();
 		double[] rainData = generateRandomValues();
@@ -65,7 +93,9 @@ public class Graph {
 		temperatureGraph = GraphPanel.getImage(temperatureData, WeatherSlice.Parameter.TEMPERATURE, 0);
 		rainGraph = GraphPanel.getImage(rainData, WeatherSlice.Parameter.RAIN, 0);
 		windGraph = GraphPanel.getImage(windData, WeatherSlice.Parameter.WIND, 0);
-	}
+	}*/
+
+
 	/**
 	 * Returns a {@link BufferedImage} containing the rain data.
 	 */
@@ -92,26 +122,26 @@ public class Graph {
 	/**
 	 * Returns the BufferedImage displaying the random rain data. Use for testing.
 	 */
-	public static BufferedImage getRandomRainGraph() {
+	/*public static BufferedImage getRandomRainGraph() {
 		Graph graph = new Graph();
 		return graph.rainGraph;
-	}
+	}*/
 
 	/**
 	 * Returns the BufferedImage displaying the random temperature data. Use for testing.
 	 */
-	public static BufferedImage getRandomTemperatureGraph() {
+	/*public static BufferedImage getRandomTemperatureGraph() {
 		Graph graph = new Graph();
 		return graph.temperatureGraph;
-	}
+	}*/
 
 	/**
 	 * Returns the BufferedImage displaying the random wind data. Use for testing.
 	 */
-	public static BufferedImage getRandomWindGraph() {
+	/*public static BufferedImage getRandomWindGraph() {
 		Graph graph = new Graph();
 		return graph.windGraph;
-	}
+	}*/
 
 	/**
 	 * private method for random value generation, to be used for testing

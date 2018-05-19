@@ -93,7 +93,13 @@ public class GraphPanel extends JPanel {
             graphPoints.add(new Point(x1, y1));
         }
 
-        g2.setColor(Color.BLACK);
+        // set background colour
+		g2.setColor(new Color(215, 225, 255));
+		g2.fillRect(padding + labelPadding, padding,
+				getWidth() - (2 * padding) - labelPadding,
+				getHeight() - 2 * padding - labelPadding);
+		g2.setColor(Color.BLACK);
+
 
 		// create hatch marks and grid lines for x axis
 		for (int i = 0; i < values.length; i++) {
