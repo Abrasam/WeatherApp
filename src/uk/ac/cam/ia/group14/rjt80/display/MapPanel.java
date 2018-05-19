@@ -53,6 +53,9 @@ public class MapPanel extends UpdateableJPanel {
                 respondToMouseMove(e.getPoint());
             }
         });
+
+        //default mountain range to stop other's frames from crashing
+        frame.getDatum().setCurrentMountainRegion(RegionID.BREACONS);
     }
 
     private void setBackground(String imgFilePath) {

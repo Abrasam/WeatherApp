@@ -18,7 +18,7 @@ public class MainFrame extends JFrame {
 
     public MainFrame(){
         super("Mountain Weather");
-        setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
         pack();
         setSize(400, 800);
         setResizable(false);
@@ -27,14 +27,15 @@ public class MainFrame extends JFrame {
         panels = new HashMap<>();
         panels.put(MapPanel.cardName, new MapPanel(this));
         //To add your panel, write a line exactly the same as one above, except with your panel class, i.e.:
-        //panels.put(DetailPanel.cardName, new DetailPanel(this));
-        //panels.put(SummaryPanel.cardName, new SummaryPanel(this));
+        panels.put(DetailPanel.cardName, new DetailPanel(this));
+        panels.put(SummaryPanel.cardName, new SummaryPanel(this));
 
         cards = new JPanel(new CardLayout());
         for (String cardName : panels.keySet()) {
             cards.add(panels.get(cardName), cardName);
         }
         getContentPane().add(cards);
+        ((CardLayout) cards.getLayout()).show(cards, MapPanel.cardName);
 
         //This needs to go at the bottom, idk why
         setVisible(true);
