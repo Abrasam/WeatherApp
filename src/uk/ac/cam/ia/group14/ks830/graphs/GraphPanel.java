@@ -30,7 +30,7 @@ import javax.swing.*;
  */
 public class GraphPanel extends JPanel {
 
-	// dimensions to match the main frame
+	// dimensions of the graph so they are consistent and the data is displayed clearly
     private final int preferredWidth = 3000;
     private final int preferredHeight = 120;
 
@@ -42,6 +42,8 @@ public class GraphPanel extends JPanel {
     private Color lineColor;
     private Color pointColor = new Color(100, 100, 100, 180);
     private Color gridColor = new Color(200, 200, 200, 200);
+	private Color backgroundColor = new Color(215, 225, 255);
+
 
     // declare variables for appearance of the graph
     private static final Stroke GRAPH_STROKE = new BasicStroke(2f);
@@ -86,6 +88,7 @@ public class GraphPanel extends JPanel {
         double xScale = ((double) getWidth() - (2 * padding) - labelPadding) / (values.length - 1);
         double yScale = ((double) getHeight() - 2 * padding - labelPadding) / (getMaxScore() - getMinScore());
 
+        // get the list of points to plot
         List<Point> graphPoints = new ArrayList<>();
         for (int i = 0; i < values.length; i++) {
             int x1 = (int) (i * xScale + padding + labelPadding);
@@ -94,10 +97,12 @@ public class GraphPanel extends JPanel {
         }
 
         // set background colour
-		g2.setColor(new Color(215, 225, 255));
+		this.setBackground(backgroundColor);
+		g2.setColor(backgroundColor);
 		g2.fillRect(padding + labelPadding, padding,
 				getWidth() - (2 * padding) - labelPadding,
 				getHeight() - 2 * padding - labelPadding);
+
 		g2.setColor(Color.BLACK);
 
 
@@ -129,6 +134,8 @@ public class GraphPanel extends JPanel {
 		        getWidth() - padding,
 		        getHeight() - padding - labelPadding);
 
+
+		// paint the lines that will connect the points
         Stroke oldStroke = g2.getStroke();
         g2.setColor(lineColor);
         g2.setStroke(GRAPH_STROKE);
@@ -272,7 +279,8 @@ public class GraphPanel extends JPanel {
 	    frame.setLocationRelativeTo(null);
 	    frame.setVisible(true);
     }
-    
+
+    // method for independent display of the graph that is used for testing
     public static void main(String[] args) {
       SwingUtilities.invokeLater(new Runnable() {
          public void run() {

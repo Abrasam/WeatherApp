@@ -59,7 +59,7 @@ public class Graph {
 	 *
 	 * @param weatherSlices: the region for which the weather data graphs should be displayed.
 	 */
-	private Graph(WeatherSlice[] weatherSlices) {
+	public Graph(WeatherSlice[] weatherSlices) {
 		// retrieve a WeatherSlice array containing the hourly data for the next five days
 
 		// extract weatherSliceData into the separate temperature, rain, wind data
