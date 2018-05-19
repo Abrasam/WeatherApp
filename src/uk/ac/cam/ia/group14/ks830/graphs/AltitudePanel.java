@@ -79,9 +79,9 @@ public class AltitudePanel extends JPanel{
 
 
 		// create hatch marks and grid lines for x axis
-		for (int i = 0; i < values.length; i+=2) {
-			if (values.length > 1) {
-				int x0 = i * (getWidth() - padding * 2 - labelPadding) / (values.length - 1) + padding + labelPadding;
+		for (int i = 0; i < graphPoints.size(); i++) {
+			if (graphPoints.size() > 1) {
+				int x0 = i * (getWidth() - padding * 2 - labelPadding) / (graphPoints.size() - 1) + padding + labelPadding;
 				int x1 = x0;
 				int y0 = getHeight() - padding - labelPadding;
 				int y1 = y0 - pointWidth;
@@ -131,12 +131,13 @@ public class AltitudePanel extends JPanel{
 			g2.fillOval(x, y, ovalW, ovalH);
 
 			// display the parameter if it is a local minimum or a local maximum
-			if (i > 0 && i < values.length - 1 &&
-					((values[i] >= values[i+1] && values[i] >= values[i-1]) ||
-							values[i] <= values[i+1] && values[i] <= values[i-1])) {
+			int j = i * 2;
+			if (j > 0 && j < values.length - 1 &&
+					((values[j] >= values[j+1] && values[j] >= values[j-1]) ||
+							values[j] <= values[j+1] && values[j] <= values[j-1])) {
 				// display the value above the point
 				g2.setColor(pointColor);
-				String metricLabel = "" + ((int) values[i]);
+				String metricLabel = "" + ((int) values[j]);
 
 				FontMetrics metrics = g2.getFontMetrics();
 				int labelWidth = metrics.stringWidth(metricLabel);
