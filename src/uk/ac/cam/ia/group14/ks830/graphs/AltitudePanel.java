@@ -62,7 +62,7 @@ public class AltitudePanel extends JPanel{
 
 		// get the list of points to plot
 		List<Point> graphPoints = new ArrayList<>();
-		for (int i = 0; i < values.length; i++) {
+		for (int i = 0; i < values.length; i+=2) {
 			int x1 = (int) (i * xScale + padding + labelPadding);
 			int y1 = (int) ((getMaxScore() - values[i]) * yScale + padding);
 			graphPoints.add(new Point(x1, y1));
@@ -90,7 +90,7 @@ public class AltitudePanel extends JPanel{
 					g2.drawLine(x0, getHeight() - padding - labelPadding - 1 - pointWidth,
 							x1, graphPoints.get(i).y);
 					g2.setColor(Color.BLACK);
-					String xLabel = i * 50 + " m";
+					String xLabel = i * 50 + "m";
 					FontMetrics metrics = g2.getFontMetrics();
 					int labelWidth = metrics.stringWidth(xLabel);
 					g2.drawString(xLabel, x0 - labelWidth / 2, y0 + metrics.getHeight() + 3);
@@ -136,7 +136,8 @@ public class AltitudePanel extends JPanel{
 							values[i] <= values[i+1] && values[i] <= values[i-1])) {
 				// display the value above the point
 				g2.setColor(pointColor);
-				String metricLabel = "" + ((int) values[i]);;
+				String metricLabel = "" + ((int) values[i]);
+
 				FontMetrics metrics = g2.getFontMetrics();
 				int labelWidth = metrics.stringWidth(metricLabel);
 				g2.drawString(metricLabel, x - labelWidth / 2, y - (metrics.getHeight() / 2) + 1);
