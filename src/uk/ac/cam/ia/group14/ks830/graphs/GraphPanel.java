@@ -61,6 +61,7 @@ public class GraphPanel extends JPanel {
 
     	// set the size of the graph
     	this.setSize(new Dimension(preferredWidth, preferredHeight));
+    	this.setBackground(backgroundColor);
 
     	switch (parameter) {
 		    case TEMPERATURE:
