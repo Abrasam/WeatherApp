@@ -90,7 +90,7 @@ public class AltitudePanel extends JPanel{
 					g2.drawLine(x0, getHeight() - padding - labelPadding - 1 - pointWidth,
 							x1, graphPoints.get(i).y);
 					g2.setColor(Color.BLACK);
-					String xLabel = i * 50 + "m";
+					String xLabel = i * 100 + "m";
 					FontMetrics metrics = g2.getFontMetrics();
 					int labelWidth = metrics.stringWidth(xLabel);
 					g2.drawString(xLabel, x0 - labelWidth / 2, y0 + metrics.getHeight() + 3);

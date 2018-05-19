@@ -1,6 +1,5 @@
 package uk.ac.cam.ia.group14.detail;
 
-import sun.applet.Main;
 import uk.ac.cam.ia.group14.ks830.graphs.Graph;
 import uk.ac.cam.ia.group14.rjt80.display.MapPanel;
 import uk.ac.cam.ia.group14.sjs252.WeatherFetcher;
@@ -17,7 +16,6 @@ import java.awt.geom.RoundRectangle2D;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
-import java.text.DecimalFormat;
 import java.util.Calendar;
 import java.util.Date;
 
@@ -28,13 +26,13 @@ public class DetailPanel extends UpdateableJPanel implements MouseListener,Mouse
     private static boolean renew = true;
 
     //Actual screen size: x: 0-393, y: 0-770
-    private int CONST_SCREENRIGHT = 393;
-    private int CONST_SCREENBOTTOM = 770;
+    //private int CONST_SCREENRIGHT = 393;  //not used
+    //private int CONST_SCREENBOTTOM = 770;  //not used
 
     //Scroll param
     private Color scrollColor = new Color(150,150,150);
     private int scrollBarX = 50;
-    private int scrollBarY = CONST_SCREENBOTTOM/2;
+    private int scrollBarY = 385; // ( CONST_SCREENBOTTOM / 2 );
     private int scrollBarHeight = 700;
     private int scrollBarThickness = 3;
     private int scrollDivWidth = 16;
@@ -92,7 +90,7 @@ public class DetailPanel extends UpdateableJPanel implements MouseListener,Mouse
     private BufferedImage tempGraph;
     private BufferedImage windGraph;
     private BufferedImage rainGraph;
-    private BufferedImage attiGraph;
+    private BufferedImage[] altiGraph = new BufferedImage[120];
 
     //Graph param
     private double graphX = 225;
@@ -130,6 +128,7 @@ public class DetailPanel extends UpdateableJPanel implements MouseListener,Mouse
     private RegionID stateRegion = null;
     private Region stateData = null;
     WeatherSlice[] ws;
+    double[][] altTemperature = new double[120][];
 
     //Other Class
     private MainFrame mf;
@@ -177,6 +176,7 @@ public class DetailPanel extends UpdateableJPanel implements MouseListener,Mouse
     }
 
     private Date roundDateHour(Date cur, boolean roundDown){
+        //Round date to hour
         Calendar cal = Calendar.getInstance();
         cal.setTime(cur);
         cal.add(Calendar.MINUTE,roundDown?0:30);
@@ -187,6 +187,7 @@ public class DetailPanel extends UpdateableJPanel implements MouseListener,Mouse
     }
 
     private Date roundUpDate(Date cur){
+        //Round date to next date
         Calendar cal = Calendar.getInstance();
         cal.setTime(cur);
         cal.add(Calendar.DATE,1);
@@ -224,9 +225,13 @@ public class DetailPanel extends UpdateableJPanel implements MouseListener,Mouse
     }
 
     private int mapCurDateToWs(){
+        //Map the current time to weather information index
         return (int)(roundDateHour(curDate,false).getTime()-roundDateHour(startDate,false).getTime()-1)/3600000;
     }
 
+    ////////////////////////////////////////////////////////////
+    //This function is used as data prediction and calculation//
+    ////////////////////////////////////////////////////////////
     private void refineData(){
         for (int i=0;i<ws.length;i++) {
             //Estimate data which is null
@@ -266,6 +271,20 @@ public class DetailPanel extends UpdateableJPanel implements MouseListener,Mouse
             freezingAltitude = (double)Math.round(freezingAltitude);
             WeatherSlice.Status status = ws[i].getStatus();
             ws[i]=new WeatherSlice(time,temp,wind,rain,visibility,cloudLevel,freezingAltitude,status);
+        }
+        for (int i=0;i<120;i++){
+            double[] tmp = new double[30];
+            for (int j=0;j<30;j++){
+                if (j==0) tmp[j] = ws[i].getTemp();
+                else {
+                    tmp[j] = tmp[j-1]-Math.random()/1.25+0.1;
+                    if (tmp[j]>tmp[0]) tmp[j] = tmp[j]-Math.random()/4-0.25;
+                    if (j>1 && tmp[j]>tmp[j-2] && tmp[j]>tmp[j-1]) tmp[j] = tmp[j]-Math.random()/3-0.1;
+                    if (j>2 && tmp[j]>tmp[j-3] && tmp[j]>tmp[j-2]) tmp[j] = tmp[j]-Math.random()/4-0.5;
+                }
+                if (i>0) tmp[j] = (altTemperature[i-1][j] - (altTemperature[i-1][0]-tmp[0])/2+tmp[j])/2;
+            }
+            altTemperature[i] = tmp;
         }
     }
 
@@ -329,9 +348,9 @@ public class DetailPanel extends UpdateableJPanel implements MouseListener,Mouse
         drawImg(g,rainGraph,graphX-graphW/2,graphY-graphH/2+(graphH+graphSpacing)*2,graphW,graphH,graphSourceW,graphSection);
         g.drawImage(getImg("images/general/rain.png"),(int)(graphX-graphW/2)-20,(int)(graphY-graphH/2+(graphH+graphSpacing)*2),40,40,this);
 
-        //Graph: Temperature
-        drawImg(g,attiGraph,graphX-graphW/2,graphY-graphH/2+(graphH+graphSpacing)*3,graphW,graphH,graphSourceW,graphSection);
-        g.drawImage(getImg("images/general/temperature.png"),(int)(graphX-graphW/2)-20,(int)(graphY-graphH/2+(graphH+graphSpacing)*3),40,40,this);
+        //Graph: Altitude
+        drawImg(g,altiGraph[mapCurDateToWs()],graphX-graphW/2,graphY-graphH/2+(graphH+graphSpacing)*3,graphW,graphH,300,0);
+        g.drawImage(getImg("images/general/altitude.png"),(int)(graphX-graphW/2)-16,(int)(graphY-graphH/2+(graphH+graphSpacing)*3),48,48,this);
 
         //Location
         String regionName = mf.getDatum().getCurrentMountainRegion().toString();
@@ -380,34 +399,29 @@ public class DetailPanel extends UpdateableJPanel implements MouseListener,Mouse
         tempGraph = tempGraph.getSubimage(15,0,2973,120);
         windGraph = windGraph.getSubimage(15,0,2973,120);
         rainGraph = rainGraph.getSubimage(15,0,2973,120);
-        attiGraph = attiGraph.getSubimage(15,0,2973,120);
         graphSourceW = 2973;
     }
 
     private void initialise() {
         addMouseListener(this);
         addMouseMotionListener(this);
-//        startDate = new Date ();
-//        curDate = startDate;
-//        startDate = roundDateHour(startDate,true);
         curDate = new Date();
-//        Calendar cal = Calendar.getInstance();
-//        cal.setTime(startDate);
-//        cal.set(Calendar.HOUR_OF_DAY,0);
-//        startDate = cal.getTime();
         init = false;
     }
 
     private void renewData(){
         gph = new Graph(ws);
         range = adjDate(startDate, Calendar.DATE,dateOnScroll-1);
+        //Prevent new start date is bigger than the current date;
         if (curDate.getTime()<startDate.getTime()) curDate = new Date();
         buttonX = scrollBarX;
         buttonY = scrollBarY-scrollBarHeight/2+((double)(curDate.getTime()-startDate.getTime())/(range.getTime()-startDate.getTime()))*(scrollBarHeight);
         tempGraph = gph.getTemperatureGraph();
         windGraph = gph.getWindGraph();
         rainGraph = gph.getRainGraph();
-        attiGraph = gph.getTemperatureGraph();
+        for (int i=0;i<120;i++){
+            altiGraph[i] = gph.getAltitudeGraph(altTemperature[i]);
+        }
         renew = false;
         trimGraph();
     }
@@ -444,12 +458,12 @@ public class DetailPanel extends UpdateableJPanel implements MouseListener,Mouse
         }
         //Check for press on location button
         else if (inRange(mouseX,mouseY,locButtonX,locButtonY,locButtonSize/2)){
-            System.out.println("Click on location, redirect to Location panel");
+            //System.out.println("Click on location, redirect to Location panel");
             mf.changeCard(MapPanel.cardName);
         }
         //Check for press on summary button
         else if (inRange(mouseX,mouseY,summaryX,summaryY,summarySize/2)){
-            System.out.println("Click on summary, redirect to Summary panel");
+            //System.out.println("Click on summary, redirect to Summary panel");
                 repaint();
             mf.changeCard(SummaryPanel.cardName);
         }
@@ -469,11 +483,14 @@ public class DetailPanel extends UpdateableJPanel implements MouseListener,Mouse
         holdButton = false;
         holdGraph = false;
         if (sigMove) {
+            //Repaint and calculate the ratio and convert to current time
             sigMove = false;
             sigMoveConst = 15;
             double incr;
+            //Round the current time to nearest hour
             Date targetDate = roundDateHour(curDate, false);
             while (curDate != targetDate) {
+                //Create a decaying time change until it reaches the desire time
                 incr = targetDate.getTime() - curDate.getTime();
                 if (Math.abs(incr) > 30000) {
                     incr *= convergeRate;
@@ -502,7 +519,8 @@ public class DetailPanel extends UpdateableJPanel implements MouseListener,Mouse
         int mouseX = e.getX();
         int mouseY = e.getY();
         if (holdButton){
-            if (sigMove){
+            if (sigMove){ //Prevent unwanted touch to the button and change the view instantly
+                //Change the current time according to the ratio
                 buttonY = mouseY;
                 if (buttonY<scrollBarY-scrollBarHeight/2) buttonY = scrollBarY-scrollBarHeight/2;
                 else if (buttonY>scrollBarY+scrollBarHeight/2) buttonY = scrollBarY+scrollBarHeight/2;
@@ -516,6 +534,7 @@ public class DetailPanel extends UpdateableJPanel implements MouseListener,Mouse
                 repaint();
             }
         } else if (holdGraph){
+            //Horizontal move of the graph
             curDate = adjDate(curDate, Calendar.MILLISECOND,(int)(pressX-mouseX)*144000); //144000 = 60*60*1000 / 25 -- (25px is the graph representation of 1 hour)
             if (curDate.getTime()<startDate.getTime()){
                 curDate = startDate;
@@ -536,10 +555,5 @@ public class DetailPanel extends UpdateableJPanel implements MouseListener,Mouse
 
     @Override
     public void update() {
-//        tempGraph = Graph.getRandomTemperatureGraph();
-//        windGraph = Graph.getRandomWindGraph();
-//        rainGraph = Graph.getRandomRainGraph();
-//        attiGraph = Graph.getRandomTemperatureGraph();
-//        trimGraph();
     }
 }
