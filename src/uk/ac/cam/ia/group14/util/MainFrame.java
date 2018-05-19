@@ -20,21 +20,25 @@ public class MainFrame extends JFrame {
         super("Mountain Weather");
         setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
         pack();
+        //Similar sizes to a phone screen
         setSize(400, 800);
         setResizable(false);
 
         datum = new InterpanelData();
         panels = new HashMap<>();
+        //Adding our three different screens to the Frame so they can be accessed
         panels.put(MapPanel.cardName, new MapPanel(this));
         //To add your panel, write a line exactly the same as one above, except with your panel class, i.e.:
         panels.put(DetailPanel.cardName, new DetailPanel(this));
         panels.put(SummaryPanel.cardName, new SummaryPanel(this));
 
+        //Adding the three screens to the card layout so they can be switched between
         cards = new JPanel(new CardLayout());
         for (String cardName : panels.keySet()) {
             cards.add(panels.get(cardName), cardName);
         }
         getContentPane().add(cards);
+        //Setting the initial screen as the Map Panel
         ((CardLayout) cards.getLayout()).show(cards, MapPanel.cardName);
 
         //This needs to go at the bottom, idk why

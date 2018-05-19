@@ -27,17 +27,26 @@ public class MapPanel extends UpdateableJPanel {
 
     private JLabel regionLabel;
 
+    /**
+     *
+     * @param frame The MainFrame to add the panel to
+     */
     public MapPanel(MainFrame frame) {
         super();
 
         this.frame = frame;
 
+        //sets the background to show Britain
         setBackground(backgroundFile);
+        //places the mountain ranges on the background
         getMountainRanges();
 
+        //Layout manager to position labels
         setLayout(new BorderLayout());
+        //Add title label, region label and explanation label
         addLabels();
 
+        //Listener to detect when user clicks on range
         this.addMouseListener(new MouseAdapter() {
             @Override
             public void mouseClicked(MouseEvent e) {
@@ -46,6 +55,7 @@ public class MapPanel extends UpdateableJPanel {
             }
         });
 
+        //Listener to detect if mouse over mountain range to display region label
         this.addMouseMotionListener(new MouseMotionAdapter() {
             @Override
             public void mouseMoved(MouseEvent e) {
@@ -58,6 +68,10 @@ public class MapPanel extends UpdateableJPanel {
         frame.getDatum().setCurrentMountainRegion(RegionID.BREACONS);
     }
 
+    /**
+     *
+     * @param imgFilePath file path of the image to use as the background
+     */
     private void setBackground(String imgFilePath) {
         final int WIDTH = 400;
         final int HEIGHT = 800;
@@ -70,12 +84,17 @@ public class MapPanel extends UpdateableJPanel {
         }
     }
 
+    /**
+     * Loads the polygons representing the mountain ranges from their files
+     */
     private void getMountainRanges() {
         this.mountainRangeButtons = new HashMap<>();
 
         for (int i = 0; i < RegionID.values().length; ++i) {
             try {
+                //regions stored in a file with a ubiquitous name
                 mountainRangeButtons.put(RegionID.values()[i], new Polygon2D("src/uk/ac/cam/ia/group14/rjt80/files/"+RegionID.values()[i].toString()+".txt"));
+                //global repositioning done to fit to background
                 mountainRangeButtons.get(RegionID.values()[i]).adjustCentre(new Point(80, 120));
             } catch (IOException e) {
                 JOptionPane.showMessageDialog(null,
@@ -85,8 +104,12 @@ public class MapPanel extends UpdateableJPanel {
         }
     }
 
+    /**
+     * Adds all on screen labels
+     * Default font, colour and centering used
+     */
     private void addLabels() {
-        // Top Brand Label
+        // Top Brand Label, top of screen, large text
         JLabel brandLabel = new JLabel("PEAK WEATHER");
         brandLabel.setPreferredSize(new Dimension(400, 120));
         brandLabel.setForeground(Color.WHITE);
@@ -96,21 +119,22 @@ public class MapPanel extends UpdateableJPanel {
         add(brandLabel, BorderLayout.PAGE_START);
 
 
-        //Bottom of the page
+        //To position explanation and region label below map
         JPanel pageEndPanel = new JPanel();
         pageEndPanel.setPreferredSize(new Dimension(400, 170));
         pageEndPanel.setOpaque(false);
         pageEndPanel.setLayout(new BorderLayout());
         add(pageEndPanel, BorderLayout.PAGE_END);
 
-        //Mountain region label
+        //Mountain region label, medium sized text
+        //Only visible when user is hovering over region
         regionLabel = new JLabel("");
         regionLabel.setForeground(Color.WHITE);
         regionLabel.setHorizontalAlignment(SwingConstants.CENTER);
         regionLabel.setFont(new Font("Microsoft Sans Serif", Font.BOLD, 26));
         pageEndPanel.add(regionLabel, BorderLayout.CENTER);
 
-        //Explanation label
+        //Explanation label, bottom of screen, small text
         JLabel explanationLabel = new JLabel("click a region to access weather");
         explanationLabel.setForeground(Color.WHITE);
         explanationLabel.setHorizontalAlignment(SwingConstants.CENTER);
@@ -118,6 +142,11 @@ public class MapPanel extends UpdateableJPanel {
         pageEndPanel.add(explanationLabel, BorderLayout.PAGE_END);
     }
 
+    /**
+     *
+     * @param mousePosition mouse position
+     * @return the region (as RegionID value) that the mouse position is in, or null if it isn't
+     */
     private RegionID inMountainRange(Point mousePosition) {
         RegionID mountainRangeSelected = null;
         Iterator<RegionID> rangeIterator = mountainRangeButtons.keySet().iterator();
@@ -130,6 +159,12 @@ public class MapPanel extends UpdateableJPanel {
         return mountainRangeSelected;
     }
 
+    /**
+     *
+     * @param mousePosition mouse position
+     *
+     * Used to check if user clicked on a mountain range, and switch screens if so
+     */
     private void respondToMouseClick(Point mousePosition) {
         RegionID mountainRangeSelected = inMountainRange(mousePosition);
         if (mountainRangeSelected != null) {
@@ -137,6 +172,11 @@ public class MapPanel extends UpdateableJPanel {
         }
     }
 
+    /**
+     *
+     * @param mousePosition mouse position
+     * Used to check if user is hovering over mountain range, display range name if so, remove label if not
+     */
     private void respondToMouseMove(Point mousePosition) {
         RegionID mountainRangeSelected = inMountainRange(mousePosition);
         if (mountainRangeSelected != null) {
@@ -146,16 +186,29 @@ public class MapPanel extends UpdateableJPanel {
         }
     }
 
+    /**
+     *
+     * @param mountainRangeSelected mountain range clicked on by user
+     * Will update mountain range to new location and call MainFrame to get screens switched
+     */
     private void loadDetailedPanel(RegionID mountainRangeSelected) {
         frame.getDatum().setCurrentMountainRegion(mountainRangeSelected);
         frame.changeCard(DetailPanel.cardName);
     }
 
+    /**
+     * Called when screen is switched to set initial screen layout
+     */
     public void update() {
         regionLabel.setText("");
         repaint();
     }
 
+    /**
+     *
+     * @param g the Graphics object
+     * Paints the screen with the background and mountain range polygons
+     */
     @Override
     public void paintComponent(Graphics g) {
         g.drawImage(background, 0, 0, getWidth(), getHeight(), this);
