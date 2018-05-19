@@ -80,20 +80,7 @@ public class Graph {
 		windGraph = GraphPanel.getImage(windData, WeatherSlice.Parameter.WIND, startTime);
 	}
 
-	/**
-	 * The Graph to generate random values for data. Used for testing.
-	 */
-	/*private Graph() {
-		// generate arrays of random data for temperature, rain, and wind
-		double[] temperatureData = generateRandomValues();
-		double[] rainData = generateRandomValues();
-		double[] windData = generateRandomValues();
 
-		// retrieve images for the corresponding data arrays
-		temperatureGraph = GraphPanel.getImage(temperatureData, WeatherSlice.Parameter.TEMPERATURE, 0);
-		rainGraph = GraphPanel.getImage(rainData, WeatherSlice.Parameter.RAIN, 0);
-		windGraph = GraphPanel.getImage(windData, WeatherSlice.Parameter.WIND, 0);
-	}*/
 
 
 	/**
@@ -118,44 +105,15 @@ public class Graph {
 	}
 
 
-
 	/**
-	 * Returns the BufferedImage displaying the random rain data. Use for testing.
+	 * Returns a {@link BufferedImage} of an altitude-temperature graph at a certain time.
+	 *
+	 * @param values: an array of 30 temperatures for different heights.
 	 */
-	/*public static BufferedImage getRandomRainGraph() {
-		Graph graph = new Graph();
-		return graph.rainGraph;
-	}*/
-
-	/**
-	 * Returns the BufferedImage displaying the random temperature data. Use for testing.
-	 */
-	/*public static BufferedImage getRandomTemperatureGraph() {
-		Graph graph = new Graph();
-		return graph.temperatureGraph;
-	}*/
-
-	/**
-	 * Returns the BufferedImage displaying the random wind data. Use for testing.
-	 */
-	/*public static BufferedImage getRandomWindGraph() {
-		Graph graph = new Graph();
-		return graph.windGraph;
-	}*/
-
-	/**
-	 * private method for random value generation, to be used for testing
-	 */
-	private double[] generateRandomValues() {
-		double[] values = new double[120];
-		Random random = new Random();
-		int maxDataPoints = values.length;
-		int maxScore = 50;
-		for (int i = 0; i < maxDataPoints; i++) {
-			values[i] = ((-10 + random.nextDouble() * maxScore));
-		}
-
-		return values;
+	public BufferedImage getAltitudeGraph(double[] values) {
+		return AltitudePanel.getImage(values);
 	}
+
+
 }
 
