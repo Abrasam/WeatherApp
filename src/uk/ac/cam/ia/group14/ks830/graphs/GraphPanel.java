@@ -11,6 +11,7 @@ import java.awt.Point;
 import java.awt.RenderingHints;
 import java.awt.Stroke;
 import java.awt.image.BufferedImage;
+import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
@@ -49,15 +50,17 @@ public class GraphPanel extends JPanel {
     private static final Stroke GRAPH_STROKE = new BasicStroke(2f);
     private int pointWidth = 4;
 
-    private int startTime = 0;
-
-    private double[] values;
+    // the graph instance values
+    private int startTime = 0; // starting time in the graph
+    private double[] values; // declare the array which will store graph values
+	private WeatherSlice.Parameter parameter; // the metric displayed by this instance of the GraphPanel
 
     private GraphPanel(double[] values, WeatherSlice.Parameter parameter, int startTime) {
 
     	// the graph will display the values given in the argument
     	this.values = values;
     	this.startTime = startTime;
+    	this.parameter = parameter;
 
     	// set the size of the graph
     	this.setSize(new Dimension(preferredWidth, preferredHeight));
@@ -160,13 +163,25 @@ public class GraphPanel extends JPanel {
             int ovalH = pointWidth;
             g2.fillOval(x, y, ovalW, ovalH);
 
-            // display the temperature if it is a local minimum or a local maximum
+            // display the parameter if it is a local minimum or a local maximum
             if (i > 0 && i < values.length - 1 &&
 		            ((values[i] >= values[i+1] && values[i] >= values[i-1]) ||
 				            values[i] <= values[i+1] && values[i] <= values[i-1])) {
 	            // display the value above the point
 	            g2.setColor(pointColor);
-	            String metricLabel = ((int) values[i]) + "";
+	            String metricLabel = "";
+	            switch (parameter) {
+		            case RAIN:
+			            metricLabel += (new DecimalFormat(".#")).format(values[i]);
+			            break;
+
+		            case WIND:
+			            metricLabel += (new DecimalFormat(".#")).format(values[i]);
+			            break;
+
+		            default:
+			            metricLabel += ((int) values[i]);
+	            };
 	            FontMetrics metrics = g2.getFontMetrics();
 	            int labelWidth = metrics.stringWidth(metricLabel);
 	            g2.drawString(metricLabel, x - labelWidth / 2, y - (metrics.getHeight() / 2) + 1);
