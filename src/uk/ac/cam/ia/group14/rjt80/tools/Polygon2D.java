@@ -31,9 +31,7 @@ public class Polygon2D {
         sharedConstructor(ps, new Point(0, 0),1);
     }
 
-    public Polygon2D(String pointsFile) throws IOException {
-        loadPointsFromFile(pointsFile);
-    }
+    public Polygon2D(String pointsFile) throws IOException { loadPointsFromFile(pointsFile); }
 
     private void loadPointsFromFile(String filename) throws IOException {
         List<Point> sPs = new LinkedList<>();
@@ -42,11 +40,14 @@ public class Polygon2D {
         BufferedReader b = new BufferedReader(f);
         String line;
 
+        //File first line is scale
         int sScale = Integer.parseInt(b.readLine());
 
+        //File second line is centre coordinates
         line = b.readLine();
         Point sCentre = new Point(Integer.parseInt(line.split(",")[0]), Integer.parseInt(line.split(",")[1]));
 
+        //All other lines are polygon edge coordinates
         while ((line = b.readLine()) != null) {
             String[] coords = line.split(",");
             for (int i = 0; i < coords.length / 2; ++i) {
@@ -88,8 +89,47 @@ public class Polygon2D {
         this.scale = scale;
     }
 
+    /**
+     * @param delta : absolute change to centre
+     *
+     * Allows all shapes to be adjusted to fit onto a new screen
+     */
+    public void adjustCentre(Point delta) {this.centre = new Point(this.centre.x + delta.x, this.centre.y + delta.y);}
+
+    /**
+     * @param delta absolute change to scale factor
+     *
+     * Allows all shapes to be adjusted to fit onto a new screen
+     */
+    public void adjustScale(int delta) {this.scale += delta;}
+
+    //
+
+    /**
+     * @param x x-coordinate
+     * @return adjusted coordinate
+     *
+     * adjusts coordinates at use time to prevent cumulative rounding errors (esp if this was extended to floating point)
+     */
+    private int adjustedXCoordinate(int x) { return x * scale + centre.x; }
+
+    /**
+     * @param y y-coordinate
+     * @return adjusted coordinate
+     *
+     * adjusts coordinates at use time to prevent cumulative rounding errors (esp if this was extended to floating point)
+     */
+    private int adjustedYCoordinate(int y) {
+        return y * scale + centre.y;
+    }
+
+    /**
+     * @return Path of polygon outline
+     * Required to draw the polygon on to a swing component using graphics
+     */
     public Shape drawShape() {
         GeneralPath path = new GeneralPath();
+        //iterates over all points on the polygon adding them to an outline path
         for (int i = 0; i < ps.size(); i++) {
             Point2D.Double p = new Point2D.Double(adjustedXCoordinate(ps.get(i).x), adjustedYCoordinate(ps.get(i).y));
             if (i == 0) {
@@ -102,27 +142,53 @@ public class Polygon2D {
         return path;
     }
 
+    /**
+     *
+     * @param xy a direction vector
+     * @return a vector normal to xy
+     */
     private Point normal(Point xy) {
         return new Point(-xy.y, xy.x);
     }
 
+    /**
+     *
+     * @param v1 first vector
+     * @param v2 second vector
+     * @return v1 - v2
+     */
     private Point subtract(Point v1, Point v2) {
         return new Point(v1.x - v2.x, v1.y - v2.y);
     }
 
+    /**
+     *
+     * @param v1 first vector
+     * @param v2 second vector
+     * @return v1 dot v2
+     */
     private int dot(Point v1, Point v2) {
         return v1.x * v2.x + v1.y * v2.y;
     }
 
     /***
      *
-     * @param x
+     * @param x integer to find the sign of
      * @return it's sign as +1, 0, -1
      */
     private int sign(int x) {
         return Integer.signum(x);
     }
 
+    /**
+     *
+     * @param u1 first vector first end coordinates
+     * @param u2 first vector second end coordinates
+     * @param v1 second vector first end coordinates
+     * @param v2 second vector second end coordinates
+     * @return whether u intersects v
+     *
+     */
     private boolean intersect(Point u1, Point u2, Point v1, Point v2) {
         boolean intsct = false;
 
@@ -142,14 +208,11 @@ public class Polygon2D {
         return intsct;
     }
 
-    private int adjustedXCoordinate(int x) {
-        return x * scale + centre.x;
-    }
-
-    private int adjustedYCoordinate(int y) {
-        return y * scale + centre.y;
-    }
-
+    /**
+     * @param mousePosition position of the mouse
+     * @return mouse position in polygon or not
+     * uses ray tracing algorithm to detect whether the user clicked within the shape
+     */
     public boolean withinPolygon(Point mousePosition) {
         int intersections = 0;
         Point origin = new Point(0, 0);

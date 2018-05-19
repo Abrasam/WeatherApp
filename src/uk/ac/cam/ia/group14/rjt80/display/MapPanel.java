@@ -6,9 +6,12 @@ import uk.ac.cam.ia.group14.util.*;
 
 import javax.imageio.ImageIO;
 import javax.swing.*;
+import javax.swing.border.Border;
+import javax.swing.event.MouseInputAdapter;
 import java.awt.*;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import java.awt.event.MouseMotionAdapter;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
@@ -21,6 +24,8 @@ public class MapPanel extends UpdateableJPanel {
     private MainFrame frame;
     private BufferedImage background;
     private Map<RegionID, Polygon2D> mountainRangeButtons;
+
+    private JLabel regionLabel;
 
     public MapPanel(MainFrame frame) {
         super();
@@ -40,9 +45,17 @@ public class MapPanel extends UpdateableJPanel {
                 respondToMouseClick(e.getPoint());
             }
         });
+
+        this.addMouseMotionListener(new MouseMotionAdapter() {
+            @Override
+            public void mouseMoved(MouseEvent e) {
+                super.mouseMoved(e);
+                respondToMouseMove(e.getPoint());
+            }
+        });
     }
 
-    public void setBackground(String imgFilePath) {
+    private void setBackground(String imgFilePath) {
         final int WIDTH = 400;
         final int HEIGHT = 800;
         try {
@@ -60,20 +73,16 @@ public class MapPanel extends UpdateableJPanel {
         for (int i = 0; i < RegionID.values().length; ++i) {
             try {
                 mountainRangeButtons.put(RegionID.values()[i], new Polygon2D("src/uk/ac/cam/ia/group14/rjt80/files/"+RegionID.values()[i].toString()+".txt"));
-                //mountainRangeButtons.get(RegionID.values()[i]).setScale(10);
-                mountainRangeButtons.get(RegionID.values()[i]).setCentre(new Point(80, 120));
+                mountainRangeButtons.get(RegionID.values()[i]).adjustCentre(new Point(80, 120));
             } catch (IOException e) {
                 JOptionPane.showMessageDialog(null,
                         "Could not retrieve file " + RegionID.values()[i].toString()+".txt",
                         "Error", JOptionPane.ERROR_MESSAGE);
             }
         }
-        mountainRangeButtons.get(RegionID.MOURNES).setCentre(new Point(60, 100));
     }
 
     private void addLabels() {
-        String[] logos = {"cloud-rain", "sun", "bolt"};
-
         // Top Brand Label
         JLabel brandLabel = new JLabel("PEAK WEATHER");
         brandLabel.setPreferredSize(new Dimension(400, 120));
@@ -88,59 +97,49 @@ public class MapPanel extends UpdateableJPanel {
         JPanel pageEndPanel = new JPanel();
         pageEndPanel.setPreferredSize(new Dimension(400, 170));
         pageEndPanel.setOpaque(false);
-        pageEndPanel.setLayout(new GridBagLayout());
-        GridBagConstraints gbc = new GridBagConstraints();
+        pageEndPanel.setLayout(new BorderLayout());
         add(pageEndPanel, BorderLayout.PAGE_END);
 
-        //Logos
-/*        for (int i = 0; i < logos.length; ++i) {
-            addLogo(pageEndPanel, gbc, logos[i], i);
-        }*/
+        //Mountain region label
+        regionLabel = new JLabel("");
+        regionLabel.setForeground(Color.WHITE);
+        regionLabel.setHorizontalAlignment(SwingConstants.CENTER);
+        regionLabel.setFont(new Font("Microsoft Sans Serif", Font.BOLD, 26));
+        pageEndPanel.add(regionLabel, BorderLayout.CENTER);
 
         //Explanation label
         JLabel explanationLabel = new JLabel("click a region to access weather");
         explanationLabel.setForeground(Color.WHITE);
         explanationLabel.setHorizontalAlignment(SwingConstants.CENTER);
         explanationLabel.setFont(new Font("Microsoft Sans Serif", Font.BOLD, 16));
-        gbc.gridwidth=logos.length;
-        gbc.gridx=0;
-        gbc.gridy=1;
-        pageEndPanel.add(explanationLabel, gbc);
+        pageEndPanel.add(explanationLabel, BorderLayout.PAGE_END);
     }
 
-    private void addLogo(JPanel panel, GridBagConstraints gbc, String logoName, int position) {
-        File f = new File("images/weather/"+logoName+".png");
-        BufferedImage logoImage = null;
-        try {
-            logoImage = ImageIO.read(f);
-        } catch (IOException e) {
-            JOptionPane.showMessageDialog(null,
-                    "Could not retrieve file " + logoName+".png",
-                    "Error", JOptionPane.ERROR_MESSAGE);
-        }
-        ResizeImage.resize(logoImage, 66, 66);
-        ImageIcon logoIcon = new ImageIcon(logoImage);
-        JLabel logoLabel = new JLabel();
-        logoLabel.setPreferredSize(new Dimension(66, 66));
-        gbc.gridy=0;
-        gbc.gridx=position;
-        logoLabel.setIcon(logoIcon);
-
-        panel.add(logoLabel, gbc);
-    }
-
-    private void respondToMouseClick(Point mousePosition) {
+    private RegionID inMountainRange(Point mousePosition) {
         RegionID mountainRangeSelected = null;
         Iterator<RegionID> rangeIterator = mountainRangeButtons.keySet().iterator();
         while(rangeIterator.hasNext() && mountainRangeSelected == null) {
             RegionID thisRange = rangeIterator.next();
             if (mountainRangeButtons.get(thisRange).withinPolygon(mousePosition)) {
                 mountainRangeSelected = thisRange;
-                System.out.println(thisRange.toString());
             }
         }
+        return mountainRangeSelected;
+    }
+
+    private void respondToMouseClick(Point mousePosition) {
+        RegionID mountainRangeSelected = inMountainRange(mousePosition);
         if (mountainRangeSelected != null) {
             loadDetailedPanel(mountainRangeSelected);
+        }
+    }
+
+    private void respondToMouseMove(Point mousePosition) {
+        RegionID mountainRangeSelected = inMountainRange(mousePosition);
+        if (mountainRangeSelected != null) {
+            regionLabel.setText(mountainRangeSelected.toString());
+        } else {
+            regionLabel.setText("");
         }
     }
 
@@ -150,18 +149,12 @@ public class MapPanel extends UpdateableJPanel {
     }
 
     public void update() {
+        regionLabel.setText("");
         repaint();
     }
 
     @Override
     public void paintComponent(Graphics g) {
-        /*
-         * TODO: Add title
-         *
-         * TODO: Add labels to ranges
-         *
-         * TODO: Add description of what to click
-         */
         g.drawImage(background, 0, 0, getWidth(), getHeight(), this);
 
         g.setColor(Color.GREEN);
