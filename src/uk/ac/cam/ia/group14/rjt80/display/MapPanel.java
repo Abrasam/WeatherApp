@@ -20,6 +20,8 @@ import java.util.*;
 public class MapPanel extends UpdateableJPanel {
     public static final String cardName = "MapPanel";
     private static final String backgroundFile = "src/uk/ac/cam/ia/group14/rjt80/files/ukoutline.png";
+    private static final String fontName = "Courier New";
+    private static final Color textColour = Color.WHITE;
 
     private MainFrame frame;
     private BufferedImage background;
@@ -112,10 +114,10 @@ public class MapPanel extends UpdateableJPanel {
         // Top Brand Label, top of screen, large text
         JLabel brandLabel = new JLabel("PEAK WEATHER");
         brandLabel.setPreferredSize(new Dimension(400, 120));
-        brandLabel.setForeground(Color.WHITE);
+        brandLabel.setForeground(textColour);
         brandLabel.setHorizontalAlignment(SwingConstants.CENTER);
         brandLabel.setVerticalAlignment(SwingConstants.CENTER);
-        brandLabel.setFont(new Font("Microsoft Sans Serif", Font.BOLD, 42));
+        brandLabel.setFont(new Font(fontName, Font.BOLD, 42));
         add(brandLabel, BorderLayout.PAGE_START);
 
 
@@ -129,16 +131,16 @@ public class MapPanel extends UpdateableJPanel {
         //Mountain region label, medium sized text
         //Only visible when user is hovering over region
         regionLabel = new JLabel("");
-        regionLabel.setForeground(Color.WHITE);
+        regionLabel.setForeground(textColour);
         regionLabel.setHorizontalAlignment(SwingConstants.CENTER);
-        regionLabel.setFont(new Font("Microsoft Sans Serif", Font.BOLD, 26));
+        regionLabel.setFont(new Font(fontName, Font.BOLD, 26));
         pageEndPanel.add(regionLabel, BorderLayout.CENTER);
 
         //Explanation label, bottom of screen, small text
         JLabel explanationLabel = new JLabel("click a region to access weather");
-        explanationLabel.setForeground(Color.WHITE);
+        explanationLabel.setForeground(textColour);
         explanationLabel.setHorizontalAlignment(SwingConstants.CENTER);
-        explanationLabel.setFont(new Font("Microsoft Sans Serif", Font.BOLD, 16));
+        explanationLabel.setFont(new Font(fontName, Font.BOLD, 16));
         pageEndPanel.add(explanationLabel, BorderLayout.PAGE_END);
     }
 
