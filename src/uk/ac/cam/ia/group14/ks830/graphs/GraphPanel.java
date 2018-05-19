@@ -172,11 +172,11 @@ public class GraphPanel extends JPanel {
 	            String metricLabel = "";
 	            switch (parameter) {
 		            case RAIN:
-			            metricLabel += (new DecimalFormat(".#")).format(values[i]);
+			            metricLabel += (new DecimalFormat("#.#")).format(values[i]);
 			            break;
 
 		            case WIND:
-			            metricLabel += (new DecimalFormat(".#")).format(values[i]);
+			            metricLabel += (new DecimalFormat("#.#")).format(values[i]);
 			            break;
 
 		            default:
