@@ -130,16 +130,17 @@ public class AltitudePanel extends JPanel{
 			int ovalH = pointWidth;
 			g2.fillOval(x, y, ovalW, ovalH);
 
-			// display the parameter if it is a local minimum or a local maximum
+			// display the parameter every third value, or if it is at extreme ends of graph
 			int j = i * 2;
-			if (j > 0 && j < values.length - 1 &&
-					((values[j] >= values[j+1] && values[j] >= values[j-1]) ||
-							values[j] <= values[j+1] && values[j] <= values[j-1])) {
+			if (i % 3 == 0 || i == 0 ||
+					i == graphPoints.size() - 1) {
 				// display the value above the point
 				g2.setColor(pointColor);
 				String metricLabel = "" + ((int) values[j]);
 
 				FontMetrics metrics = g2.getFontMetrics();
+
+
 				int labelWidth = metrics.stringWidth(metricLabel);
 				g2.drawString(metricLabel, x - labelWidth / 2, y - (metrics.getHeight() / 2) + 1);
 			}

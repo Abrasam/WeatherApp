@@ -17,6 +17,10 @@ import java.util.List;
 import java.util.Random;
 import javax.swing.*;
 
+import static uk.ac.cam.ia.group14.util.WeatherSlice.Parameter.RAIN;
+import static uk.ac.cam.ia.group14.util.WeatherSlice.Parameter.TEMPERATURE;
+import static uk.ac.cam.ia.group14.util.WeatherSlice.Parameter.WIND;
+
 /**
  * This is a GraphPanel implementation from {@see <a href="https://gist.github.com/roooodcastro/6325153"></a>}
  * (see also {@see <a href="http://stackoverflow.com/questions/8693342/drawing-a-simple-line-graph-in-java"></a>}).
@@ -163,10 +167,9 @@ public class GraphPanel extends JPanel {
             int ovalH = pointWidth;
             g2.fillOval(x, y, ovalW, ovalH);
 
-            // display the parameter if it is a local minimum or a local maximum
-            if (i > 0 && i < values.length - 1 &&
-		            ((values[i] >= values[i+1] && values[i] >= values[i-1]) ||
-				            values[i] <= values[i+1] && values[i] <= values[i-1])) {
+            // display the metric value every third value or at extremes of graph
+            if (i == 0 || i == values.length - 1
+		            || i % 3 == 0) {
 	            // display the value above the point
 	            g2.setColor(pointColor);
 	            String metricLabel = "";
@@ -256,7 +259,7 @@ public class GraphPanel extends JPanel {
 		    values[i] = ((-10 + random.nextDouble() * maxScore));
 	    }
 
-	    GraphPanel mainPanel = new GraphPanel(values, WeatherSlice.Parameter.TEMPERATURE, 0);
+	    GraphPanel mainPanel = new GraphPanel(values, TEMPERATURE, 0);
 
 	    JScrollPane scrollPane = new JScrollPane(mainPanel);
 
