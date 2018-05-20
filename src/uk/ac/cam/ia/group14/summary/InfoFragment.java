@@ -7,10 +7,7 @@ import java.util.List;
 
 public class InfoFragment extends JPanel {
 
-    private String defaultFontName;
-    private Color defColor;
-
-    private final Font CONSTANTS_infoFont = new Font(defaultFontName, Font.PLAIN, 16);
+    private Font defFont;
 
     private List<JLabel> tagLbl;
     private List<String> infoData;
@@ -18,7 +15,8 @@ public class InfoFragment extends JPanel {
 
 
     private void initComponents() {
-        this.setBackground(defColor);
+
+        this.setBackground(SummaryPanel.CONSTANTS_row2RowForecastsColor);
 
         int gridX=0, gridY=0;
 
@@ -31,13 +29,13 @@ public class InfoFragment extends JPanel {
             gridY = 0;
 
             GridBagConstraints upperPaddingConstraint =
-                    SummaryUtil.getGridBagConstraints(GridBagConstraints.BOTH, gridX, gridY, 1.0, singlePadWeight);
+                    SummaryUtil.getGridBagConstraints(GridBagConstraints.BOTH, gridX, gridY, 2.0, singlePadWeight);
             this.add(new JLabel(), upperPaddingConstraint);
 
             gridY++;
             for (JLabel label : tagLbl) {
                 GridBagConstraints constraints =
-                        SummaryUtil.getGridBagConstraints(GridBagConstraints.BOTH, gridX, gridY, 1.0, rowWeight);
+                        SummaryUtil.getGridBagConstraints(GridBagConstraints.BOTH, gridX, gridY, 2.0, rowWeight);
 
                 this.add(label, constraints);
 
@@ -63,8 +61,10 @@ public class InfoFragment extends JPanel {
         gridY++;
         for (String datum : infoData) {
 
-            JLabel label = new JLabel(datum, SwingConstants.CENTER);
-            label.setFont(CONSTANTS_infoFont);
+            int positioning = (tagLbl == null) ? SwingConstants.CENTER : SwingConstants.LEFT;
+
+            JLabel label = new JLabel(datum, positioning);
+            label.setFont(defFont);
 
             GridBagConstraints constraints =
                     SummaryUtil.getGridBagConstraints(GridBagConstraints.BOTH, gridX, gridY, 1.0, rowWeight);
@@ -91,28 +91,21 @@ public class InfoFragment extends JPanel {
         }
     }
 
-    public InfoFragment(String defaultFontName, Color defColor, List<JLabel> tagLbl, List<String> infoData) {
-
-        this.defaultFontName = defaultFontName;
-        this.defColor = defColor;
-
-
-        assert (tagLbl.size() == infoData.size());
-
+    public InfoFragment(List<JLabel> tagLbl, List<String> infoData) {
         this.setLayout(new GridBagLayout());
-
         this.tagLbl = tagLbl;
         this.infoData = infoData;
 
+        defFont = (infoData.size() <= 2) ? SummaryPanel.CONSTANTS_row2StatsFont2 : SummaryPanel.CONSTANTS_row2StatsFont1;
+
         initComponents();
     }
-    public InfoFragment(String defaultFontName, Color defColor, List<String> infoData) {
-
-        this.defaultFontName = defaultFontName;
-        this.defColor = defColor;
+    public InfoFragment(List<String> infoData) {
 
         this.setLayout(new GridBagLayout());
         this.infoData = infoData;
+
+        defFont = (infoData.size() <= 2) ? SummaryPanel.CONSTANTS_row2StatsFont2 : SummaryPanel.CONSTANTS_row2StatsFont1;
 
         initComponents();
         updateData();

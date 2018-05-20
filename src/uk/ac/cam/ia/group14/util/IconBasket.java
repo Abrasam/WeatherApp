@@ -79,7 +79,7 @@ public class IconBasket {
     }
 
     // Every other function refers to this one
-    private static BufferedImage getImageFromPath(String path) {
+    public static BufferedImage getImageFromPath(String path) {
         BufferedImage img = null;
         try {
             img = ImageIO.read(new File(path));
@@ -89,11 +89,13 @@ public class IconBasket {
 
         return img;
     }
-
-    private static BufferedImage getResizedImageFromPath(int x, int y, String path) {
+    public static BufferedImage getResizedImageFromPath(int x, int y, String path) {
         BufferedImage img = getImageFromPath(path);
         img = ResizeImage.resize(img, x, y);
         return img;
+    }
+    public static ImageIcon getResizedIconFromPath(int x, int y, String path) {
+        return new ImageIcon(getResizedImageFromPath(x, y, path));
     }
 
 
