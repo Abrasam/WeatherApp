@@ -127,8 +127,8 @@ public class DetailPanel extends UpdateableJPanel implements MouseListener,Mouse
     // Weather data
     private RegionID stateRegion = null;
     private Region stateData = null;
-    WeatherSlice[] ws;
-    double[][] altTemperature = new double[120][];
+    private WeatherSlice[] ws;
+    private double[][] altTemperature = new double[120][];
 
     //Other Class
     private MainFrame mf;
@@ -226,7 +226,9 @@ public class DetailPanel extends UpdateableJPanel implements MouseListener,Mouse
 
     private int mapCurDateToWs(){
         //Map the current time to weather information index
-        return (int)(roundDateHour(curDate,false).getTime()-roundDateHour(startDate,false).getTime()-1)/3600000;
+        int ret = (int)(roundDateHour(curDate,false).getTime()-roundDateHour(startDate,false).getTime())/3600000;
+        if (ret==120) ret--;
+        return ret;
     }
 
     ////////////////////////////////////////////////////////////
@@ -373,13 +375,13 @@ public class DetailPanel extends UpdateableJPanel implements MouseListener,Mouse
         //Current Data
         //--Current temp
         g.drawImage(getImg("images/general/temperature.png"),(int)(curTempX-curTempSize-25),(int)(curTempY-curTempSize-18),30,30,this);
-        int curTempLen = String.format("%.0f", ws[mapCurDateToWs()].getTemp()).length();
-        drawString(g,curTempX-curTempLen*(curTempSize*1.2)/2,curTempY,String.format("%.0f", ws[mapCurDateToWs()].getTemp())+" °",(int)curTempSize,null,false);
+        int curTempLen = String.format("%.0f", ws[mapCurDateToWs()].getTemp()-0.5).length();
+        drawString(g,curTempX-curTempLen*(curTempSize*1.2)/2,curTempY,String.format("%.0f", ws[mapCurDateToWs()].getTemp()-0.5)+" °",(int)curTempSize,null,false);
         drawString(g,curTempX,curTempY,String.format("%.1f", ws[mapCurDateToWs()].getTemp()-(int)ws[mapCurDateToWs()].getTemp()).substring(1),(int)(curTempSize/2.2),Color.GRAY,false);
         //--Current wind
         g.drawImage(getImg("images/general/wind.png"),(int)(curWindX-curWindSize-15),(int)(curWindY-curWindSize-15),35,35,this);
-        int curWindLen = String.format("%.0f", ws[mapCurDateToWs()].getWind()).length();
-        drawString(g,curWindX-curWindLen*(curWindSize*1.2)/2,curWindY,String.format("%.0f", ws[mapCurDateToWs()].getWind()),(int)curWindSize,null,false);
+        int curWindLen = String.format("%.0f", ws[mapCurDateToWs()].getWind()-0.5).length();
+        drawString(g,curWindX-curWindLen*(curWindSize*1.2)/2,curWindY,String.format("%.0f", ws[mapCurDateToWs()].getWind()-0.5),(int)curWindSize,null,false);
         drawString(g,curWindX,curWindY,String.format("%.1f", ws[mapCurDateToWs()].getWind()-(int)ws[mapCurDateToWs()].getWind()).substring(1)+"km/h",(int)(curWindSize/1.8),Color.DARK_GRAY,false);
         //--Current visibility
         g.drawImage(getImg("images/general/vis.png"),(int)(curVisX-curVisSize-55),(int)(curVisY-curVisSize-5),25,25,this);
