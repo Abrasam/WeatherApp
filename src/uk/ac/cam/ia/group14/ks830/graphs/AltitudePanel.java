@@ -11,11 +11,11 @@ import java.util.List;
 import java.util.Random;
 
 /**
- *
- *
+ * The {@link AltitudePanel} is very similar to the {@link GraphPanel} but processes the data based on altitude
+ * and not the time, and only returns the temperature metric.
  */
 public class AltitudePanel extends JPanel{
-	// dimensions of the graph so they are consistent and the data is displayed clearly
+	// dimensions of the graph so they are consistent with the frame and the data is displayed clearly
 	private final int preferredWidth = 300;
 	private final int preferredHeight = 120;
 
@@ -30,15 +30,15 @@ public class AltitudePanel extends JPanel{
 	private Color backgroundColor = new Color(215, 225, 255);
 
 
-	// declare variables for appearance of the graph
+	// declare variables for appearance of the graph (i.e. the curve)
 	private static final Stroke GRAPH_STROKE = new BasicStroke(2f);
 	private int pointWidth = 4;
 
-	// the graph instance values
-	private double[] values; // declare the array which will store graph values
+	// declare the array which will store temperature values (indexed by altitude)
+	private double[] values;
 
 	/**
-	 * The constructor uses an array of given values to display a altitude-temperature graph.
+	 * The constructor uses an array of given values to display an altitude-temperature graph.
 	 * @param values: array of size 30 that contains temperatures for successive altitudes
 	 */
 	private AltitudePanel(double[] values) {
@@ -51,12 +51,17 @@ public class AltitudePanel extends JPanel{
 		this.setBackground(backgroundColor);
 	}
 
+	/**
+	 * The method that paints the graph for it to be later used in the application. Very similar to
+	 * the paintComponent method in {@link GraphPanel}.
+	 */
 	@Override
 	protected void paintComponent(Graphics g) {
 		super.paintComponent(g);
 		Graphics2D g2 = (Graphics2D) g;
 		g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
 
+		// scaling of axes so that the metric range fits nicely in space available
 		double xScale = ((double) getWidth() - (2 * padding) - labelPadding) / (values.length - 1);
 		double yScale = ((double) getHeight() - 2 * padding - labelPadding) / (getMaxScore() - getMinScore());
 
@@ -85,6 +90,8 @@ public class AltitudePanel extends JPanel{
 				int x1 = x0;
 				int y0 = getHeight() - padding - labelPadding;
 				int y1 = y0 - pointWidth;
+
+				// render the grid line on every fifth hatch mark and display the label
 				if (i % 5 == 0) {
 					g2.setColor(gridColor);
 					g2.drawLine(x0, getHeight() - padding - labelPadding - 1 - pointWidth,
@@ -95,6 +102,8 @@ public class AltitudePanel extends JPanel{
 					int labelWidth = metrics.stringWidth(xLabel);
 					g2.drawString(xLabel, x0 - labelWidth / 2, y0 + metrics.getHeight() + 3);
 				}
+
+				// draw hatch mark
 				g2.drawLine(x0, y0, x1, y1);
 			}
 		}
@@ -106,7 +115,7 @@ public class AltitudePanel extends JPanel{
 				getHeight() - padding - labelPadding);
 
 
-		// paint the lines that will connect the points
+		// paint the curve lines
 		Stroke oldStroke = g2.getStroke();
 		g2.setColor(lineColor);
 		g2.setStroke(GRAPH_STROKE);
@@ -130,10 +139,11 @@ public class AltitudePanel extends JPanel{
 			int ovalH = pointWidth;
 			g2.fillOval(x, y, ovalW, ovalH);
 
-			// display the parameter every third value, or if it is at extreme ends of graph
+			// display the label every third value, or if it is an extreme point in the graph
 			int j = i * 2;
 			if (i % 3 == 0 || i == 0 ||
 					i == graphPoints.size() - 1) {
+
 				// display the value above the point
 				g2.setColor(pointColor);
 				String metricLabel = "" + ((int) values[j]);
@@ -147,7 +157,9 @@ public class AltitudePanel extends JPanel{
 		}
 	}
 
-	// find the minimum metric value (used to scale the y-axis)
+	/**
+	 * Finds the minimum metric value (used to scale the y-axis)
+	 */
 	private double getMinScore() {
 		double minScore = Double.MAX_VALUE;
 		for (double score : values) {
@@ -156,7 +168,9 @@ public class AltitudePanel extends JPanel{
 		return minScore;
 	}
 
-	// find the maximum metric value (used to scale the y-axis)
+	/**
+	 * Finds the maximum metric value (used to scale the y-axis)
+ 	 */
 	private double getMaxScore() {
 		double maxScore = Double.MIN_VALUE;
 		for (double score : values) {
@@ -165,6 +179,13 @@ public class AltitudePanel extends JPanel{
 		return maxScore;
 	}
 
+
+	/**
+	 * Generates an image of the graph.
+	 *
+	 * @param values an array of temperature values indexed by altitude
+	 * @return a {@link BufferedImage} containing the temperature-altitude graph.
+	 */
 	public static BufferedImage getImage(double[] values) {
 		AltitudePanel panel = new AltitudePanel(values);
 

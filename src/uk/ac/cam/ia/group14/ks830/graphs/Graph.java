@@ -10,10 +10,11 @@ import java.util.Random;
 
 
 /**
- * {@link Graph} class receives the data from arrays of {@link WeatherSlice}s
- * and processes it to return the {@link javax.swing.JPanel}s of graphs for weather attributes
+ * {@link Graph} class retrieves the data from arrays of {@link WeatherSlice}s
+ * and processes it to return the {@link BufferedImage}s of graphs for weather attributes
  * {@link WeatherSlice#temp}, {@link WeatherSlice#wind}, and {@link WeatherSlice#rain}
- * against {@link WeatherSlice#time}, adjusting the designs of each graph accordingly.
+ * against {@link WeatherSlice#time}, (or {@link WeatherSlice#temp} against altitude),
+ * adjusting the designs of each graph accordingly.
  *
  */
 
@@ -48,6 +49,7 @@ public class Graph {
 			windData[i++] = slice.getWind();
 		}
 
+		// get the images of the graphs
 		temperatureGraph = GraphPanel.getImage(temperatureData, WeatherSlice.Parameter.TEMPERATURE, startTime);
 		rainGraph = GraphPanel.getImage(rainData, WeatherSlice.Parameter.RAIN, startTime);
 		windGraph = GraphPanel.getImage(windData, WeatherSlice.Parameter.WIND, startTime);
@@ -81,8 +83,6 @@ public class Graph {
 	}
 
 
-
-
 	/**
 	 * Returns a {@link BufferedImage} containing the rain data.
 	 */
@@ -108,7 +108,7 @@ public class Graph {
 	/**
 	 * Returns a {@link BufferedImage} of an altitude-temperature graph at a certain time.
 	 *
-	 * @param values: an array of 30 temperatures for different heights.
+	 * @param values: an array of 30 temperatures for different altitudes.
 	 */
 	public BufferedImage getAltitudeGraph(double[] values) {
 		return AltitudePanel.getImage(values);

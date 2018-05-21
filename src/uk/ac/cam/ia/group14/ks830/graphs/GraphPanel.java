@@ -26,7 +26,7 @@ import static uk.ac.cam.ia.group14.util.WeatherSlice.Parameter.WIND;
  * (see also {@see <a href="http://stackoverflow.com/questions/8693342/drawing-a-simple-line-graph-in-java"></a>}).
  *
  * Some of the parameters have been changed to match the style of our weather application,
- * and methods have been added to facilitate display of different graph styles.
+ * and methods have been added to facilitate display of different graphs based on their weather parameter.
  *
  * @author {@see <a href="https://gist.github.com/roooodcastro">Rodrigo</a>}
  * @author {@see <a href="https://stackoverflow.com/users/522444/hovercraft-full-of-eels">Hovercraft Full Of Eels</a>}
@@ -59,6 +59,16 @@ public class GraphPanel extends JPanel {
     private double[] values; // declare the array which will store graph values
 	private WeatherSlice.Parameter parameter; // the metric displayed by this instance of the GraphPanel
 
+	/**
+	 * Constructor creating a GraphPanel for a certain metric.
+	 *
+	 * @param values the array of the values to be displayed indexed by time
+	 * @param parameter the metrix that is to be displayed, one of
+	 * {@link uk.ac.cam.ia.group14.util.WeatherSlice.Parameter#TEMPERATURE},
+	 * {@link uk.ac.cam.ia.group14.util.WeatherSlice.Parameter#RAIN},
+	 * {@link uk.ac.cam.ia.group14.util.WeatherSlice.Parameter#WIND}.
+	 * @param startTime indicates the hour at the first timestep in the array
+	 */
     private GraphPanel(double[] values, WeatherSlice.Parameter parameter, int startTime) {
 
     	// the graph will display the values given in the argument
@@ -70,6 +80,7 @@ public class GraphPanel extends JPanel {
     	this.setSize(new Dimension(preferredWidth, preferredHeight));
     	this.setBackground(backgroundColor);
 
+    	// set curve colours based on the parameter
     	switch (parameter) {
 		    case TEMPERATURE:
 			    lineColor = new Color(150, 105, 105, 180);
@@ -87,12 +98,16 @@ public class GraphPanel extends JPanel {
 	    }
     }
 
+	/**
+	 * Paints the graph for the values and the metric of this instance of GraphPanel.
+	 */
 	@Override
     protected void paintComponent(Graphics g) {
         super.paintComponent(g);
         Graphics2D g2 = (Graphics2D) g;
         g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
 
+        // scale x and y axes to fit the graph in nicely and adjust to the range of values displayed
         double xScale = ((double) getWidth() - (2 * padding) - labelPadding) / (values.length - 1);
         double yScale = ((double) getHeight() - 2 * padding - labelPadding) / (getMaxScore() - getMinScore());
 
@@ -121,6 +136,8 @@ public class GraphPanel extends JPanel {
 				int x1 = x0;
 				int y0 = getHeight() - padding - labelPadding;
 				int y1 = y0 - pointWidth;
+
+				// display a grid line every fourth hatch mark as well as the time at that mark
 				if (i % 4 == 0) {
 					g2.setColor(gridColor);
 					g2.drawLine(x0, getHeight() - padding - labelPadding - 1 - pointWidth,
@@ -159,7 +176,6 @@ public class GraphPanel extends JPanel {
 
         // paint the points and related metric labels
         for (int i = 0; i < graphPoints.size(); i++) {
-
         	g2.setColor(pointColor);
             int x = graphPoints.get(i).x - pointWidth / 2;
             int y = graphPoints.get(i).y - pointWidth / 2;
@@ -175,6 +191,7 @@ public class GraphPanel extends JPanel {
 	            String metricLabel = "";
 	            switch (parameter) {
 		            case RAIN:
+		            	// additional formatting as with these parameters decimal digits are important
 			            metricLabel += (new DecimalFormat("#.#")).format(values[i]);
 			            break;
 
@@ -183,8 +200,11 @@ public class GraphPanel extends JPanel {
 			            break;
 
 		            default:
+		            	// for the temperature case
 			            metricLabel += ((int) values[i]);
 	            };
+
+	            // draw the label
 	            FontMetrics metrics = g2.getFontMetrics();
 	            int labelWidth = metrics.stringWidth(metricLabel);
 	            g2.drawString(metricLabel, x - labelWidth / 2, y - (metrics.getHeight() / 2) + 1);
@@ -192,7 +212,9 @@ public class GraphPanel extends JPanel {
         }
     }
 
-    // find the minimum metric value (used to scale the y-axis)
+	/**
+	 * Finds the minimum metric value (used to scale the y-axis)
+ 	 */
     private double getMinScore() {
         double minScore = Double.MAX_VALUE;
         for (double score : values) {
@@ -201,7 +223,9 @@ public class GraphPanel extends JPanel {
         return minScore;
     }
 
-	// find the maximum metric value (used to scale the y-axis)
+	/**
+	 * Finds the maximum metric value (used to scale the y-axis)
+	 */
     private double getMaxScore() {
         double maxScore = Double.MIN_VALUE;
         for (double score : values) {
@@ -210,6 +234,14 @@ public class GraphPanel extends JPanel {
         return maxScore;
     }
 
+	/**
+	 * Returns an image of the graph that is used for display in the main frame.
+	 *
+	 * @param values the values of the weather metric
+	 * @param parameter the weather metric that the graph should display
+	 * @param startTime the time at the first value in the array
+	 * @return a {@link BufferedImage} containing the image of the required graph.
+	 */
 	public static BufferedImage getImage(double[] values, WeatherSlice.Parameter parameter, int startTime) {
 		GraphPanel panel = new GraphPanel(values, parameter, startTime);
 
@@ -222,35 +254,10 @@ public class GraphPanel extends JPanel {
 		return bi;
 	}
 
-    public static JPanel getPanel(double[] values, WeatherSlice.Parameter parameter, int startTime) {
-	    JScrollPane scrollPane = new JScrollPane(new GraphPanel(values, parameter, startTime));
-
-	    scrollPane.setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED);
-	    scrollPane.getHorizontalScrollBar().setPreferredSize(new Dimension(0, 0));
-
-
-	    scrollPane.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_NEVER);
-	    scrollPane.getVerticalScrollBar().setVisible(false);
-
-	    scrollPane.setBounds(0, 0, 300, 120);
-	    scrollPane.setWheelScrollingEnabled(true);
-	    scrollPane.setPreferredSize(new Dimension(300, 120));
-
-	    scrollPane.setBackground(new Color(1, 0, 0, 0));
-
-	    scrollPane.getViewport().setBorder(null);
-	    scrollPane.setViewportBorder(null);
-	    scrollPane.setBorder(null);
-
-
-	    JPanel contentPane = new JPanel(null);
-	    contentPane.setPreferredSize(new Dimension(300, 120));
-	    contentPane.add(scrollPane);
-
-	    return contentPane;
-    }
-    
-    private static void createAndShowGui() {
+	/**
+	 * A private method used in main to test this class with random input.
+	 */
+	private static void createAndShowGui() {
 	    double[] values = new double[120];
 	    Random random = new Random();
 	    int maxDataPoints = values.length;
@@ -299,7 +306,9 @@ public class GraphPanel extends JPanel {
 	    frame.setVisible(true);
     }
 
-    // method for independent display of the graph that is used for testing
+	/**
+	 * Method for the independent display of the graph that is used for testing
+ 	 */
     public static void main(String[] args) {
       SwingUtilities.invokeLater(new Runnable() {
          public void run() {
