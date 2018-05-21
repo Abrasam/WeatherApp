@@ -18,7 +18,7 @@ public class RowForecastFragment extends JPanel{
     private String dayOfWeekString;
     private ImageIcon forecastIcon;
     private List<String> leftStatsData, rightStatsData;
-    private List<JLabel> leftStatsTags;
+    private List<ImageIcon> leftStatsTags, rightStatsTags;
 
 
     private void initComponents() {
@@ -26,6 +26,7 @@ public class RowForecastFragment extends JPanel{
 
         dayOfWeekLbl = new JLabel("", SwingConstants.CENTER);
         dayOfWeekLbl.setFont(SummaryPanel.CONSTANTS_row2DaysOfWeekFont);
+        dayOfWeekLbl.setForeground(SummaryPanel.CONSTANTS_row2RowForecastFontColor);
 
         GridBagConstraints dayOfWeekConstraints =
                 getGridBagConstraints(GridBagConstraints.BOTH, 0, 0, SummaryPanel.CONSTANTS_row2DayOfWeekWeight, 1.0);
@@ -41,7 +42,7 @@ public class RowForecastFragment extends JPanel{
                 getGridBagConstraints(GridBagConstraints.BOTH, 1, 0, SummaryPanel.CONSTANTS_row2SingleStatWeight, 1.0);
         this.add(leftStatsFragment, leftStatsConstraints);
 
-        rightStatsFragment = new InfoFragment(rightStatsData);
+        rightStatsFragment = new InfoFragment(rightStatsTags, rightStatsData);
         GridBagConstraints rightStatsConstraints =
                 getGridBagConstraints(GridBagConstraints.BOTH, 3, 0, SummaryPanel.CONSTANTS_row2SingleStatWeight, 1.0);
         this.add(rightStatsFragment, rightStatsConstraints);
@@ -61,12 +62,14 @@ public class RowForecastFragment extends JPanel{
         updateForecastStats();
     }
 
-
-
-    public RowForecastFragment(String dayOfWeekString, List<String> leftStatsData, ImageIcon forecastIcon, List<String> rightStatsData) {
+    public RowForecastFragment(String dayOfWeekString,
+                               List<ImageIcon> leftStatsTags, List<String> leftStatsData,
+                               ImageIcon forecastIcon,
+                               List<String> rightStatsData) {
         super(new GridBagLayout());
-        
+
         this.dayOfWeekString = dayOfWeekString;
+        this.leftStatsTags = leftStatsTags;
         this.leftStatsData = leftStatsData;
         this.forecastIcon = forecastIcon;
         this.rightStatsData = rightStatsData;
@@ -76,13 +79,17 @@ public class RowForecastFragment extends JPanel{
         updateAll();
     }
 
-    public RowForecastFragment(String dayOfWeekString, List<JLabel> leftStatsTags, List<String> leftStatsData, ImageIcon forecastIcon, List<String> rightStatsData) {
+    public RowForecastFragment(String dayOfWeekString,
+                               List<ImageIcon> leftStatsTags, List<String> leftStatsData,
+                               ImageIcon forecastIcon,
+                               List<ImageIcon> rightStatsTags, List<String> rightStatsData) {
         super(new GridBagLayout());
 
         this.dayOfWeekString = dayOfWeekString;
         this.leftStatsTags = leftStatsTags;
         this.leftStatsData = leftStatsData;
         this.forecastIcon = forecastIcon;
+        this.rightStatsTags = rightStatsTags;
         this.rightStatsData = rightStatsData;
 
         initComponents();

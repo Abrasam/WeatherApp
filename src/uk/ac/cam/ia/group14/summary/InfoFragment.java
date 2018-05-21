@@ -10,10 +10,10 @@ public class InfoFragment extends JPanel {
     private Font defFont;
 
     private List<JLabel> tagLbl;
-    private List<String> infoData;
-    private List<JLabel> infoLbl;
+    private List<String> statsData;
+    private List<JLabel> statsLbl;
 
-
+    // Initialise the stats and tags (if there are such)
     private void initComponents() {
 
         this.setBackground(SummaryPanel.CONSTANTS_row2RowForecastsColor);
@@ -23,7 +23,7 @@ public class InfoFragment extends JPanel {
         double totalRowsWeight = 0.2;
         double singlePadWeight = (1.0 - totalRowsWeight)/2.0; // Put dummy rows on the top and bottom to compress labels/data
 
-        double rowWeight = totalRowsWeight / (double) infoData.size();
+        double rowWeight = totalRowsWeight / (double) statsData.size();
 
         if (tagLbl != null) {
             gridY = 0;
@@ -50,7 +50,7 @@ public class InfoFragment extends JPanel {
             gridX++;
         }
 
-        infoLbl = new ArrayList<>();
+        statsLbl = new ArrayList<>();
         gridY = 0;
 
 
@@ -59,18 +59,19 @@ public class InfoFragment extends JPanel {
         this.add(new JLabel(), upperPaddingConstraint);
 
         gridY++;
-        for (String datum : infoData) {
+        for (String datum : statsData) {
 
             int positioning = (tagLbl == null) ? SwingConstants.CENTER : SwingConstants.LEFT;
 
             JLabel label = new JLabel(datum, positioning);
             label.setFont(defFont);
+            label.setForeground(SummaryPanel.CONSTANTS_row2RowForecastFontColor);;
 
             GridBagConstraints constraints =
                     SummaryUtil.getGridBagConstraints(GridBagConstraints.BOTH, gridX, gridY, 1.0, rowWeight);
 
             this.add(label, constraints);
-            infoLbl.add(label);
+            statsLbl.add(label);
 
             gridY++;
         }
@@ -82,37 +83,47 @@ public class InfoFragment extends JPanel {
     }
 
     private void updateData() {
-        for (int i=0; i<infoData.size(); i++) {
+        for (int i = 0; i< statsData.size(); i++) {
 
-            JLabel label = infoLbl.get(i);
-            String data = infoData.get(i);
+            JLabel label = statsLbl.get(i);
+            String data = statsData.get(i);
 
             label.setText(data);
         }
     }
 
-    public InfoFragment(List<JLabel> tagLbl, List<String> infoData) {
-        this.setLayout(new GridBagLayout());
-        this.tagLbl = tagLbl;
-        this.infoData = infoData;
-
-        defFont = (infoData.size() <= 2) ? SummaryPanel.CONSTANTS_row2StatsFont2 : SummaryPanel.CONSTANTS_row2StatsFont1;
-
-        initComponents();
-    }
-    public InfoFragment(List<String> infoData) {
+    // Function called by all constructors after fields are initialised
+    private void init() {
 
         this.setLayout(new GridBagLayout());
-        this.infoData = infoData;
 
-        defFont = (infoData.size() <= 2) ? SummaryPanel.CONSTANTS_row2StatsFont2 : SummaryPanel.CONSTANTS_row2StatsFont1;
+        defFont = (statsData.size() <= 2) ? SummaryPanel.CONSTANTS_row2StatsFont2 : SummaryPanel.CONSTANTS_row2StatsFont1;
 
         initComponents();
         updateData();
     }
 
+    public InfoFragment(List<String> statsData) {
+        this.statsData = statsData;
+        init();
+    }
+
+    public InfoFragment(List<ImageIcon> tagIcons, List<String> statsData) {
+        this.statsData = statsData;
+        if (tagIcons != null) {
+            // Turn those icons into labels
+
+            tagLbl = new ArrayList<>();
+            for (ImageIcon tagIcon : tagIcons) {
+                tagLbl.add(new JLabel(tagIcon));
+            }
+        }
+
+        init();
+    }
+
     public void setData(List<String> infoData) {
-        this.infoData = infoData;
+        this.statsData = infoData;
         updateData();
     }
 

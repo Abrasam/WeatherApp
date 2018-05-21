@@ -12,8 +12,10 @@ import java.util.GregorianCalendar;
 
 /**
  * A class to retrieve a specified weather icon, based on the weather conditions (check images/weather/... for available icons)
- * Current icons location : https://www.flaticon.com/packs/weather-53
- * Icons credit: https://www.freepik.com/
+ * Current icons source : https://www.flaticon.com/packs/weather-53
+ * Icons credit:
+ * https://www.freepik.com/
+ * <div>Icons made by <a href="https://www.flaticon.com/authors/gregor-cresnar" title="Gregor Cresnar">Gregor Cresnar</a> from <a href="https://www.flaticon.com/" title="Flaticon">www.flaticon.com</a> is licensed by <a href="http://creativecommons.org/licenses/by/3.0/" title="Creative Commons BY 3.0" target="_blank">CC 3.0 BY</a></div>
  *
  */
 
