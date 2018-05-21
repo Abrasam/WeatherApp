@@ -63,4 +63,8 @@ public class MainFrame extends JFrame {
     public InterpanelData getDatum() {
         return datum;
     }
+
+    public static void main (String[] args){
+        new MainFrame();
+    }
 }

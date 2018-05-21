@@ -110,13 +110,13 @@ public class DetailPanel extends UpdateableJPanel implements MouseListener,Mouse
     private double curWindX = 330;
     private double curWindY = 215;
     private double curWindSize = 26;
-    private double curVisX = 135;
+    private double curVisX = 145;
     private double curVisY = 150;
     private double curVisSize = 15;
-    private double curCloudX = 135;
+    private double curCloudX = 137;
     private double curCloudY = 190;
     private double curCloudSize = 15;
-    private double curFreezeX = 135;
+    private double curFreezeX = 137;
     private double curFreezeY = 230;
     private double curFreezeSize = 15;
 
@@ -373,28 +373,35 @@ public class DetailPanel extends UpdateableJPanel implements MouseListener,Mouse
         drawString(g,dateX-weekday[(getDateDetail(curDate,Calendar.DAY_OF_WEEK)+5)%7].length()*(dateFontSize/4),dateY,weekday[(getDateDetail(curDate,Calendar.DAY_OF_WEEK)+5)%7],dateFontSize,null,false);
 
         //Current Data
+
         //--Current temp
         g.drawImage(getImg("images/general/temperature.png"),(int)(curTempX-curTempSize-25),(int)(curTempY-curTempSize-18),30,30,this);
         int curTempLen = String.format("%.0f", ws[mapCurDateToWs()].getTemp()-(ws[mapCurDateToWs()].getTemp()>0?0.5:-0.5)).length();
         drawString(g,curTempX-curTempLen*(curTempSize*1.2)/2,curTempY,String.format("%.0f", ws[mapCurDateToWs()].getTemp()-(ws[mapCurDateToWs()].getTemp()>0?0.5:-0.5))+" °",(int)curTempSize,null,false);
         drawString(g,curTempX,curTempY,String.format("%.1f", ws[mapCurDateToWs()].getTemp()-(int)ws[mapCurDateToWs()].getTemp()).substring(1),(int)(curTempSize/2.2),Color.GRAY,false);
+
         //--Current wind
         g.drawImage(getImg("images/general/wind.png"),(int)(curWindX-curWindSize-15),(int)(curWindY-curWindSize-15),35,35,this);
         int curWindLen = String.format("%.0f", ws[mapCurDateToWs()].getWind()-(ws[mapCurDateToWs()].getWind()>0?0.5:-0.5)).length();
         drawString(g,curWindX-curWindLen*(curWindSize*1.2)/2,curWindY,String.format("%.0f", ws[mapCurDateToWs()].getWind()-(ws[mapCurDateToWs()].getWind()>0?0.5:-0.5)),(int)curWindSize,null,false);
         drawString(g,curWindX,curWindY,String.format("%.1f", ws[mapCurDateToWs()].getWind()-(int)ws[mapCurDateToWs()].getWind()).substring(1)+"km/h",(int)(curWindSize/1.8),Color.DARK_GRAY,false);
+
         //--Current visibility
         g.drawImage(getImg("images/general/vis.png"),(int)(curVisX-curVisSize-55),(int)(curVisY-curVisSize-5),25,25,this);
         int curVisLen = String.format("%.0f", ws[mapCurDateToWs()].getVisibility()).length();
-        drawString(g,curVisX-curVisLen*(curVisSize*1.2)/2,curVisY,String.format("%.0f", ws[mapCurDateToWs()].getVisibility()),(int)curVisSize,null,false);
+        drawString(g,curVisX-curVisLen*(curVisSize*1.2)/2,curVisY,String.format("%.0f", ws[mapCurDateToWs()].getVisibility()) + "%",(int)curVisSize,null,false);
+
         //--Current Cloudlevel
         g.drawImage(getImg("images/general/cloud.png"),(int)(curCloudX-curCloudSize-55),(int)(curCloudY-curCloudSize-5),25,25,this);
         int curCloudLen = String.format("%.0f", ws[mapCurDateToWs()].getCloudLevel()).length();
         drawString(g,curCloudX-curCloudLen*(curCloudSize*1.2)/2,curCloudY,String.format("%.0f", ws[mapCurDateToWs()].getCloudLevel()),(int)curCloudSize,null,false);
+        drawString(g,140,curCloudY,"ft",(int)(curCloudSize*0.75),null,false);
+
         //--Current Freeze
         g.drawImage(getImg("images/general/freeze.png"),(int)(curFreezeX-curFreezeSize-55),(int)(curFreezeY-curFreezeSize-5),25,25,this);
         int curFreezeLen = String.format("%.0f", ws[mapCurDateToWs()].getFreezingAltitude()).length();
         drawString(g,curFreezeX-curFreezeLen*(curFreezeSize*1.2)/2,curFreezeY,String.format("%.0f", ws[mapCurDateToWs()].getFreezingAltitude()),(int)curFreezeSize,null,false);
+        drawString(g,140,curFreezeY,"ft",(int)(curFreezeSize*0.75),null,false);
     }
 
     private void trimGraph(){
