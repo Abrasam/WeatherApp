@@ -12,6 +12,17 @@ public class WeatherSlice {
     private final double freezingAltitude;
     private final Status status;
 
+    /**
+     * Represents a discrete slice of time for which we have weather data. Note that some fields may be null of they were not available.
+     * @param time (start) time of slide
+     * @param temp temperatur.
+     * @param wind wind speed
+     * @param rain rain level
+     * @param visibility visibility
+     * @param cloudLevel height of clouds
+     * @param freezingAltitude freezing altitude (altitude above which temperature is <= 0)
+     * @param status of type WeatherSlice.Status, this represents the status of the climate, i.e. rain/clear/thumderstorm/etc.
+     */
     public WeatherSlice(Date time, double temp, double wind, double rain, double visibility, double cloudLevel, double freezingAltitude, Status status) {
         this.time = time;
         this.temp = temp;
@@ -23,38 +34,76 @@ public class WeatherSlice {
         this.status = status;
     }
 
+    /**
+     * Gets time of slice.
+     * @return time
+     */
     public Date getTime() {
         return time;
     }
 
+    /**
+     * Gets temperature of slice.
+     * @return temperature
+     */
     public double getTemp() {
         return temp;
     }
 
+    /**
+     * Get wind speed of the slice.
+     * @return wind speed
+     */
     public double getWind() {
         return wind;
     }
 
+    /**
+     * Get the rain level of the slice.
+     * @return rain
+     */
     public double getRain() {
         return rain;
     }
 
+    /**
+     * Get the visibility of the slice.
+     * In this prototype these values are incorrect as the data was not available for free.
+     * @return visibility
+     */
     public double getVisibility() {
         return visibility;
     }
 
+    /**
+     * Gets the cloud level of the slice.
+     * In this prototype these values are incorrect as the data was not available for free.
+     * @return cloud level
+     */
     public double getCloudLevel() {
         return cloudLevel;
     }
 
+    /**
+     * Gets the freezing altitude of this slice.
+     * In this prototype these values are incorrect as the data was not available for free.
+     * @return freezing altitude
+     */
     public double getFreezingAltitude() {
         return freezingAltitude;
     }
 
+    /**
+     * Get the status of this slice.
+     * @return the status
+     */
     public Status getStatus() {
         return status;
     }
 
+    /**
+     * Status enum.
+     */
     public enum Status {
         CLOUDS, //HAS CLOUDS (OR ASH STORMS)
         SUN, //CLEAR
