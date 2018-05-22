@@ -9,7 +9,7 @@ public class WeatherSlice {
     private final double rain;
     private final double visibility;
     private final double cloudLevel;
-    private final double freezingAltitude;
+    private final double humidity;
     private final Status status;
 
     /**
@@ -20,17 +20,17 @@ public class WeatherSlice {
      * @param rain rain level
      * @param visibility visibility
      * @param cloudLevel height of clouds
-     * @param freezingAltitude freezing altitude (altitude above which temperature is <= 0)
+     * @param humidity humidity
      * @param status of type WeatherSlice.Status, this represents the status of the climate, i.e. rain/clear/thumderstorm/etc.
      */
-    public WeatherSlice(Date time, double temp, double wind, double rain, double visibility, double cloudLevel, double freezingAltitude, Status status) {
+    public WeatherSlice(Date time, double temp, double wind, double rain, double visibility, double cloudLevel, double humidity, Status status) {
         this.time = time;
         this.temp = temp;
         this.wind = wind;
         this.rain = rain;
         this.visibility = visibility;
         this.cloudLevel = cloudLevel;
-        this.freezingAltitude = freezingAltitude;
+        this.humidity = humidity;
         this.status = status;
     }
 
@@ -89,8 +89,8 @@ public class WeatherSlice {
      * In this prototype these values are incorrect as the data was not available for free.
      * @return freezing altitude
      */
-    public double getFreezingAltitude() {
-        return freezingAltitude;
+    public double getHumidity() {
+        return humidity;
     }
 
     /**
@@ -128,7 +128,7 @@ public class WeatherSlice {
                 ", rain=" + rain +
                 ", visibility=" + visibility +
                 ", cloudLevel=" + cloudLevel +
-                ", freezingAltitude=" + freezingAltitude +
+                ", freezingAltitude=" + humidity +
                 ", status=" + status +
                 '}';
     }

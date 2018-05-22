@@ -144,8 +144,14 @@ public class WeatherFetcher {
                 rainfall = (rain == null ? 0 : rain.getDouble("3h")); //get the rainfall of the slice, if JSON error it will be 0.
             } catch (JSONException e) {
             }
+            double humidity = 0;
+            try {
+                humidity = main.getDouble("humidity"); //get the humidity, is JSON error it will be 0.
+            } catch (JSONException e) {
+            }
+            //System.out.println(json);
             //NOTE THAT SOME PARAMETERS WERE RANDOMLY GENERATED HERE BECAUSE THE WEATHER API WOULD NOT PROVIDE THEM FOR FREE.
-            WeatherSlice slice = new WeatherSlice(time, temp, wind_speed, rainfall, 80 + rand.nextInt(20), rand.nextInt(100)+5000, 10000 + rand.nextInt(500), parseStatus(status.getString("main"))); //generate weather slice.
+            WeatherSlice slice = new WeatherSlice(time, temp, wind_speed, rainfall, 80 + rand.nextInt(20), rand.nextInt(100)+5000, humidity, parseStatus(status.getString("main"))); //generate weather slice.
             hourly[3 * i] = slice;
             hourly[3 * i + 1] = slice;
             hourly[3 * i + 2] = slice; //the free version of the API does 3 hour slices not 1 hour slices, so we simulate this data by assuming the data is constant for the 3 hours.
