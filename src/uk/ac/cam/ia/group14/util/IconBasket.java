@@ -1,10 +1,7 @@
 package uk.ac.cam.ia.group14.util;
 
-import uk.ac.cam.ia.group14.sjs252.WeatherFetcher;
-
 import javax.imageio.ImageIO;
 import javax.swing.*;
-import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;

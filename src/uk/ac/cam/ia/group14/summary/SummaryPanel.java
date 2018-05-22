@@ -5,7 +5,6 @@ import uk.ac.cam.ia.group14.sjs252.WeatherFetcher;
 import uk.ac.cam.ia.group14.util.*;
 
 import javax.swing.*;
-import javax.swing.border.EmptyBorder;
 import java.awt.*;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;

@@ -1,7 +1,6 @@
 package uk.ac.cam.ia.group14.summary;
 
 import java.awt.*;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.GregorianCalendar;

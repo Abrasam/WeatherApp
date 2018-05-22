@@ -1,7 +1,5 @@
 package uk.ac.cam.ia.group14.summary;
 
-import sun.swing.SwingAccessor;
-
 import javax.swing.*;
 import java.awt.*;
 import java.util.List;
