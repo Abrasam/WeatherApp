@@ -67,7 +67,7 @@ public class SummaryPanel extends UpdateableJPanel implements MouseListener{
     public static final String CONSTANTS_celsius = "°C", CONSTANTS_kmh = " km/h",
             CONSTANTS_cloudLevelSuffix = " ft", CONSTANTS_visibilitySuffix = " %", CONSTANTS_freezingAltitudeSuffix = " ft";
 
-    public static final int CONSTANTS_row2ForecastIconSize = 90;
+    public static final int CONSTANTS_row2ForecastIconSize = 110;
 
 
     // Icons
@@ -95,14 +95,17 @@ public class SummaryPanel extends UpdateableJPanel implements MouseListener{
             IconBasket.getResizedIconFromPath(30, 30, "images/general/temperature.png");
     public static final ImageIcon CONSTANTS_windIcon =
             IconBasket.getResizedIconFromPath(30, 30, "images/general/wind.png");
+    public static final ImageIcon CONSTANTS_sunsetIcon =
+            IconBasket.getResizedIconFromPath(30, 30, "images/general/sunset.png");
 
     public static final ImageIcon[] CONSTANTS_row2RightTagsArray = {
             CONSTANTS_temperatureIcon,
-            CONSTANTS_windIcon
+            CONSTANTS_windIcon,
+            CONSTANTS_sunsetIcon
     };
 
     // Size of the left&right stats on each row
-    public static final int CONSTANTS_row2LeftStatsSize = 3, CONSTANTS_row2RightStatsSize = 2;
+    public static final int CONSTANTS_row2LeftStatsSize = 3, CONSTANTS_row2RightStatsSize = 3;
 
 
     // Weather data
@@ -119,18 +122,6 @@ public class SummaryPanel extends UpdateableJPanel implements MouseListener{
 
     // All the elements on the second row (which contains many rows of fragments itself)
     private ArrayList<RowForecastFragment> row2RowForecastFragments;
-
-    // Each row needs to have its own set of tags, despite the fact that they are the same icons
-    // This function just copies icons
-    /*private List<JLabel> getFreshListOfImages(ImageIcon[] iconsArray) {
-        List<JLabel> ret = new ArrayList<>();
-
-        for (ImageIcon tagIcon : iconsArray) {
-            ret.add(new JLabel(tagIcon));
-        }
-
-        return ret;
-    }*/
 
     // Initialise the bare bones of the back button and location name
     private void initBackButtonAndLocationName() {
@@ -287,7 +278,7 @@ public class SummaryPanel extends UpdateableJPanel implements MouseListener{
                     true, curWeatherSlice.getStatus());
 
             // Strings to be displayed for the stats
-            String tempString, visString, cloudString, windString, freezeString, curDayOfWeek;
+            String tempString, visString, cloudString, windString, freezeString, sunsetString, curDayOfWeek;
             Integer tempInt, visInt, cloudsInt, windInt, freezeInt;
             List<String> curLeftStats, curRightStats;
 
@@ -307,10 +298,11 @@ public class SummaryPanel extends UpdateableJPanel implements MouseListener{
 
             tempString = tempInt.toString() + CONSTANTS_celsius;
             windString = windInt.toString() + CONSTANTS_kmh;
+            sunsetString = "06:00-09:00";
 
             // Pack those Strings into lists
             curLeftStats = SummaryUtil.makeList(visString, cloudString, freezeString);
-            curRightStats = SummaryUtil.makeList(tempString, windString);
+            curRightStats = SummaryUtil.makeList(tempString, windString, sunsetString);
 
             // Once all the fields have been updated, tell the current rowForecastFragment to update its data
             curRowForecastFragment.updateData(curDayOfWeek, curIcon, curLeftStats, curRightStats);
