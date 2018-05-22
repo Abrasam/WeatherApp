@@ -64,7 +64,7 @@ public class SummaryPanel extends UpdateableJPanel implements MouseListener{
     // Prefixes/suffixes
     public static final String CONSTANTS_row1LocationNamePrefix = "";
     public static final String CONSTANTS_celsius = "°C", CONSTANTS_kmh = " km/h",
-            CONSTANTS_cloudLevelSuffix = " ft", CONSTANTS_visibilitySuffix = " %", CONSTANTS_freezingAltitudeSuffix = " ft";
+            CONSTANTS_cloudLevelSuffix = " ft", CONSTANTS_visibilitySuffix = " %", CONSTANTS_humiditySuffix = " %";
 
     public static final int CONSTANTS_row2ForecastIconSize = 110;
 
@@ -77,34 +77,34 @@ public class SummaryPanel extends UpdateableJPanel implements MouseListener{
 
     // Prefix icons of the left statistics for each row are precomputed below
     public static final ImageIcon CONSTANTS_visibilityIcon =
-            IconBasket.getResizedIconFromPath(30, 30, "images/general/vis.png");
+            IconBasket.getResizedIconFromPath(24, 24, "images/general/vis.png");
     public static final ImageIcon CONSTANTS_couldLevelIcon =
-            IconBasket.getResizedIconFromPath(30, 30, "images/general/cloud.png");
-    public static final ImageIcon CONSTANTS_freezingIcon =
-            IconBasket.getResizedIconFromPath(30, 30, "images/general/freeze.png");
+            IconBasket.getResizedIconFromPath(24, 24, "images/general/cloud.png");
+    public static final ImageIcon CONSTANTS_humidityIcon =
+            IconBasket.getResizedIconFromPath(24, 24, "images/general/humidity.png");
 
     public static final ImageIcon[] CONSTANTS_row2LeftTagsArray = {
             CONSTANTS_visibilityIcon,
             CONSTANTS_couldLevelIcon,
-            CONSTANTS_freezingIcon
+            CONSTANTS_humidityIcon
     };
 
     // Prefix icons of the right statistics
     public static final ImageIcon CONSTANTS_temperatureIcon =
-            IconBasket.getResizedIconFromPath(30, 30, "images/general/temperature.png");
+            IconBasket.getResizedIconFromPath(24, 24, "images/general/temperature.png");
     public static final ImageIcon CONSTANTS_windIcon =
-            IconBasket.getResizedIconFromPath(30, 30, "images/general/wind.png");
+            IconBasket.getResizedIconFromPath(24, 24, "images/general/wind.png");
     public static final ImageIcon CONSTANTS_sunsetIcon =
-            IconBasket.getResizedIconFromPath(30, 30, "images/general/sunset.png");
+            IconBasket.getResizedIconFromPath(24, 24, "images/general/sunset.png");
 
     public static final ImageIcon[] CONSTANTS_row2RightTagsArray = {
             CONSTANTS_temperatureIcon,
-            CONSTANTS_windIcon,
-            CONSTANTS_sunsetIcon
+            CONSTANTS_windIcon
+            //CONSTANTS_sunsetIcon
     };
 
     // Size of the left&right stats on each row
-    public static final int CONSTANTS_row2LeftStatsSize = 3, CONSTANTS_row2RightStatsSize = 3;
+    public static final int CONSTANTS_row2LeftStatsSize = 3, CONSTANTS_row2RightStatsSize = 2;
 
 
     // Weather data
@@ -277,8 +277,8 @@ public class SummaryPanel extends UpdateableJPanel implements MouseListener{
                     true, curWeatherSlice.getStatus());
 
             // Strings to be displayed for the stats
-            String tempString, visString, cloudString, windString, freezeString, sunsetString, curDayOfWeek;
-            Integer tempInt, visInt, cloudsInt, windInt, freezeInt;
+            String tempString, visString, cloudString, windString, humidityString, sunsetString, curDayOfWeek;
+            Integer tempInt, visInt, cloudsInt, windInt, humidityInt;
             List<String> curLeftStats, curRightStats;
 
             curDayOfWeek = SummaryUtil.getDayOfWeekString(dayOfWeek+i);
@@ -288,20 +288,19 @@ public class SummaryPanel extends UpdateableJPanel implements MouseListener{
             visInt = (int) Math.round(curWeatherSlice.getVisibility());
             cloudsInt = (int) Math.round(curWeatherSlice.getCloudLevel());
             windInt = (int) Math.round(curWeatherSlice.getWind());
-            freezeInt = (int) Math.round(curWeatherSlice.getFreezingAltitude());
+            humidityInt = (int) Math.round(curWeatherSlice.getHumidity());
 
             // Add suffixes and make them pretty
             visString = visInt.toString() + CONSTANTS_visibilitySuffix;
             cloudString = cloudsInt.toString() + CONSTANTS_cloudLevelSuffix;
-            freezeString = freezeInt.toString() + CONSTANTS_freezingAltitudeSuffix;
+            humidityString = humidityInt.toString() + CONSTANTS_humiditySuffix;
 
             tempString = tempInt.toString() + CONSTANTS_celsius;
             windString = windInt.toString() + CONSTANTS_kmh;
-            sunsetString = "06:00-09:00";
 
             // Pack those Strings into lists
-            curLeftStats = SummaryUtil.makeList(visString, cloudString, freezeString);
-            curRightStats = SummaryUtil.makeList(tempString, windString, sunsetString);
+            curLeftStats = SummaryUtil.makeList(visString, cloudString, humidityString);
+            curRightStats = SummaryUtil.makeList(tempString, windString);
 
             // Once all the fields have been updated, tell the current rowForecastFragment to update its data
             curRowForecastFragment.updateData(curDayOfWeek, curIcon, curLeftStats, curRightStats);
