@@ -119,6 +119,9 @@ public class DetailPanel extends UpdateableJPanel implements MouseListener,Mouse
     private double curFreezeX = 137;
     private double curFreezeY = 230;
     private double curFreezeSize = 15;
+    private double curHumidX = 145;
+    private double curHumidY = 230;
+    private double curHumidSize = 15;
 
     //FPS
     private Date lastPaintTime;
@@ -271,8 +274,13 @@ public class DetailPanel extends UpdateableJPanel implements MouseListener,Mouse
             if (i%3==0 && i>0) freezingAltitude = (freezingAltitude + ws[i-1].getFreezingAltitude())/2;
             if (i<ws.length-1) freezingAltitude = (freezingAltitude + ws[i+1].getFreezingAltitude())/2;
             freezingAltitude = (double)Math.round(freezingAltitude);
+            double humidity = ws[i].getHumidity() + ((i+3<ws.length)?(ws[i+3].getHumidity()-ws[i].getHumidity())*0.08:0) + ((i+5<ws.length)?(ws[i+5].getHumidity()-ws[i].getHumidity())*0.04:0) + ((i+7<ws.length)?(ws[i+7].getHumidity()-ws[i].getHumidity())*0.02:0) + ((i>=3)?(ws[i-3].getHumidity()-ws[i].getHumidity())*0.12:0) + ((i>=5)?(ws[i-5].getHumidity()-ws[i].getHumidity())*0.06:0) + ((i>=7)?(ws[i-7].getHumidity()-ws[i].getHumidity())*0.03:0);
+            if (i%3==0 && i>0) humidity = (freezingAltitude + ws[i-1].getHumidity())/2;
+            if (i<ws.length-1) humidity = (freezingAltitude + ws[i+1].getHumidity())/2;
+            if (humidity>100) humidity = 100;
+            humidity = (double)Math.round(humidity);
             WeatherSlice.Status status = ws[i].getStatus();
-            ws[i]=new WeatherSlice(time,temp,wind,rain,visibility,cloudLevel,freezingAltitude,status);
+            ws[i]=new WeatherSlice(time,temp,wind,rain,visibility,cloudLevel,humidity,status);
         }
         for (int i=0;i<120;i++){
             double[] tmp = new double[30];
@@ -311,7 +319,7 @@ public class DetailPanel extends UpdateableJPanel implements MouseListener,Mouse
             int vertAdjust = 0;
             if ((startDate.getTime())-roundUpDate(startDate).getTime()<0) {
                 if (i==0) continue;
-                // when day doesn't start at midnight, adjust the scroll
+                    // when day doesn't start at midnight, adjust the scroll
                 else vertAdjust = (int)(scrollBarHeight/(dateOnScroll-1)*(-1-((double)(startDate.getTime()-roundUpDate(startDate).getTime())/86400000)));
             }
             drawLine(g,scrollBarX-scrollDivWidth/2,scrollBarY+vertAdjust-scrollBarHeight/2-scrollBarThickness/2+scrollBarHeight/(dateOnScroll-1)*i,scrollDivWidth,scrollBarThickness,scrollColor);
@@ -398,10 +406,16 @@ public class DetailPanel extends UpdateableJPanel implements MouseListener,Mouse
         drawString(g,140,curCloudY,"ft",(int)(curCloudSize*0.75),null,false);
 
         //--Current Freeze
-        g.drawImage(getImg("images/general/freeze.png"),(int)(curFreezeX-curFreezeSize-55),(int)(curFreezeY-curFreezeSize-5),25,25,this);
-        int curFreezeLen = String.format("%.0f", ws[mapCurDateToWs()].getFreezingAltitude()).length();
-        drawString(g,curFreezeX-curFreezeLen*(curFreezeSize*1.2)/2,curFreezeY,String.format("%.0f", ws[mapCurDateToWs()].getFreezingAltitude()),(int)curFreezeSize,null,false);
-        drawString(g,140,curFreezeY,"ft",(int)(curFreezeSize*0.75),null,false);
+//        g.drawImage(getImg("images/general/freeze.png"),(int)(curFreezeX-curFreezeSize-55),(int)(curFreezeY-curFreezeSize-5),25,25,this);
+//        int curFreezeLen = String.format("%.0f", ws[mapCurDateToWs()].getFreezingAltitude()).length();
+//        drawString(g,curFreezeX-curFreezeLen*(curFreezeSize*1.2)/2,curFreezeY,String.format("%.0f", ws[mapCurDateToWs()].getFreezingAltitude()),(int)curFreezeSize,null,false);
+//        drawString(g,140,curFreezeY,"ft",(int)(curFreezeSize*0.75),null,false);
+
+        //--Current Humidity
+        g.drawImage(getImg("images/general/humidity.png"),(int)(curHumidX-curHumidSize-55),(int)(curHumidY-curHumidSize-5),25,25,this);
+        int curHumidLen = String.format("%.0f", ws[mapCurDateToWs()].getHumidity()).length();
+        drawString(g,curHumidX-curHumidLen*(curHumidSize*1.2)/2,curHumidY,String.format("%.0f", ws[mapCurDateToWs()].getHumidity()) + "%",(int)curHumidSize,null,false);
+        //drawString(g,140,curHumidY,"ft",(int)(curHumidSize*0.75),null,false);
     }
 
     private void trimGraph(){
@@ -473,7 +487,7 @@ public class DetailPanel extends UpdateableJPanel implements MouseListener,Mouse
         //Check for press on summary button
         else if (inRange(mouseX,mouseY,summaryX,summaryY,summarySize/2)){
             //System.out.println("Click on summary, redirect to Summary panel");
-                repaint();
+            repaint();
             mf.changeCard(SummaryPanel.cardName);
         }
         //Check for press on graphs
