@@ -101,6 +101,11 @@ public class WeatherSlice {
         return status;
     }
 
+    @Deprecated
+    public double getFreezingAltitude() {
+        return 0;
+    }
+
     /**
      * Status enum.
      */

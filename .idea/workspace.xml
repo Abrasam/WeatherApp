@@ -2,12 +2,6 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="f0fd33b6-a506-499a-90f3-6ac613fc4ddb" name="Default" comment="Try and create detail page java">
-      <change beforePath="$PROJECT_DIR$/saves/Beacons.txt" beforeDir="false" afterPath="$PROJECT_DIR$/saves/Beacons.txt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/saves/Cairngorms.txt" beforeDir="false" afterPath="$PROJECT_DIR$/saves/Cairngorms.txt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/saves/Grampians.txt" beforeDir="false" afterPath="$PROJECT_DIR$/saves/Grampians.txt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/saves/Mournes.txt" beforeDir="false" afterPath="$PROJECT_DIR$/saves/Mournes.txt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/saves/Pennines.txt" beforeDir="false" afterPath="$PROJECT_DIR$/saves/Pennines.txt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/saves/Snowdonia.txt" beforeDir="false" afterPath="$PROJECT_DIR$/saves/Snowdonia.txt" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/uk/ac/cam/ia/group14/sjs252/WeatherFetcher.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/uk/ac/cam/ia/group14/sjs252/WeatherFetcher.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/uk/ac/cam/ia/group14/util/WeatherSlice.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/uk/ac/cam/ia/group14/util/WeatherSlice.java" afterDir="false" />
     </list>
@@ -21,23 +15,37 @@
   </component>
   <component name="FileEditorManager">
     <leaf SIDE_TABS_SIZE_LIMIT_KEY="300">
-      <file leaf-file-name="WeatherFetcher.java" pinned="false" current-in-tab="false">
+      <file leaf-file-name="WeatherFetcher.java" pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/src/uk/ac/cam/ia/group14/sjs252/WeatherFetcher.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="439">
-              <caret line="148" column="102" selection-start-line="148" selection-start-column="102" selection-end-line="148" selection-end-column="102" />
+            <state relative-caret-position="296">
+              <caret line="158" column="35" lean-forward="true" selection-start-line="158" selection-start-column="35" selection-end-line="158" selection-end-column="35" />
               <folding>
                 <element signature="imports" expanded="true" />
+                <element signature="e#3512#3543#0" expanded="true" />
               </folding>
             </state>
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="WeatherSlice.java" pinned="false" current-in-tab="true">
+      <file leaf-file-name="WeatherSlice.java" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/src/uk/ac/cam/ia/group14/util/WeatherSlice.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="408">
-              <caret line="130" column="48" selection-start-line="130" selection-start-column="48" selection-end-line="130" selection-end-column="48" />
+            <state relative-caret-position="288">
+              <caret line="104" column="17" selection-start-line="104" selection-start-column="17" selection-end-line="104" selection-end-column="17" />
+              <folding>
+                <element signature="e#2741#2742#0" expanded="true" />
+                <element signature="e#2765#2766#0" expanded="true" />
+              </folding>
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="SummaryPanel.java" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/src/uk/ac/cam/ia/group14/summary/SummaryPanel.java">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="465">
+              <caret line="291" column="76" selection-start-line="291" selection-start-column="57" selection-end-line="291" selection-end-column="76" />
             </state>
           </provider>
         </entry>
@@ -99,8 +107,8 @@
         <option value="$PROJECT_DIR$/src/uk/ac/cam/ia/group14/util/RegionID.java" />
         <option value="$PROJECT_DIR$/src/uk/ac/cam/ia/group14/rjt80/display/MapPanel.java" />
         <option value="$PROJECT_DIR$/src/uk/ac/cam/ia/group14/util/Region.java" />
-        <option value="$PROJECT_DIR$/src/uk/ac/cam/ia/group14/sjs252/WeatherFetcher.java" />
         <option value="$PROJECT_DIR$/src/uk/ac/cam/ia/group14/util/WeatherSlice.java" />
+        <option value="$PROJECT_DIR$/src/uk/ac/cam/ia/group14/sjs252/WeatherFetcher.java" />
       </list>
     </option>
   </component>
@@ -309,11 +317,11 @@
       <window_info anchor="bottom" id="Event Log" order="8" side_tool="true" />
       <window_info anchor="right" id="Maven Projects" order="6" />
       <window_info anchor="bottom" id="Version Control" order="9" />
-      <window_info anchor="bottom" id="Run" order="2" visible="true" weight="0.32905984" />
+      <window_info active="true" anchor="bottom" id="Run" order="2" visible="true" weight="0.32905984" />
       <window_info anchor="bottom" id="Terminal" order="7" />
       <window_info id="Capture Tool" order="6" />
       <window_info id="Designer" order="3" />
-      <window_info active="true" content_ui="combo" id="Project" order="0" visible="true" weight="0.106770836" />
+      <window_info content_ui="combo" id="Project" order="0" visible="true" weight="0.106770836" />
       <window_info anchor="bottom" id="Find" order="1" />
       <window_info id="Structure" order="1" side_tool="true" weight="0.25" />
       <window_info anchor="right" id="Ant Build" order="1" weight="0.25" />
@@ -347,6 +355,7 @@
           <caret line="189" column="7" selection-start-line="189" selection-start-column="7" selection-end-line="189" selection-end-column="7" />
           <folding>
             <element signature="imports" expanded="true" />
+            <element signature="e#3512#3543#0" expanded="true" />
           </folding>
         </state>
       </provider>
@@ -357,6 +366,7 @@
           <caret line="168" column="54" selection-start-line="168" selection-start-column="54" selection-end-line="168" selection-end-column="54" />
           <folding>
             <element signature="imports" expanded="true" />
+            <element signature="e#3512#3543#0" expanded="true" />
           </folding>
         </state>
       </provider>
@@ -429,6 +439,7 @@
           <caret line="38" column="56" selection-start-line="38" selection-start-column="56" selection-end-line="38" selection-end-column="56" />
           <folding>
             <element signature="imports" expanded="true" />
+            <element signature="e#3512#3543#0" expanded="true" />
           </folding>
         </state>
       </provider>
@@ -591,13 +602,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/uk/ac/cam/ia/group14/summary/SummaryPanel.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="-51">
-          <caret line="46" column="31" lean-forward="true" selection-start-line="46" selection-start-column="31" selection-end-line="46" selection-end-column="31" />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/src/uk/ac/cam/ia/group14/util/InterpanelData.java">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="51">
@@ -655,20 +659,32 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/uk/ac/cam/ia/group14/sjs252/WeatherFetcher.java">
+    <entry file="file://$PROJECT_DIR$/src/uk/ac/cam/ia/group14/summary/SummaryPanel.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="439">
-          <caret line="148" column="102" selection-start-line="148" selection-start-column="102" selection-end-line="148" selection-end-column="102" />
-          <folding>
-            <element signature="imports" expanded="true" />
-          </folding>
+        <state relative-caret-position="465">
+          <caret line="291" column="76" selection-start-line="291" selection-start-column="57" selection-end-line="291" selection-end-column="76" />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/src/uk/ac/cam/ia/group14/util/WeatherSlice.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="408">
-          <caret line="130" column="48" selection-start-line="130" selection-start-column="48" selection-end-line="130" selection-end-column="48" />
+        <state relative-caret-position="288">
+          <caret line="104" column="17" selection-start-line="104" selection-start-column="17" selection-end-line="104" selection-end-column="17" />
+          <folding>
+            <element signature="e#2741#2742#0" expanded="true" />
+            <element signature="e#2765#2766#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/uk/ac/cam/ia/group14/sjs252/WeatherFetcher.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="296">
+          <caret line="158" column="35" lean-forward="true" selection-start-line="158" selection-start-column="35" selection-end-line="158" selection-end-column="35" />
+          <folding>
+            <element signature="imports" expanded="true" />
+            <element signature="e#3512#3543#0" expanded="true" />
+          </folding>
         </state>
       </provider>
     </entry>

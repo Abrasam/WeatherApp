@@ -90,6 +90,7 @@ public class WeatherFetcher {
      * @param json the JSON string
      * @return the weather slices.
      */
+    @SuppressWarnings("deprecated")
     private WeatherSlice[][] load(String json) {
         JSONArray weather = (JSONArray) new JSONObject(json).get("list");
         //System.out.println(json);
