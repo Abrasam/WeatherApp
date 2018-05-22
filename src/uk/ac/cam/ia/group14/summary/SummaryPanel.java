@@ -17,16 +17,6 @@ public class SummaryPanel extends UpdateableJPanel implements MouseListener{
 
     public static String cardName = "SummaryPanel";
 
-    // Wilson blue D7E1FF
-    // Ross green 22B14C
-    // Ross blue 00A2E8
-
-    // whiteish : #dce9ef
-    // light blue : 91bbd1
-    // dark blue : 3286AA
-
-    // tryBlue : #94a8e6
-
     // Number of days for the summary
     public static final int CONSTANTS_daysCount = 5;
 

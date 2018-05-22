@@ -8,17 +8,23 @@ import static uk.ac.cam.ia.group14.summary.SummaryUtil.getGridBagConstraints;
 
 public class RowForecastFragment extends JPanel{
 
+    // Label for the day of the week MON TUE..
     private JLabel dayOfWeekLbl;
-    private InfoFragment leftStatsFragment;
-    private JLabel forecastIconLbl;
-    private InfoFragment rightStatsFragment;
-
     private String dayOfWeekString;
+
+    // Stats on the left of the icon
+    private InfoFragment leftStatsFragment;
+
+    // The icon
+    private JLabel forecastIconLbl;
     private ImageIcon forecastIcon;
+
+    // Stats on the right of the icon
+    private InfoFragment rightStatsFragment;
     private List<String> leftStatsData, rightStatsData;
     private List<ImageIcon> leftStatsTags, rightStatsTags;
 
-
+    // init the bare bones of the components
     private void initComponents() {
         this.setBackground(SummaryPanel.CONSTANTS_row2RowForecastsColor);
 
@@ -46,10 +52,12 @@ public class RowForecastFragment extends JPanel{
         this.add(rightStatsFragment, rightStatsConstraints);
     }
 
+    // forecast stats are might be updated multiple times
     private void updateForecastStats() {
         leftStatsFragment.setData(leftStatsData);
         rightStatsFragment.setData(rightStatsData);
     }
+
     private void updateDayOfWeekAndIcon() {
         dayOfWeekLbl.setText(dayOfWeekString);
         forecastIconLbl.setIcon(forecastIcon);
@@ -60,6 +68,7 @@ public class RowForecastFragment extends JPanel{
         updateForecastStats();
     }
 
+    // Constructor which creates a row forecast fragment without right tag images
     public RowForecastFragment(String dayOfWeekString,
                                List<ImageIcon> leftStatsTags, List<String> leftStatsData,
                                ImageIcon forecastIcon,
@@ -77,6 +86,7 @@ public class RowForecastFragment extends JPanel{
         updateAll();
     }
 
+    // Constructor which creates a row fragment WITH right tag images
     public RowForecastFragment(String dayOfWeekString,
                                List<ImageIcon> leftStatsTags, List<String> leftStatsData,
                                ImageIcon forecastIcon,
@@ -95,6 +105,7 @@ public class RowForecastFragment extends JPanel{
         updateAll();
     }
 
+    // Function which is called when data is updated
     public void updateData(String dayOfWeekString, ImageIcon forecastIcon, List<String> leftStatsData, List<String> rightStatsData) {
 
         this.dayOfWeekString = dayOfWeekString;

@@ -13,7 +13,7 @@ public class InfoFragment extends JPanel {
     private List<String> statsData;
     private List<JLabel> statsLbl;
 
-    // Initialise the stats and tags (if there are such)
+    // Initialise the bare bones of stats and tags (if there are such)
     private void initComponents() {
 
         this.setBackground(SummaryPanel.CONSTANTS_row2RowForecastsColor);
@@ -25,15 +25,18 @@ public class InfoFragment extends JPanel {
 
         double rowWeight = totalRowsWeight / (double) statsData.size();
 
+        // Only add another column if tags are specified (which they might not be)
         if (tagLbl != null) {
             gridY = 0;
 
+            // Constraints for upper dummy panel used for padding
             GridBagConstraints upperPaddingConstraint =
                     SummaryUtil.getGridBagConstraints(GridBagConstraints.BOTH, gridX, gridY, 2.0, singlePadWeight);
             this.add(new JLabel(), upperPaddingConstraint);
 
             gridY++;
             for (JLabel label : tagLbl) {
+                // Actual
                 GridBagConstraints constraints =
                         SummaryUtil.getGridBagConstraints(GridBagConstraints.BOTH, gridX, gridY, 2.0, rowWeight);
 
@@ -42,7 +45,7 @@ public class InfoFragment extends JPanel {
                 gridY++;
             }
 
-
+            // Add the lowe dummy panel
             GridBagConstraints lowerPaddingConstraint =
                     SummaryUtil.getGridBagConstraints(GridBagConstraints.BOTH, gridX, gridY, 1.0, singlePadWeight);
             this.add(new JLabel(), lowerPaddingConstraint );
@@ -50,9 +53,9 @@ public class InfoFragment extends JPanel {
             gridX++;
         }
 
+        // Here is the data to put the actual data
         statsLbl = new ArrayList<>();
         gridY = 0;
-
 
         GridBagConstraints upperPaddingConstraint =
                 SummaryUtil.getGridBagConstraints(GridBagConstraints.BOTH, gridX, gridY, 1.0, singlePadWeight);
@@ -60,6 +63,8 @@ public class InfoFragment extends JPanel {
 
         gridY++;
         for (String datum : statsData) {
+
+            // Put each stat
 
             int positioning = (tagLbl == null) ? SwingConstants.CENTER : SwingConstants.LEFT;
 
@@ -82,6 +87,7 @@ public class InfoFragment extends JPanel {
         this.add(new JLabel(), lowerPaddingConstraint );
     }
 
+    // Update the text of all the stats (not the tags though, they remain constant)
     private void updateData() {
         for (int i = 0; i< statsData.size(); i++) {
 
@@ -103,11 +109,13 @@ public class InfoFragment extends JPanel {
         updateData();
     }
 
+    // Constructor to initialise an info fragment without tags
     public InfoFragment(List<String> statsData) {
         this.statsData = statsData;
         init();
     }
 
+    // Constructor to initialise an info fragment with tags
     public InfoFragment(List<ImageIcon> tagIcons, List<String> statsData) {
         this.statsData = statsData;
         if (tagIcons != null) {
@@ -122,6 +130,7 @@ public class InfoFragment extends JPanel {
         init();
     }
 
+    // function to update the data
     public void setData(List<String> infoData) {
         this.statsData = infoData;
         updateData();
