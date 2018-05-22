@@ -1,5 +1,7 @@
 package uk.ac.cam.ia.group14.util;
 
+import uk.ac.cam.ia.group14.sjs252.WeatherFetcher;
+
 import javax.imageio.ImageIO;
 import javax.swing.*;
 import java.awt.*;
@@ -21,7 +23,7 @@ import java.util.GregorianCalendar;
 
 public class IconBasket {
 
-    private static final int constDayHoursFrom = 6, constDayHoursTo = 20;
+    private static int constDayHoursFrom = 6, constDayHoursTo = 20;
 
     private static final String constNight = "night";
     private static final String constCloud = "cloud";
@@ -76,6 +78,8 @@ public class IconBasket {
     }
 
     private static boolean checkIfDay(GregorianCalendar calendar) {
+
+
         int hours = calendar.get(Calendar.HOUR_OF_DAY);
         return (constDayHoursFrom <= hours && hours <= constDayHoursTo);
     }
