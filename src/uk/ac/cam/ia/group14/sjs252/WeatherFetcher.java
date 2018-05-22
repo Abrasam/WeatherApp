@@ -192,8 +192,4 @@ public class WeatherFetcher {
         }
         return buffer.toString();
     }
-
-    /*public static void main(String[] args) {
-        System.out.println(getInstance().getRegion(RegionID.BREACONS));
-    }*/
 }
